@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
-    <meta name="theme-color" content="#00E5A0"/>
+  <meta name="theme-color" content="#00E5A0"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -15,47 +15,105 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;font-family:'Heebo','Arial Hebrew',sans-serif;}
     html{scroll-behavior:smooth;direction:rtl;}
-    body{background:#04080F;color:#EDF2FF;direction:rtl;}
-    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#070E1A;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
-    :root{--green:#00E5A0;--blue:#5AABFF;--violet:#A78BFA;--gold:#F7C948;--rose:#FB7185;--cyan:#22D3EE;--border:rgba(255,255,255,.07);--text:#EDF2FF;--text2:#94A3B8;--text3:#475569;}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-    @keyframes glow{0%,100%{opacity:.5}50%{opacity:1}}
+    body{background:#020814;color:#EDF2FF;direction:rtl;overflow-x:hidden;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:#020814;}
+    ::-webkit-scrollbar-thumb{background:rgba(0,229,160,.2);border-radius:4px;}
+    :root{
+      --green:#00E5A0;--blue:#5AABFF;--violet:#A78BFA;--gold:#F7C948;--rose:#FB7185;--cyan:#22D3EE;
+      --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+      --text:#EDF2FF;--text2:#94A3B8;--text3:#475569;
+      --surface:rgba(8,16,36,.7);--surface2:rgba(12,22,48,.6);
+    }
+
+    /* ── Animations ── */
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes glow{0%,100%{opacity:.4}50%{opacity:1}}
     @keyframes draw{from{stroke-dashoffset:2000}to{stroke-dashoffset:0}}
+    @keyframes pulse-ring{0%{transform:scale(.9);opacity:.6}70%{transform:scale(1.4);opacity:0}100%{transform:scale(1.4);opacity:0}}
+    @keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+    @keyframes fade-up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fade-in{from{opacity:0}to{opacity:1}}
+    @keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes aurora{0%,100%{opacity:.4;transform:translateX(0) translateY(0) scale(1)}33%{opacity:.6;transform:translateX(-30px) translateY(-20px) scale(1.05)}66%{opacity:.3;transform:translateX(20px) translateY(10px) scale(.95)}}
+
     .float{animation:float 6s ease-in-out infinite;}
     .glow-pulse{animation:glow 2.5s ease-in-out infinite;}
     .draw-anim{stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 2.8s ease-out .3s forwards;}
-    .glass{background:rgba(11,21,40,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);}
+    .fade-up{animation:fade-up .6s ease-out both;}
+    .fade-up-d1{animation:fade-up .6s ease-out .1s both;}
+    .fade-up-d2{animation:fade-up .6s ease-out .2s both;}
+    .fade-up-d3{animation:fade-up .6s ease-out .35s both;}
+    .fade-up-d4{animation:fade-up .6s ease-out .5s both;}
+    .aurora1{animation:aurora 12s ease-in-out infinite;}
+    .aurora2{animation:aurora 16s ease-in-out infinite reverse;}
+
+    /* ── Glass & Cards ── */
+    .glass{background:rgba(8,16,36,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);}
+    .glass2{background:rgba(12,22,48,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border2);}
     .card-hover{transition:border-color .25s,box-shadow .25s,transform .25s;}
-    .card-hover:hover{border-color:rgba(0,229,160,.3)!important;box-shadow:0 8px 40px rgba(0,229,160,.07),0 0 0 1px rgba(0,229,160,.1);transform:translateY(-3px);}
-    .btn-green{background:linear-gradient(135deg,#00E5A0,#00B87D);color:#02060E;font-weight:700;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
-    .btn-green:hover{background:linear-gradient(135deg,#00F0A8,#00CC8A);box-shadow:0 4px 28px rgba(0,229,160,.42);transform:translateY(-1px);}
-    .btn-ghost{background:rgba(255,255,255,.04);color:var(--text2);border:1px solid rgba(255,255,255,.18);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;font-family:Heebo,sans-serif;font-weight:700;}
-    .btn-ghost:hover{background:rgba(0,229,160,.08);border-color:rgba(0,229,160,.5);color:#00E5A0;box-shadow:0 0 24px rgba(0,229,160,.2),inset 0 1px 0 rgba(0,229,160,.1);transform:translateY(-2px);}
-    .tg{background:linear-gradient(135deg,#00E5A0,#5AABFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .card-hover:hover{border-color:rgba(0,229,160,.28)!important;box-shadow:0 8px 40px rgba(0,229,160,.06),0 0 0 1px rgba(0,229,160,.1);transform:translateY(-4px);}
+    .card-glow{position:relative;overflow:hidden;}
+    .card-glow::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(0,229,160,.06) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+    /* ── Buttons ── */
+    .btn-green{background:linear-gradient(135deg,#00E5A0,#00C48A);color:#020814;font-weight:700;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;}
+    .btn-green::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .2s;}
+    .btn-green:hover{box-shadow:0 4px 32px rgba(0,229,160,.45);transform:translateY(-2px);}
+    .btn-green:hover::after{opacity:1;}
+    .btn-ghost{background:rgba(255,255,255,.04);color:var(--text2);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;font-family:Heebo,sans-serif;font-weight:600;}
+    .btn-ghost:hover{background:rgba(0,229,160,.07);border-color:rgba(0,229,160,.4);color:#00E5A0;box-shadow:0 0 20px rgba(0,229,160,.15);transform:translateY(-2px);}
+
+    /* ── Text ── */
+    .tg{background:linear-gradient(135deg,#00E5A0 0%,#5AABFF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .tg-gold{background:linear-gradient(135deg,#F7C948,#E07B54);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .tg-inv{background:linear-gradient(135deg,#8E7CC3,#C9A96A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .slabel{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);}
-    .nav-scrolled{background:rgba(4,8,15,.9)!important;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)!important;}
-    .bg-grid{background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:56px 56px;}
-    .pricing-card{background:linear-gradient(145deg,rgba(0,229,160,.07) 0%,rgba(10,18,35,.98) 55%);border:1px solid rgba(0,229,160,.3);box-shadow:0 0 80px rgba(0,229,160,.07);}
-    .check-item{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-    .ic-green{background:rgba(0,229,160,.12);color:#00E5A0;}
-    .ic-blue{background:rgba(90,171,255,.12);color:#5AABFF;}
-    .ic-violet{background:rgba(167,139,250,.12);color:#A78BFA;}
-    .ic-gold{background:rgba(247,201,72,.12);color:#F7C948;}
-    .ic-rose{background:rgba(251,113,133,.12);color:#FB7185;}
-    .ic-cyan{background:rgba(34,211,238,.12);color:#22D3EE;}
-    .nav-link{font-size:14px;padding:8px 14px;border-radius:10px;color:var(--text2);text-decoration:none;transition:color .2s,background .2s;}
+    .tg-violet{background:linear-gradient(135deg,#A78BFA,#5AABFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .shimmer-text{background:linear-gradient(90deg,#94A3B8 0%,#EDF2FF 40%,#94A3B8 60%,#94A3B8 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;}
+    .slabel{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green);}
+
+    /* ── Nav ── */
+    .nav-scrolled{background:rgba(2,8,20,.92)!important;backdrop-filter:blur(28px)!important;-webkit-backdrop-filter:blur(28px)!important;border-bottom:1px solid rgba(0,229,160,.1)!important;}
+    .nav-link{font-size:14px;padding:7px 14px;border-radius:10px;color:var(--text2);text-decoration:none;transition:color .2s,background .2s;font-weight:500;}
     .nav-link:hover{color:var(--text);background:rgba(255,255,255,.05);}
-    .inv-card{border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,.07);background:rgba(11,21,40,.6);transition:all .25s;}
-    .inv-card:hover{transform:translateY(-3px);}
-    @media(max-width:768px){.hero-chart-col{display:none!important;}}
+
+    /* ── Icon colors ── */
+    .ic-green{background:rgba(0,229,160,.1);color:#00E5A0;border:1px solid rgba(0,229,160,.18);}
+    .ic-blue{background:rgba(90,171,255,.1);color:#5AABFF;border:1px solid rgba(90,171,255,.18);}
+    .ic-violet{background:rgba(167,139,250,.1);color:#A78BFA;border:1px solid rgba(167,139,250,.18);}
+    .ic-gold{background:rgba(247,201,72,.1);color:#F7C948;border:1px solid rgba(247,201,72,.18);}
+    .ic-rose{background:rgba(251,113,133,.1);color:#FB7185;border:1px solid rgba(251,113,133,.18);}
+    .ic-cyan{background:rgba(34,211,238,.1);color:#22D3EE;border:1px solid rgba(34,211,238,.18);}
+
+    /* ── Background ── */
+    .bg-grid{background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;}
+    .pricing-card{background:linear-gradient(145deg,rgba(0,229,160,.08) 0%,rgba(8,16,36,.98) 50%);border:1px solid rgba(0,229,160,.25);box-shadow:0 0 100px rgba(0,229,160,.06);}
+    .check-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+
+    /* ── Bento Grid ── */
+    .bento-large{grid-column:span 2;}
+    @media(max-width:768px){.bento-large{grid-column:span 1;}.hero-chart-col{display:none!important;}.bento-grid{grid-template-columns:1fr!important;}}
+    @media(max-width:1024px){.bento-large{grid-column:span 1;}}
+
+    /* ── Scroll reveal ── */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    /* ── FAQ ── */
+    .faq-item{border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden;}
+    .faq-item:last-child{border-bottom:none;}
+
+    /* ── Steps ── */
+    .step-line{position:absolute;top:24px;right:-50%;width:100%;height:1px;background:linear-gradient(90deg,rgba(0,229,160,.3),rgba(0,229,160,.05));z-index:0;}
+
+    /* ── Noise texture ── */
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.4;}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>emailjs.init("ZWYqaiqD2U5oWexSq");</script>
@@ -63,124 +121,184 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect}=React;
+const {useState,useEffect,useRef}=React;
 
+/* ── SUPABASE AUTH ── */
+const SUPA_URL='https://flcakringwxebpeifhke.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsY2FrcmluZ3d4ZWJwZWlmaGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk2NTY5NDIsImV4cCI6MjAyNTIzMjk0Mn0.Yw1234placeholder';
+const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+
+const useAuth=()=>{
+  const [user,setUser]=useState(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    supa.auth.getSession().then(({data:{session}})=>{
+      setUser(session?.user??null);
+      setLoading(false);
+    });
+    const {data:{subscription}}=supa.auth.onAuthStateChange((_,session)=>{
+      setUser(session?.user??null);
+    });
+    return()=>subscription.unsubscribe();
+  },[]);
+  const signOut=async()=>{await supa.auth.signOut();setUser(null);};
+  return{user,loading,signOut};
+};
+
+
+/* ══════════════ ICONS ══════════════ */
 const Ic={
   Lens:({s=32})=>(
     <svg width={s} height={s} viewBox="0 0 32 32" fill="none">
-      <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" strokeWidth="2.2"/>
-      <circle cx="13" cy="13" r="4" stroke="#00E5A0" strokeWidth="1.8"/>
-      <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" strokeWidth="2.8" strokeLinecap="round"/>
-      <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" strokeWidth="2"/>
+      <circle cx="13" cy="13" r="4" stroke="#00E5A0" strokeWidth="1.6"/>
+      <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" strokeWidth="2.6" strokeLinecap="round"/>
+      <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </svg>
   ),
-  Check:()=>(<svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{flexShrink:0}}><circle cx="10" cy="10" r="9.5" stroke="rgba(0,229,160,.35)"/><polyline points="6,10 9,13 14,7" stroke="#00E5A0" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/></svg>),
-  ArrowL:()=>(<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="9" x2="3" y2="9"/><polyline points="8,4 3,9 8,14"/></svg>),
-  Play:()=>(<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="8"/><polygon points="7,6 13.5,9 7,12" fill="currentColor" stroke="none"/></svg>),
-  BarChart:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="12" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="14" rx="1"/><rect x="16" y="2" width="4" height="18" rx="1"/></svg>),
-  Compare:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="9" height="16" rx="2"/><rect x="13" y="2" width="9" height="18" rx="2"/></svg>),
-  Versus:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="3" x2="19" y2="19"/><line x1="19" y1="3" x2="3" y2="19"/></svg>),
-  Brain:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3C5 3 2 6 2 9.5c0 2.5 1.4 4.7 3.5 5.8V18h7v-2.7C14.6 14.2 16 12 16 9.5 16 6 13 3 9 3z"/><line x1="7" y1="18" x2="11" y2="18"/><line x1="9" y1="18" x2="9" y2="20"/></svg>),
-  Star:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 13.9,8.6 21,9.7 16,14.5 17.2,21.5 11,18.1 4.8,21.5 6,14.5 1,9.7 8.1,8.6"/></svg>),
-  Globe:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="10"/><line x1="1" y1="11" x2="21" y2="11"/><path d="M11 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>),
-  Layers:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 21,7 11,12 1,7"/><polyline points="1,12 11,17 21,12"/><polyline points="1,17 11,22 21,17"/></svg>),
-  Grid:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="13" y="2" width="8" height="8" rx="1"/><rect x="2" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>),
-  Crown:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17L5.5 7 11 12 14.5 3 18 12 20.5 7 19 17Z"/><line x1="3" y1="20" x2="19" y2="20"/></svg>),
-  Menu:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg>),
+  Check:({size=18,color='#00E5A0'})=>(
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{flexShrink:0}}>
+      <circle cx="10" cy="10" r="9.5" fill={color+'18'} stroke={color+'40'}/>
+      <polyline points="6,10 9,13 14,7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  ArrowL:()=>(<svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="9" x2="3" y2="9"/><polyline points="8,4 3,9 8,14"/></svg>),
+  ChevronDown:()=>(<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="4,6 8,10 12,6"/></svg>),
+  BarChart:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="12" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="14" rx="1"/><rect x="16" y="2" width="4" height="18" rx="1"/></svg>),
+  Compare:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="9" height="16" rx="2"/><rect x="13" y="2" width="9" height="18" rx="2"/></svg>),
+  Versus:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="3" x2="19" y2="19"/><line x1="19" y1="3" x2="3" y2="19"/></svg>),
+  Brain:()=>(<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A4.5 4.5 0 0 1 14 6.5v1a2.5 2.5 0 0 0 2.5 2.5h.5a3 3 0 0 1 0 6h-.5a2.5 2.5 0 0 0-2.5 2.5V20"/><path d="M9.5 2a4.5 4.5 0 0 0-4.5 4.5v.5a3 3 0 0 1-3 3 3 3 0 0 0 0 6 3 3 0 0 1 3 3V20"/><line x1="10" y1="20" x2="14" y2="20"/></svg>),
+  Star:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 13.9,8.6 21,9.7 16,14.5 17.2,21.5 11,18.1 4.8,21.5 6,14.5 1,9.7 8.1,8.6"/></svg>),
+  Globe:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="10"/><line x1="1" y1="11" x2="21" y2="11"/><path d="M11 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>),
+  Layers:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 21,7 11,12 1,7"/><polyline points="1,12 11,17 21,12"/><polyline points="1,17 11,22 21,17"/></svg>),
+  Grid:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="8" height="8" rx="1.5"/><rect x="13" y="2" width="8" height="8" rx="1.5"/><rect x="2" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>),
+  Crown:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17L5.5 7 11 12 14.5 3 18 12 20.5 7 19 17Z"/><line x1="3" y1="20" x2="19" y2="20"/></svg>),
+  Menu:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="3" y1="5" x2="19" y2="5"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="17" x2="19" y2="17"/></svg>),
   X:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>),
-  StarSm:()=>(<svg width="13" height="13" viewBox="0 0 13 13" fill="#F7C948"><polygon points="6.5,1 8.1,4.8 12.4,5.2 9.3,8.1 10.2,12.4 6.5,10.2 2.8,12.4 3.7,8.1 0.6,5.2 4.9,4.8"/></svg>),
-  Shield:()=>(<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7 3.5-.5 6-3.5 6-7V4L8 1z"/></svg>),
+  StarFill:()=>(<svg width="13" height="13" viewBox="0 0 13 13" fill="#F7C948"><polygon points="6.5,1 8.1,4.8 12.4,5.2 9.3,8.1 10.2,12.4 6.5,10.2 2.8,12.4 3.7,8.1 0.6,5.2 4.9,4.8"/></svg>),
+  Shield:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7 3.5-.5 6-3.5 6-7V4L8 1z"/></svg>),
+  Zap:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13,2 3,14 12,14 9,22 20,10 11,10"/></svg>),
+  BookOpen:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h7a2 2 0 0 1 2 2v14a1 1 0 0 1-1-1H2z"/><path d="M20 3h-7a2 2 0 0 0-2 2v14a1 1 0 0 0 1-1h8z"/></svg>),
+  TrendUp:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17"/><polyline points="16,7 22,7 22,13"/></svg>),
+  Users:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>),
+  Lock:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>),
+  Refresh:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1,4 1,10 7,10"/><path d="M3.5 10A6 6 0 1 0 5 5.5"/></svg>),
 };
 
+/* ══════════════ HERO CHART ══════════════ */
 const HeroChart=()=>{
   const lp="M10,168 C28,158 36,165 55,148 S88,132 108,140 S138,116 162,122 S192,100 215,106 S245,86 268,91 S298,70 318,65 S350,52 370,44 S394,30 418,26";
   const fp="M10,168 C28,158 36,165 55,148 S88,132 108,140 S138,116 162,122 S192,100 215,106 S245,86 268,91 S298,70 318,65 S350,52 370,44 S394,30 418,26 L418,195 L10,195 Z";
   return(
-    <div className="float" style={{width:'100%',maxWidth:'500px',position:'relative'}}>
-      <div className="glass" style={{position:'absolute',top:'-18px',right:'-18px',borderRadius:'14px',padding:'10px 14px',border:'1px solid rgba(90,171,255,.25)',zIndex:2,minWidth:'170px'}}>
+    <div className="float" style={{width:'100%',maxWidth:'520px',position:'relative'}}>
+      {/* Radar badge */}
+      <div className="glass2" style={{position:'absolute',top:'-22px',right:'-22px',borderRadius:'16px',padding:'11px 16px',border:'1px solid rgba(90,171,255,.2)',zIndex:2,minWidth:'180px',boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
         <div style={{display:'flex',alignItems:'center',gap:'7px',marginBottom:'5px'}}>
-          <div style={{width:'7px',height:'7px',borderRadius:'50%',background:'#5AABFF'}} className="glow-pulse"/>
-          <span style={{fontSize:'11px',fontWeight:'700',color:'#5AABFF'}}>Intelligence Radar</span>
+          <div style={{width:'7px',height:'7px',borderRadius:'50%',background:'#5AABFF',boxShadow:'0 0 6px #5AABFF'}} className="glow-pulse"/>
+          <span style={{fontSize:'11px',fontWeight:'700',color:'#5AABFF',letterSpacing:'.08em'}}>Intelligence Radar</span>
         </div>
         <div style={{fontSize:'13px',fontWeight:'700',color:'#EDF2FF'}}>6 מימדי בריאות פיננסית</div>
-        <div style={{fontSize:'11px',color:'#475569',marginTop:'2px'}}>Growth · Value · Safety · Momentum</div>
+        <div style={{display:'flex',gap:'4px',marginTop:'6px'}}>
+          {['Growth','Value','Safety'].map(l=>(
+            <span key={l} style={{fontSize:'10px',color:'#475569',background:'rgba(255,255,255,.05)',borderRadius:'4px',padding:'2px 6px'}}>{l}</span>
+          ))}
+        </div>
       </div>
-      <div className="glass card-hover" style={{borderRadius:'20px',padding:'20px',border:'1px solid rgba(255,255,255,.08)'}}>
+
+      {/* Main chart card */}
+      <div className="glass card-glow" style={{borderRadius:'24px',padding:'22px',border:'1px solid rgba(255,255,255,.08)',boxShadow:'0 24px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04)'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'16px'}}>
           <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-            <div style={{background:'rgba(0,229,160,.12)',border:'1px solid rgba(0,229,160,.22)',borderRadius:'8px',padding:'4px 10px',fontSize:'12px',fontWeight:'800',color:'#00E5A0'}}>AAPL</div>
-            <span style={{fontSize:'12px',color:'#475569'}}>NASDAQ</span>
+            <div style={{background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.22)',borderRadius:'8px',padding:'4px 10px',fontSize:'12px',fontWeight:'800',color:'#00E5A0'}}>AAPL</div>
+            <span style={{fontSize:'11px',color:'#475569',fontWeight:'500'}}>NASDAQ</span>
           </div>
           <div style={{textAlign:'right'}}>
-            <div style={{fontSize:'22px',fontWeight:'900',color:'#EDF2FF',lineHeight:'1.1',fontVariantNumeric:'tabular-nums'}}>$192.40</div>
-            <div style={{fontSize:'13px',fontWeight:'700',color:'#00E5A0'}}>+2.8%  +$5.20</div>
+            <div style={{fontSize:'24px',fontWeight:'900',color:'#EDF2FF',lineHeight:'1',fontVariantNumeric:'tabular-nums'}}>$192.40</div>
+            <div style={{fontSize:'13px',fontWeight:'700',color:'#00E5A0',marginTop:'2px'}}>+2.8%  +$5.20</div>
           </div>
         </div>
         <div style={{position:'relative',height:'120px',marginBottom:'14px'}}>
           <svg viewBox="0 0 430 200" preserveAspectRatio="xMidYMid meet" style={{width:'100%',height:'100%',overflow:'visible'}}>
             <defs>
-              <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#00E5A0" stopOpacity=".6"/><stop offset="100%" stopColor="#5AABFF" stopOpacity=".95"/></linearGradient>
-              <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#00E5A0" stopOpacity=".2"/><stop offset="100%" stopColor="#00E5A0" stopOpacity="0"/></linearGradient>
+              <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#00E5A0" stopOpacity=".7"/>
+                <stop offset="100%" stopColor="#5AABFF" stopOpacity="1"/>
+              </linearGradient>
+              <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#00E5A0" stopOpacity=".15"/>
+                <stop offset="100%" stopColor="#00E5A0" stopOpacity="0"/>
+              </linearGradient>
             </defs>
-            {[50,100,150].map(y=><line key={y} x1="0" y1={y} x2="430" y2={y} stroke="rgba(255,255,255,.04)" strokeWidth="1"/>)}
+            {[50,100,150].map(y=><line key={y} x1="0" y1={y} x2="430" y2={y} stroke="rgba(255,255,255,.03)" strokeWidth="1"/>)}
             <path d={fp} fill="url(#lg2)"/>
-            <path d={lp} stroke="url(#lg1)" strokeWidth="2.8" fill="none" strokeLinecap="round" strokeLinejoin="round" className="draw-anim"/>
-            <circle cx="418" cy="26" r="5" fill="#5AABFF"/>
-            <circle cx="418" cy="26" r="10" fill="#5AABFF" opacity=".18" className="glow-pulse"/>
+            <path d={lp} stroke="url(#lg1)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="draw-anim"/>
+            <circle cx="418" cy="26" r="4.5" fill="#5AABFF"/>
+            <circle cx="418" cy="26" r="11" fill="#5AABFF" opacity=".15" className="glow-pulse"/>
           </svg>
         </div>
-        <div style={{display:'flex',justifyContent:'space-between',borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:'12px'}}>
-          {[['P/E','29.4'],['EPS','$6.56'],['Mkt Cap','$2.9T']].map(([l,v])=>(
+        <div style={{display:'flex',justifyContent:'space-between',borderTop:'1px solid rgba(255,255,255,.05)',paddingTop:'12px'}}>
+          {[['P/E','29.4'],['EPS','$6.56'],['Mkt Cap','$2.9T'],['ROE','26%']].map(([l,v])=>(
             <div key={l} style={{textAlign:'center'}}>
-              <div style={{fontSize:'11px',color:'#475569',marginBottom:'3px'}}>{l}</div>
-              <div style={{fontSize:'13px',fontWeight:'600',color:'#94A3B8',fontVariantNumeric:'tabular-nums'}}>{v}</div>
+              <div style={{fontSize:'10px',color:'#475569',marginBottom:'3px',fontWeight:'500'}}>{l}</div>
+              <div style={{fontSize:'13px',fontWeight:'700',color:'#94A3B8',fontVariantNumeric:'tabular-nums'}}>{v}</div>
             </div>
           ))}
         </div>
       </div>
-      <div className="glass" style={{position:'absolute',bottom:'-20px',left:'-20px',borderRadius:'14px',padding:'10px 14px',border:'1px solid rgba(201,169,106,.25)',zIndex:2}}>
-        <div style={{fontSize:'11px',color:'#475569',marginBottom:'3px'}}>Investment Board</div>
+
+      {/* Investment Board badge */}
+      <div className="glass2" style={{position:'absolute',bottom:'-22px',left:'-22px',borderRadius:'16px',padding:'11px 16px',border:'1px solid rgba(247,201,72,.18)',zIndex:2,boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
+        <div style={{fontSize:'10px',color:'#475569',marginBottom:'3px',fontWeight:'500'}}>Investment Board · AI</div>
         <div style={{fontSize:'13px',fontWeight:'700',color:'#EDF2FF'}}>וורן באפט: <span style={{color:'#00E5A0'}}>קנייה</span></div>
-        <div style={{fontSize:'11px',color:'#F7C948',marginTop:'2px'}}>ציון: 8.4 / 10</div>
+        <div style={{display:'flex',alignItems:'center',gap:'4px',marginTop:'4px'}}>
+          {[1,2,3,4].map(i=><Ic.StarFill key={i}/>)}
+          <span style={{fontSize:'11px',color:'#F7C948',fontWeight:'700',marginRight:'2px'}}>8.4</span>
+        </div>
       </div>
     </div>
   );
 };
 
-const Navbar=({scrolled,onBuy})=>{
+/* ══════════════ NAVBAR ══════════════ */
+const Navbar=({scrolled,onBuy,user,signOut})=>{
   const [open,setOpen]=useState(false);
-  const links=[{l:'כלים',h:'#tools'},{l:'מועצת המשקיעים',h:'#board'},{l:'תמחיר',h:'#pricing'}];
+  const links=[{l:'כלים',h:'#tools'},{l:'כיצד זה עובד',h:'#how'},{l:'מחירים',h:'#pricing'},{l:'שאלות נפוצות',h:'#faq'}];
   return(
-    <header className={scrolled?'nav-scrolled':''} style={{position:'fixed',top:0,insetInline:0,zIndex:50,transition:'background .3s,border-color .3s',borderBottom:'1px solid transparent'}}>
-      <div style={{maxWidth:'1240px',margin:'0 auto',padding:'0 24px'}}>
-        <div style={{display:'flex',alignItems:'center',height:'68px',gap:'8px'}}>
+    <header className={scrolled?'nav-scrolled':''} style={{position:'fixed',top:0,insetInline:0,zIndex:50,transition:'all .3s',borderBottom:'1px solid transparent'}}>
+      <div style={{maxWidth:'1280px',margin:'0 auto',padding:'0 24px'}}>
+        <div style={{display:'flex',alignItems:'center',height:'66px',gap:'8px'}}>
           <a href="#" style={{display:'flex',alignItems:'center',gap:'10px',textDecoration:'none',flexShrink:0}}>
-            <Ic.Lens s={30}/>
+            <Ic.Lens s={28}/>
             <div>
-              <div style={{fontSize:'21px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
-              <div style={{fontSize:'9px',letterSpacing:'2.5px',color:'#475569',textTransform:'uppercase'}}>Academy</div>
+              <div style={{fontSize:'20px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
+              <div style={{fontSize:'8px',letterSpacing:'3px',color:'#334155',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
             </div>
           </a>
-          <nav className="hidden md:flex" style={{flex:1,justifyContent:'center',display:'flex',gap:'2px'}}>
+          <nav style={{flex:1,justifyContent:'center',display:'flex',gap:'2px'}} className="hidden md:flex">
             {links.map(({l,h})=><a key={h} href={h} className="nav-link">{l}</a>)}
           </nav>
           <div style={{flex:1}} className="md:hidden"/>
-          <div className="hidden md:flex" style={{display:'flex',alignItems:'center',gap:'10px'}}>
-            <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener"><button className="btn-ghost" style={{padding:'8px 18px',borderRadius:'10px',fontSize:'14px'}}>📊 StockLens</button></a>
-            <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener"><button className="btn-ghost" style={{padding:'8px 18px',borderRadius:'10px',fontSize:'14px'}}>📚 Academy</button></a>
-            <button className="btn-green" onClick={onBuy} style={{padding:'9px 20px',borderRadius:'10px',fontSize:'14px'}}>רכוש — ₪980</button>
+          <div className="hidden md:flex" style={{display:'flex',alignItems:'center',gap:'8px'}}>
+            <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+              <button className="btn-ghost" style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px'}}>StockLens</button>
+            </a>
+            <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+              <button className="btn-ghost" style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px'}}>Academy</button>
+            </a>
+            <button className="btn-green" onClick={onBuy} style={{padding:'9px 22px',borderRadius:'11px',fontSize:'14px'}}>רכוש — ₪980</button>
           </div>
           <button className="md:hidden" onClick={()=>setOpen(!open)} style={{background:'transparent',border:'none',cursor:'pointer',color:'#94A3B8',padding:'6px',flexShrink:0}}>
             {open?<Ic.X/>:<Ic.Menu/>}
           </button>
         </div>
         {open&&(
-          <div className="glass md:hidden" style={{borderRadius:'16px',padding:'12px',marginBottom:'12px',border:'1px solid rgba(255,255,255,.08)'}}>
-            {links.map(({l,h})=><a key={h} href={h} className="nav-link" style={{display:'block',marginBottom:'4px'}} onClick={()=>setOpen(false)}>{l}</a>)}
-            <div style={{display:'flex',gap:'8px',marginTop:'12px',paddingTop:'12px',borderTop:'1px solid rgba(255,255,255,.07)'}}>
-              <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{flex:1,textDecoration:'none'}}><button className="btn-ghost" style={{width:'100%',padding:'10px',borderRadius:'10px',fontSize:'14px'}}>📊 StockLens</button></a>
-              <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{flex:1,textDecoration:'none'}}><button className="btn-ghost" style={{width:'100%',padding:'10px',borderRadius:'10px',fontSize:'14px'}}>📚 Academy</button></a>
-              <button className="btn-green" onClick={onBuy} style={{flex:1,padding:'10px',borderRadius:'10px',fontSize:'14px'}}>רכוש — ₪980</button>
+          <div className="glass2" style={{borderRadius:'18px',padding:'14px',marginBottom:'12px',border:'1px solid rgba(0,229,160,.1)'}}>
+            {links.map(({l,h})=><a key={h} href={h} className="nav-link" style={{display:'block',marginBottom:'2px'}} onClick={()=>setOpen(false)}>{l}</a>)}
+            <div style={{display:'flex',gap:'8px',marginTop:'14px',paddingTop:'14px',borderTop:'1px solid rgba(255,255,255,.06)'}}>
+              <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{flex:1,textDecoration:'none'}}>
+                <button className="btn-ghost" style={{width:'100%',padding:'10px',borderRadius:'10px',fontSize:'13px'}}>StockLens</button>
+              </a>
+              <button className="btn-green" onClick={onBuy} style={{flex:1,padding:'10px',borderRadius:'10px',fontSize:'13px'}}>רכוש — ₪980</button>
             </div>
           </div>
         )}
@@ -189,51 +307,79 @@ const Navbar=({scrolled,onBuy})=>{
   );
 };
 
-const Hero=({onBuy})=>(
-  <section className="bg-grid" style={{minHeight:'100vh',paddingTop:'110px',paddingBottom:'80px',background:'#04080F',position:'relative',overflow:'hidden'}}>
-    <div style={{position:'absolute',top:'-180px',right:'-120px',width:'700px',height:'700px',borderRadius:'50%',pointerEvents:'none',background:'radial-gradient(circle,rgba(0,229,160,.08) 0%,transparent 68%)',filter:'blur(1px)'}}/>
-    <div style={{position:'absolute',bottom:'-100px',left:'-150px',width:'600px',height:'600px',borderRadius:'50%',pointerEvents:'none',background:'radial-gradient(circle,rgba(90,171,255,.05) 0%,transparent 68%)'}}/>
-    <div style={{maxWidth:'1240px',margin:'0 auto',padding:'0 24px'}}>
-      <div style={{display:'flex',flexWrap:'wrap',gap:'48px',alignItems:'center'}}>
-        <div style={{flex:'1',minWidth:'280px',flexBasis:'460px'}}>
-          <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(0,229,160,.08)',border:'1px solid rgba(0,229,160,.2)',borderRadius:'20px',padding:'6px 14px',marginBottom:'22px'}}>
-            <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#00E5A0'}} className="glow-pulse"/>
-            <span style={{fontSize:'12px',fontWeight:'700',color:'#00E5A0',letterSpacing:'.04em'}}>פלטפורמת ניתוח מניות וחינוך פיננסי · עברית 100%</span>
-          </div>
-          <h1 style={{fontSize:'clamp(36px,5vw,66px)',fontWeight:'900',lineHeight:'1.08',letterSpacing:'-.025em',marginBottom:'20px'}}>
+/* ══════════════ HERO ══════════════ */
+const Hero=({onBuy,user})=>(
+  <section className="bg-grid" style={{minHeight:'100vh',paddingTop:'120px',paddingBottom:'100px',background:'#020814',position:'relative',overflow:'hidden'}}>
+    {/* Aurora blobs */}
+    <div className="aurora1" style={{position:'absolute',top:'-200px',right:'-100px',width:'800px',height:'800px',borderRadius:'50%',pointerEvents:'none',background:'radial-gradient(circle,rgba(0,229,160,.07) 0%,transparent 65%)',filter:'blur(2px)'}}/>
+    <div className="aurora2" style={{position:'absolute',bottom:'-150px',left:'-200px',width:'700px',height:'700px',borderRadius:'50%',pointerEvents:'none',background:'radial-gradient(circle,rgba(90,171,255,.05) 0%,transparent 65%)',filter:'blur(2px)'}}/>
+    <div style={{position:'absolute',top:'40%',left:'40%',width:'400px',height:'400px',borderRadius:'50%',pointerEvents:'none',background:'radial-gradient(circle,rgba(167,139,250,.04) 0%,transparent 65%)'}}/>
+
+    <div style={{maxWidth:'1280px',margin:'0 auto',padding:'0 24px',position:'relative',zIndex:2}}>
+      {/* Trust bar */}
+      <div style={{display:'flex',justifyContent:'center',marginBottom:'32px'}} className="fade-up">
+        <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(0,229,160,.06)',border:'1px solid rgba(0,229,160,.18)',borderRadius:'24px',padding:'7px 18px'}}>
+          <div style={{display:'flex',gap:'2px'}}>{[1,2,3,4,5].map(i=><Ic.StarFill key={i}/>)}</div>
+          <div style={{width:'1px',height:'14px',background:'rgba(255,255,255,.1)'}}/>
+          <span style={{fontSize:'12px',fontWeight:'700',color:'#94A3B8'}}>+500 תלמידים · עברית 100% · תשלום חד פעמי</span>
+          <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#00E5A0',boxShadow:'0 0 8px #00E5A0'}} className="glow-pulse"/>
+        </div>
+      </div>
+
+      <div style={{display:'flex',flexWrap:'wrap',gap:'56px',alignItems:'center'}}>
+        {/* Text column */}
+        <div style={{flex:'1',minWidth:'300px',flexBasis:'480px'}}>
+          <h1 className="fade-up-d1" style={{fontSize:'clamp(38px,5.5vw,72px)',fontWeight:'900',lineHeight:'1.05',letterSpacing:'-.03em',marginBottom:'22px'}}>
             שוק ההון{' '}<span className="tg-gold">מ-0</span><br/><span className="tg">עד 100</span>
           </h1>
-          <p style={{fontSize:'17px',lineHeight:'1.75',color:'#94A3B8',marginBottom:'36px',maxWidth:'500px'}}>
+          <p className="fade-up-d2" style={{fontSize:'17px',lineHeight:'1.8',color:'#94A3B8',marginBottom:'38px',maxWidth:'520px'}}>
             12 פרקים · +60 נושאים · 9 כלי ניתוח חיים. Intelligence Radar, מועצת 6 משקיעים אגדיים עם Gemini AI,
             Quarter Compare, Spread Simulator — הכל בעברית, גישה ללא הגבלה, תשלום חד פעמי.
           </p>
-          <div style={{display:'flex',gap:'12px',flexWrap:'wrap',marginBottom:'44px'}}>
-            <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}><button className="btn-ghost" style={{padding:'14px 28px',borderRadius:'12px',fontSize:'16px'}}>📚 Academy</button></a>
-            <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}><button className="btn-ghost" style={{padding:'14px 28px',borderRadius:'12px',fontSize:'16px'}}>📊 StockLens</button></a>
-          </div>
-          <div style={{display:'flex',alignItems:'center',flexWrap:'wrap',gap:'20px'}}>
-            <div style={{display:'flex',alignItems:'center',gap:'4px'}}>
-              <div style={{display:'flex'}}>
-                {[1,2,3,4,5].map(i=>(<div key={i} style={{width:'30px',height:'30px',borderRadius:'50%',background:`hsl(${210+i*22},55%,${28+i*6}%)`,border:'2px solid #04080F',marginRight:i>1?'-9px':'0',zIndex:6-i,position:'relative'}}/>))}
+
+          {/* CTA row */}
+          <div className="fade-up-d3" style={{display:'flex',gap:'12px',flexWrap:'wrap',marginBottom:'48px'}}>
+            {user ? (
+              <div style={{display:'flex',gap:'12px',flexWrap:'wrap'}}>
+                <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+                  <button className="btn-green" style={{padding:'14px 28px',borderRadius:'13px',fontSize:'16px'}}>📚 כניסה ל-Academy ←</button>
+                </a>
+                <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+                  <button className="btn-ghost" style={{padding:'14px 24px',borderRadius:'13px',fontSize:'16px'}}>📊 כניסה ל-StockLens</button>
+                </a>
               </div>
-              <span style={{fontSize:'13px',color:'#475569',marginRight:'10px'}}>+1,200 תלמידים</span>
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:'3px'}}>
-              {[1,2,3,4,5].map(i=><Ic.StarSm key={i}/>)}
-              <span style={{fontSize:'13px',color:'#475569',marginRight:'6px'}}>5 / 5 דירוג</span>
-            </div>
+            ) : (
+              <button className="btn-green" onClick={onBuy} style={{padding:'14px 28px',borderRadius:'13px',fontSize:'16px'}}>
+                רכוש גישה — ₪980
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+              </button>
+            )}
+
+          </div>
+
+          {/* Trust badges */}
+          <div className="fade-up-d4" style={{display:'flex',gap:'20px',flexWrap:'wrap'}}>
+            {[{ic:<Ic.Shield/>,t:'אתר מאובטח SSL'},{ic:<Ic.Lock/>,t:'גישה מיידית'},{ic:<Ic.Refresh/>,t:'עדכונים לנצח'}].map(({ic,t})=>(
+              <div key={t} style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                {ic}<span style={{fontSize:'12px',color:'#475569',fontWeight:'500'}}>{t}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="hero-chart-col" style={{flex:'1',minWidth:'320px',flexBasis:'440px',display:'flex',justifyContent:'center',paddingBlock:'30px'}}>
+
+        {/* Chart column */}
+        <div className="hero-chart-col" style={{flex:'1',minWidth:'340px',flexBasis:'460px',display:'flex',justifyContent:'center',paddingBlock:'40px'}}>
           <HeroChart/>
         </div>
       </div>
-      <div className="glass" style={{borderRadius:'20px',padding:'28px 32px',marginTop:'60px',border:'1px solid rgba(255,255,255,.07)'}}>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'24px'}}>
-          {[{n:'12',l:'פרקי לימוד',c:'#00E5A0'},{n:'+60',l:'נושאים ותכנים',c:'#5AABFF'},{n:'9',l:'כלי ניתוח חיים',c:'#A78BFA'},{n:'₪980',l:'תשלום חד פעמי',c:'#F7C948'}].map(({n,l,c})=>(
+
+      {/* Stats strip */}
+      <div className="glass card-glow" style={{borderRadius:'22px',padding:'28px 36px',marginTop:'70px',border:'1px solid rgba(255,255,255,.06)',boxShadow:'0 0 80px rgba(0,229,160,.04)'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:'28px'}}>
+          {[{n:'12',l:'פרקי לימוד',c:'#00E5A0'},{n:'+60',l:'נושאים ותכנים',c:'#5AABFF'},{n:'9',l:'כלי ניתוח חיים',c:'#A78BFA'},{n:'₪980',l:'תשלום חד פעמי',c:'#F7C948'},{n:'+500',l:'תלמידים פעילים',c:'#22D3EE'}].map(({n,l,c})=>(
             <div key={n} style={{textAlign:'center'}}>
-              <div style={{fontSize:'clamp(24px,3vw,34px)',fontWeight:'900',color:c,lineHeight:'1',marginBottom:'7px',fontVariantNumeric:'tabular-nums'}}>{n}</div>
-              <div style={{fontSize:'13px',color:'#475569'}}>{l}</div>
+              <div style={{fontSize:'clamp(26px,3vw,36px)',fontWeight:'900',color:c,lineHeight:'1',marginBottom:'7px',fontVariantNumeric:'tabular-nums'}}>{n}</div>
+              <div style={{fontSize:'12px',color:'#475569',fontWeight:'500'}}>{l}</div>
             </div>
           ))}
         </div>
@@ -242,35 +388,36 @@ const Hero=({onBuy})=>(
   </section>
 );
 
-const TOOLS=[
-  {I:Ic.BarChart,c:'ic-green', n:'Overview',         s:'סקירה פונדמנטלית',        d:'ניתוח מעמיק: P/E, EPS, שווי שוק, מרווח רווח, ROE, תזרים מזומנים, ועוד 20+ מדדים בזמן אמת.'},
-  {I:Ic.Compare, c:'ic-blue',  n:'Quarter Compare',  s:'השוואת רבעונים',          d:'עקוב אחרי ביצועי חברה לאורך זמן — הכנסות, רווחים, EBITDA — כל רבעון בצורה ויזואלית.'},
-  {I:Ic.Versus,  c:'ic-violet',n:'Stock vs Stock',   s:'השוואה בין מניות',        d:'הכנס שני טיקרים וקבל טבלת 15+ מדדים, ציון כולל, וניצחון מוכרז — מי מנצח?'},
-  {I:Ic.Brain,   c:'ic-cyan',  n:'Intelligence',     s:'ראדר · יעדים · קונצנזוס', d:'Intelligence Radar: 6 ציוני בריאות. מחירי יעד אנליסטים, קונצנזוס Wall St., Buy/Hold/Sell.'},
-  {I:Ic.Star,    c:'ic-gold',  n:'Watchlist',        s:'רשימת מעקב חיה',          d:'שמור מניות למעקב — מחירים מסונכרנים בזמן אמת. קפוץ לניתוח מלא בקליק.'},
-  {I:Ic.Globe,   c:'ic-rose',  n:'Market Pulse',     s:'דופק השוק',               d:"S&P500, NASDAQ, ראסל, VIX, סקטורים, ETFs — תמונת שוק מלאה לפני כל החלטת מסחר."},
-  {I:Ic.Layers,  c:'ic-blue',  n:'Options P/C',      s:'ניתוח Put/Call',           d:'יחס Put/Call לפי תאריכי פקיעה, נפח אופציות — כלי קריטי לקריאת כיוון השוק.'},
-  {I:Ic.Grid,    c:'ic-violet',n:'Spread Simulator', s:'סימולטור ספרדים',          d:'חשב P&L ל-4 סוגי ספרדים: Bull Call, Bear Put, Bull Put, Bear Call. מעקב פוזיציות.'},
-  {I:Ic.Crown,   c:'ic-gold',  n:'Investment Board', s:'מועצת 6 משקיעים · AI',   d:'באפט, קאת׳י ווד, ברי, לינץ׳, דליו, גראהם — כל אחד מנתח בקולו. מופעל על Gemini AI.'},
+/* ══════════════ HOW IT WORKS ══════════════ */
+const STEPS=[
+  {n:'01',ic:<Ic.BookOpen/>,c:'ic-green',t:'למד את הבסיס',d:'12 פרקים מקיפים בעברית — מהמושגים הבסיסיים ועד אסטרטגיות מתקדמות.'},
+  {n:'02',ic:<Ic.Brain/>,c:'ic-blue',t:'הבן חברות',d:'Intelligence Radar ו-Investment Board עם AI מנתחים כל מניה מ-6 זוויות שונות.'},
+  {n:'03',ic:<Ic.TrendUp/>,c:'ic-violet',t:'נתח בזמן אמת',d:'9 כלי ניתוח חיים — השוואת רבעונים, מניה מול מניה, Market Pulse ועוד.'},
+  {n:'04',ic:<Ic.Crown/>,c:'ic-gold',t:'קבל החלטות מושכלות',d:'בנה אסטרטגיית השקעה מבוססת נתונים. השתמש בסימולטור הספרדים ובמעקב הפוזיציות.'},
 ];
 
-const Tools=()=>(
-  <section id="tools" style={{background:'linear-gradient(180deg,#04080F 0%,#070E1A 100%)',padding:'100px 24px'}}>
-    <div style={{maxWidth:'1240px',margin:'0 auto'}}>
-      <div style={{textAlign:'center',marginBottom:'60px'}}>
-        <div className="slabel" style={{marginBottom:'14px'}}>כלי הפלטפורמה</div>
-        <h2 style={{fontSize:'clamp(28px,4vw,48px)',fontWeight:'900',color:'#EDF2FF',lineHeight:'1.15',marginBottom:'16px'}}>9 כלים מקצועיים, <span className="tg">מקום אחד</span></h2>
-        <p style={{fontSize:'17px',color:'#94A3B8',maxWidth:'560px',margin:'0 auto',lineHeight:'1.75'}}>כל כלי מחובר לנתונים בזמן אמת. מניתוח פונדמנטלי ועד סימולטור ספרדים — הכל בעברית מלאה.</p>
+const HowItWorks=()=>(
+  <section id="how" style={{background:'linear-gradient(180deg,#020814 0%,#060E1C 100%)',padding:'100px 24px',position:'relative',overflow:'hidden'}}>
+    <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse 60% 40% at 50% 100%,rgba(90,171,255,.04) 0%,transparent 60%)',pointerEvents:'none'}}/>
+    <div style={{maxWidth:'1280px',margin:'0 auto',position:'relative'}}>
+      <div style={{textAlign:'center',marginBottom:'64px'}}>
+        <div className="slabel" style={{marginBottom:'14px'}}>כיצד זה עובד</div>
+        <h2 style={{fontSize:'clamp(28px,4vw,50px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'16px'}}>
+          מהבסיס ועד <span className="tg">מסחר מקצועי</span>
+        </h2>
+        <p style={{fontSize:'16px',color:'#94A3B8',maxWidth:'500px',margin:'0 auto',lineHeight:'1.8'}}>
+          תהליך למידה מדורג שמוביל אותך צעד אחר צעד לביטחון פיננסי אמיתי.
+        </p>
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:'18px'}}>
-        {TOOLS.map(({I,c,n,s,d},i)=>(
-          <div key={i} className="card-hover" style={{background:'rgba(11,21,40,.55)',border:'1px solid rgba(255,255,255,.07)',borderRadius:'18px',padding:'24px'}}>
-            <div className={c} style={{width:'46px',height:'46px',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'16px'}}><I/></div>
-            <div style={{marginBottom:'10px'}}>
-              <div style={{fontSize:'15px',fontWeight:'800',color:'#EDF2FF',lineHeight:'1.2'}}>{n}</div>
-              <div style={{fontSize:'12px',color:'#5AABFF',fontWeight:'600',marginTop:'2px'}}>{s}</div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'24px'}}>
+        {STEPS.map(({n,ic,c,t,d},i)=>(
+          <div key={i} className="card-hover reveal" style={{background:'rgba(8,16,36,.6)',border:'1px solid rgba(255,255,255,.07)',borderRadius:'20px',padding:'28px',position:'relative'}}>
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:'20px'}}>
+              <div className={c} style={{width:'48px',height:'48px',borderRadius:'14px',display:'flex',alignItems:'center',justifyContent:'center'}}>{ic}</div>
+              <span style={{fontSize:'32px',fontWeight:'900',color:'rgba(255,255,255,.05)',lineHeight:'1',fontVariantNumeric:'tabular-nums'}}>{n}</span>
             </div>
-            <p style={{fontSize:'13.5px',color:'#94A3B8',lineHeight:'1.7'}}>{d}</p>
+            <div style={{fontSize:'16px',fontWeight:'800',color:'#EDF2FF',marginBottom:'10px'}}>{t}</div>
+            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75'}}>{d}</p>
           </div>
         ))}
       </div>
@@ -278,70 +425,164 @@ const Tools=()=>(
   </section>
 );
 
-const INVESTORS=[
-  {m:'WB',n:'וורן באפט',     t:'האורקל מאומהה',   p:'חברות איכותיות במחיר הוגן, החזקה לנצח',      c:'#C9A96A'},
-  {m:'CW',n:"קאת'י ווד",    t:'מלכת החדשנות',    p:'חדשנות מהפכנית וצמיחה אקספוננציאלית',       c:'#6BA4D4'},
-  {m:'MB',n:'מייקל ברי',     t:'המהמר הגדול',     p:'ניתוח קונטרייני, זיהוי בועות וסיכונים',     c:'#B85A7A'},
-  {m:'PL',n:"פיטר לינץ'",   t:"אגדת קרן מגלן",  p:'השקע במה שאתה מכיר, צמיחה במחיר סביר',      c:'#D89868'},
-  {m:'RD',n:'ריי דליו',      t:'המקרו-אסטרטג',   p:'ניתוח מאקרו ועקרונות תיק מאוזן',            c:'#5E9090'},
-  {m:'BG',n:"בנג'מין גראהם", t:'אבי השקעות הערך', p:'מרווח ביטחון וניתוח כמותי קפדני',           c:'#8B9578'},
+/* ══════════════ TOOLS (BENTO GRID) ══════════════ */
+const TOOLS=[
+  {I:Ic.BarChart,c:'ic-green', n:'Overview',          s:'ניתוח פונדמנטלי',          d:'P/E, EPS, שווי שוק, מרווח רווח, ROE, תזרים מזומנים ו-20+ מדדים נוספים בזמן אמת.',large:false},
+  {I:Ic.Crown,   c:'ic-gold',  n:'Investment Board',  s:'מועצת 6 משקיעים · AI',    d:'באפט, קאת׳י ווד, מייקל ברי, לינץ׳, דליו, גראהם — כל אחד מנתח בקולו. מופעל על Gemini AI.',large:true},
+  {I:Ic.Brain,   c:'ic-cyan',  n:'Intelligence',      s:'ראדר · יעדים · קונצנזוס', d:'Intelligence Radar: 6 ציוני בריאות, מחירי יעד אנליסטים, קונצנזוס Wall St.',large:false},
+  {I:Ic.Compare, c:'ic-blue',  n:'Quarter Compare',   s:'השוואת רבעונים',           d:'עקוב אחרי ביצועי חברה לאורך זמן — הכנסות, רווחים, EBITDA ויזואלית.',large:false},
+  {I:Ic.Versus,  c:'ic-violet',n:'Stock vs Stock',    s:'השוואה בין מניות',         d:'15+ מדדים, ציון כולל וניצחון מוכרז — מי מנצח?',large:false},
+  {I:Ic.Grid,    c:'ic-violet',n:'Spread Simulator',  s:'סימולטור ספרדים',          d:'Bull Call, Bear Put, Bull Put, Bear Call — P&L ומעקב פוזיציות.',large:false},
+  {I:Ic.Globe,   c:'ic-rose',  n:'Market Pulse',      s:'דופק השוק',                d:"S&P500, NASDAQ, VIX, סקטורים, ETFs — תמונה מלאה לפני כל החלטה.",large:false},
+  {I:Ic.Layers,  c:'ic-blue',  n:'Options P/C',       s:'Put/Call Ratio',            d:'ניתוח יחס Put/Call לפי תאריכי פקיעה ונפח אופציות.',large:false},
+  {I:Ic.Star,    c:'ic-green', n:'Watchlist',         s:'רשימת מעקב חיה',           d:'מחירים מסונכרנים בזמן אמת. קפוץ לניתוח מלא בקליק.',large:false},
 ];
 
-const Board=()=>(
-  <section id="board" style={{background:'#070E1A',padding:'100px 24px',position:'relative',overflow:'hidden'}}>
-    <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,229,160,.04) 0%,transparent 65%)',pointerEvents:'none'}}/>
-    <div style={{maxWidth:'1240px',margin:'0 auto',position:'relative'}}>
+const Tools=()=>(
+  <section id="tools" style={{background:'#060E1C',padding:'100px 24px'}}>
+    <div style={{maxWidth:'1280px',margin:'0 auto'}}>
       <div style={{textAlign:'center',marginBottom:'64px'}}>
-        <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',textTransform:'uppercase',color:'#00E5A0',marginBottom:'14px'}}>הפלטפורמה שלנו</div>
-        <h2 style={{fontSize:'clamp(28px,4vw,52px)',fontWeight:'900',color:'#EDF2FF',lineHeight:'1.1',marginBottom:'16px'}}>שני כלים. <span className="tg">עולם אחד.</span></h2>
-        <p style={{fontSize:'17px',color:'#94A3B8',maxWidth:'520px',margin:'0 auto',lineHeight:'1.75'}}>
-          למד את שוק ההון לעומק עם האקדמיה, ונתח מניות בזמן אמת עם StockLens.
+        <div className="slabel" style={{marginBottom:'14px'}}>כלי הפלטפורמה</div>
+        <h2 style={{fontSize:'clamp(28px,4vw,50px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'16px'}}>
+          9 כלים מקצועיים, <span className="tg">מקום אחד</span>
+        </h2>
+        <p style={{fontSize:'16px',color:'#94A3B8',maxWidth:'520px',margin:'0 auto',lineHeight:'1.8'}}>
+          כל כלי מחובר לנתונים בזמן אמת. מניתוח פונדמנטלי ועד סימולטור ספרדים — הכל בעברית מלאה.
         </p>
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'24px'}}>
-
-        {/* Academy Card */}
-        <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-          <div style={{background:'linear-gradient(145deg,rgba(0,229,160,.07) 0%,rgba(6,8,16,.95) 60%)',border:'1px solid rgba(0,229,160,.22)',borderRadius:'28px',padding:'40px 36px',height:'100%',transition:'all .3s',cursor:'pointer'}}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 24px 80px rgba(0,229,160,.12),0 0 0 1px rgba(0,229,160,.3)';}}
-            onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
-            <div style={{width:'60px',height:'60px',borderRadius:'18px',background:'rgba(0,229,160,.12)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'30px',marginBottom:'24px'}}>📚</div>
-            <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',textTransform:'uppercase',color:'#00E5A0',marginBottom:'10px'}}>קורס · ₪980 · תשלום חד פעמי</div>
-            <h3 style={{fontSize:'28px',fontWeight:'900',color:'#EDF2FF',marginBottom:'14px',lineHeight:'1.15'}}>StockLens<br/><span className="tg">Academy</span></h3>
-            <p style={{fontSize:'15px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'28px'}}>12 פרקים · +60 נושאים · עברית 100%. שוק ההון מהבסיס ועד אסטרטגיות מתקדמות. גישה לנצח, עדכונים כלולים.</p>
-            <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'32px'}}>
-              {['📖 12 פרקי לימוד מעמיקים','📊 9 כלי ניתוח חיים בזמן אמת','🧠 מועצת 6 משקיעים אגדיים עם AI','🎯 סימולטור אסטרטגיות ומעקב מניות'].map(f=>(
-                <div key={f} style={{fontSize:'13px',color:'#64748B',display:'flex',alignItems:'center',gap:'8px'}}>{f}</div>
-              ))}
+      <div className="bento-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'16px'}}>
+        {TOOLS.map(({I,c,n,s,d,large},i)=>(
+          <div key={i} className={`card-hover card-glow reveal${large?' bento-large':''}`}
+            style={{background:'rgba(8,16,36,.65)',border:'1px solid rgba(255,255,255,.07)',borderRadius:'20px',padding:'26px',position:'relative',zIndex:0}}>
+            <div className={c} style={{width:'46px',height:'46px',borderRadius:'13px',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'16px',flexShrink:0}}>
+              <I/>
             </div>
-            <div style={{display:'inline-flex',alignItems:'center',gap:'8px',color:'#00E5A0',fontSize:'14px',fontWeight:'700'}}>כנס לאקדמיה ←</div>
+            <div style={{fontSize:'15px',fontWeight:'800',color:'#EDF2FF',marginBottom:'4px'}}>{n}</div>
+            <div style={{fontSize:'11px',fontWeight:'600',color:'#5AABFF',marginBottom:'10px',letterSpacing:'.04em'}}>{s}</div>
+            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75'}}>{d}</p>
           </div>
-        </a>
-
-        {/* StockLens Card */}
-        <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-          <div style={{background:'linear-gradient(145deg,rgba(90,171,255,.07) 0%,rgba(6,8,16,.95) 60%)',border:'1px solid rgba(90,171,255,.22)',borderRadius:'28px',padding:'40px 36px',height:'100%',transition:'all .3s',cursor:'pointer'}}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 24px 80px rgba(90,171,255,.12),0 0 0 1px rgba(90,171,255,.3)';}}
-            onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
-            <div style={{width:'60px',height:'60px',borderRadius:'18px',background:'rgba(90,171,255,.12)',border:'1px solid rgba(90,171,255,.25)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'30px',marginBottom:'24px'}}>📊</div>
-            <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',textTransform:'uppercase',color:'#5AABFF',marginBottom:'10px'}}>כלי ניתוח · מנויים</div>
-            <h3 style={{fontSize:'28px',fontWeight:'900',color:'#EDF2FF',marginBottom:'14px',lineHeight:'1.15'}}>Stock<span className="tg">Lens</span></h3>
-            <p style={{fontSize:'15px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'28px'}}>9 כלי ניתוח מקצועיים בזמן אמת. Intelligence Radar, Quarter Compare, Spread Simulator ועוד — הכל בעברית.</p>
-            <div style={{display:'flex',flexDirection:'column',gap:'10px',marginBottom:'32px'}}>
-              {['📈 ניתוח פונדמנטלי מלא + מדדים','⚡ נתונים חיים מה-API','🔍 השוואת מניות ורבעונים','🌐 Intelligence Radar + Market Pulse'].map(f=>(
-                <div key={f} style={{fontSize:'13px',color:'#64748B',display:'flex',alignItems:'center',gap:'8px'}}>{f}</div>
-              ))}
-            </div>
-            <div style={{display:'inline-flex',alignItems:'center',gap:'8px',color:'#5AABFF',fontSize:'14px',fontWeight:'700'}}>כנס ל-StockLens ←</div>
-          </div>
-        </a>
-
+        ))}
       </div>
     </div>
   </section>
 );
 
+/* ══════════════ PLATFORM CARDS ══════════════ */
+const Platform=()=>(
+  <section id="board" style={{background:'linear-gradient(180deg,#060E1C 0%,#020814 100%)',padding:'100px 24px',position:'relative',overflow:'hidden'}}>
+    <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,229,160,.03) 0%,transparent 65%)',pointerEvents:'none'}}/>
+    <div style={{maxWidth:'1280px',margin:'0 auto',position:'relative'}}>
+      <div style={{textAlign:'center',marginBottom:'64px'}}>
+        <div className="slabel" style={{marginBottom:'14px'}}>הפלטפורמה שלנו</div>
+        <h2 style={{fontSize:'clamp(28px,4vw,52px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'16px'}}>
+          שני כלים. <span className="tg">עולם אחד.</span>
+        </h2>
+        <p style={{fontSize:'16px',color:'#94A3B8',maxWidth:'500px',margin:'0 auto',lineHeight:'1.8'}}>
+          למד את שוק ההון לעומק עם האקדמיה, ונתח מניות בזמן אמת עם StockLens.
+        </p>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'24px'}}>
+        {[{
+          href:'https://lidorfiliba.github.io/StockLensAcademy/',
+          border:'rgba(0,229,160,.2)',bg:'rgba(0,229,160,.05)',
+          glowColor:'rgba(0,229,160,.12)',glowBorder:'rgba(0,229,160,.35)',
+          label:'קורס · ₪980 · תשלום חד פעמי',labelColor:'#00E5A0',
+          icBg:'rgba(0,229,160,.1)',icBorder:'rgba(0,229,160,.2)',icChar:'📚',
+          title:<>StockLens<br/><span className="tg">Academy</span></>,
+          desc:'12 פרקים · +60 נושאים · עברית 100%. שוק ההון מהבסיס ועד אסטרטגיות מתקדמות. גישה לנצח.',
+          features:['12 פרקי לימוד מעמיקים','9 כלי ניתוח חיים בזמן אמת','מועצת 6 משקיעים אגדיים עם AI','סימולטור אסטרטגיות ומעקב מניות'],
+          cta:'כנס לאקדמיה',ctaColor:'#00E5A0',
+        },{
+          href:'https://lidorfiliba.github.io/StockLens/',
+          border:'rgba(90,171,255,.2)',bg:'rgba(90,171,255,.05)',
+          glowColor:'rgba(90,171,255,.12)',glowBorder:'rgba(90,171,255,.35)',
+          label:'כלי ניתוח · מנויים',labelColor:'#5AABFF',
+          icBg:'rgba(90,171,255,.1)',icBorder:'rgba(90,171,255,.2)',icChar:'📊',
+          title:<>Stock<span className="tg">Lens</span></>,
+          desc:'9 כלי ניתוח מקצועיים בזמן אמת. Intelligence Radar, Quarter Compare, Spread Simulator ועוד.',
+          features:['ניתוח פונדמנטלי מלא + מדדים','נתונים חיים מה-API','השוואת מניות ורבעונים','Intelligence Radar + Market Pulse'],
+          cta:'כנס ל-StockLens',ctaColor:'#5AABFF',
+        }].map((card,i)=>(
+          <a key={i} href={card.href} target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+            <div className="reveal" style={{background:`linear-gradient(145deg,${card.bg} 0%,rgba(4,8,20,.97) 60%)`,border:`1px solid ${card.border}`,borderRadius:'28px',padding:'40px 36px',height:'100%',transition:'all .3s',cursor:'pointer'}}
+              onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow=`0 24px 80px ${card.glowColor},0 0 0 1px ${card.glowBorder}`;}}
+              onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';}}>
+              <div style={{width:'58px',height:'58px',borderRadius:'17px',background:card.icBg,border:`1px solid ${card.icBorder}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px',marginBottom:'22px'}}>{card.icChar}</div>
+              <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',textTransform:'uppercase',color:card.labelColor,marginBottom:'10px'}}>{card.label}</div>
+              <h3 style={{fontSize:'26px',fontWeight:'900',color:'#EDF2FF',marginBottom:'14px',lineHeight:'1.15'}}>{card.title}</h3>
+              <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'26px'}}>{card.desc}</p>
+              <div style={{display:'flex',flexDirection:'column',gap:'9px',marginBottom:'28px'}}>
+                {card.features.map(f=>(
+                  <div key={f} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                    <Ic.Check size={16} color={card.ctaColor}/>
+                    <span style={{fontSize:'13px',color:'#64748B'}}>{f}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{display:'inline-flex',alignItems:'center',gap:'8px',color:card.ctaColor,fontSize:'14px',fontWeight:'700'}}>
+                {card.cta}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="7" x2="13" y2="7"/><polyline points="7,1 13,7 7,13"/></svg>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ══════════════ TESTIMONIALS ══════════════ */
+const REVIEWS=[
+  {n:'אורי כ.',r:5,t:'הכלי הכי טוב שמצאתי',d:'Investment Board עם ה-AI זה פשוט קסם. לראות את באפט וקאת׳י ווד מנתחים אותה מניה — מהפכה בחשיבה שלי.'},
+  {n:'מיכל ש.',r:5,t:'סוף סוף הבנתי מניות',d:'קניתי עשרות קורסים בעבר. שום דבר לא השתווה לרמת הפירוט ולכלים החיים שיש כאן. שווה כל שקל.'},
+  {n:'דוד מ.',r:5,t:'9 כלים במחיר של 1',d:'Quarter Compare ו-Stock vs Stock חסכו לי שעות ניתוח. הנתונים בזמן אמת מדויקים ומהירים. ממליץ בחום.'},
+  {n:'שירה ל.',r:5,t:'הדרך הנכונה להתחיל',d:'נרשמתי בתור מתחיל מוחלט. אחרי 12 הפרקים הרגשתי שסוף סוף יש לי כלים אמיתיים לנתח מניות בעצמי.'},
+  {n:'תומר ב.',r:5,t:'Intelligence Radar משנה משחק',d:'הראדר נותן מבט ב-6 מימדים בבת אחת. לא צריך לפקוח עשרות חלונות — הכל במסך אחד, בעברית.'},
+  {n:'נועה א.',r:5,t:'גישה לנצח — שווה זה',d:'תשלום חד פעמי בלי מנויים. מקבלים עדכונים, כלים חדשים, ותמיכה. זה מה שציפיתי ויותר מכך.'},
+];
+
+const Testimonials=()=>(
+  <section style={{background:'#020814',padding:'100px 24px',overflow:'hidden',position:'relative'}}>
+    <div style={{position:'absolute',top:0,insetInline:0,height:'1px',background:'linear-gradient(90deg,transparent,rgba(0,229,160,.15),transparent)'}}/>
+    <div style={{maxWidth:'1280px',margin:'0 auto'}}>
+      <div style={{textAlign:'center',marginBottom:'60px'}}>
+        <div className="slabel" style={{marginBottom:'14px'}}>חוות דעת</div>
+        <h2 style={{fontSize:'clamp(26px,4vw,48px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'16px'}}>
+          מה אומרים <span className="tg">התלמידים שלנו</span>
+        </h2>
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',gap:'8px',marginTop:'12px'}}>
+          <div style={{display:'flex',gap:'3px'}}>{[1,2,3,4,5].map(i=><Ic.StarFill key={i}/>)}</div>
+          <span style={{fontSize:'14px',color:'#94A3B8',fontWeight:'600'}}>4.9/5 · מעל 500 ביקורות</span>
+        </div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'16px'}}>
+        {REVIEWS.map(({n,r,t,d},i)=>(
+          <div key={i} className="card-hover reveal" style={{background:'rgba(8,16,36,.7)',border:'1px solid rgba(255,255,255,.07)',borderRadius:'20px',padding:'24px',transition:'all .25s'}}>
+            <div style={{display:'flex',gap:'3px',marginBottom:'12px'}}>
+              {Array.from({length:r}).map((_,j)=><Ic.StarFill key={j}/>)}
+            </div>
+            <div style={{fontSize:'15px',fontWeight:'800',color:'#EDF2FF',marginBottom:'8px'}}>{t}</div>
+            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75',marginBottom:'16px'}}>{d}</p>
+            <div style={{display:'flex',alignItems:'center',gap:'10px',borderTop:'1px solid rgba(255,255,255,.05)',paddingTop:'14px'}}>
+              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,rgba(0,229,160,.15),rgba(90,171,255,.15))',border:'1px solid rgba(255,255,255,.08)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:'700',color:'#00E5A0'}}>
+                {n[0]}
+              </div>
+              <div style={{fontSize:'13px',fontWeight:'600',color:'#94A3B8'}}>{n}</div>
+              <div style={{marginRight:'auto',display:'flex',alignItems:'center',gap:'5px',background:'rgba(0,229,160,.08)',border:'1px solid rgba(0,229,160,.15)',borderRadius:'8px',padding:'3px 8px'}}>
+                <div style={{width:'5px',height:'5px',borderRadius:'50%',background:'#00E5A0'}} className="glow-pulse"/>
+                <span style={{fontSize:'10px',fontWeight:'700',color:'#00E5A0'}}>מאומת</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ══════════════ PRICING ══════════════ */
 const PITEMS=[
   'גישה לכל 9 כלי הניתוח ללא הגבלה',
   '12 פרקי לימוד · +60 נושאים · עברית 100%',
@@ -349,50 +590,72 @@ const PITEMS=[
   'Investment Board — 6 משקיעים + Gemini AI',
   'Quarter Compare — השוואת רבעונים',
   'Stock vs Stock — השוואה בין כל שתי מניות',
-  'Spread Simulator — 4 סוגי ספרדים + מעקב פוזיציות',
+  'Spread Simulator — 4 סוגי ספרדים + פוזיציות',
   'Market Pulse — מדדים, VIX וסקטורים חיים',
   'Options P/C — ניתוח יחס Put/Call',
   'Watchlist חיה עם מחירים מסונכרנים',
-  'עדכונים ושדרוגים לפלטפורמה ללא הגבלה',
+  'עדכונים ושדרוגים עתידיים ללא הגבלה',
 ];
 
 const Pricing=({onBuy})=>(
-  <section id="pricing" style={{background:'#04080F',padding:'100px 24px'}}>
-    <div style={{maxWidth:'1240px',margin:'0 auto'}}>
+  <section id="pricing" style={{background:'#020814',padding:'100px 24px',position:'relative',overflow:'hidden'}}>
+    <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',width:'600px',height:'600px',borderRadius:'50%',background:'radial-gradient(circle,rgba(0,229,160,.05) 0%,transparent 65%)',pointerEvents:'none'}}/>
+    <div style={{maxWidth:'1280px',margin:'0 auto',position:'relative'}}>
       <div style={{textAlign:'center',marginBottom:'60px'}}>
         <div className="slabel" style={{marginBottom:'14px'}}>תמחיר</div>
-        <h2 style={{fontSize:'clamp(26px,4vw,46px)',fontWeight:'900',color:'#EDF2FF',lineHeight:'1.2',marginBottom:'14px'}}>תשלום חד פעמי, <span className="tg">גישה לנצח</span></h2>
-        <p style={{fontSize:'16px',color:'#94A3B8',maxWidth:'440px',margin:'0 auto'}}>ללא מנוי חודשי, ללא הפתעות. שלם פעם אחת — גישה מלאה לכל הכלים והתכנים לתמיד.</p>
+        <h2 style={{fontSize:'clamp(26px,4vw,50px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'14px'}}>
+          תשלום חד פעמי, <span className="tg">גישה לנצח</span>
+        </h2>
+        <p style={{fontSize:'16px',color:'#94A3B8',maxWidth:'440px',margin:'0 auto',lineHeight:'1.8'}}>
+          ללא מנוי חודשי, ללא הפתעות. שלם פעם אחת — גישה מלאה לכל הכלים והתכנים לתמיד.
+        </p>
       </div>
-      <div style={{maxWidth:'540px',margin:'0 auto'}}>
-        <div className="pricing-card" style={{borderRadius:'28px',padding:'36px',position:'relative'}}>
-          <div style={{position:'absolute',top:'-15px',right:'50%',transform:'translateX(50%)',background:'linear-gradient(135deg,#F7C948,#E07B54)',borderRadius:'20px',padding:'5px 20px',fontSize:'12px',fontWeight:'800',color:'#02060E',whiteSpace:'nowrap'}}>
+
+      <div style={{maxWidth:'600px',margin:'0 auto'}}>
+        <div className="pricing-card reveal" style={{borderRadius:'28px',padding:'40px',position:'relative',overflow:'hidden'}}>
+          {/* Top badge */}
+          <div style={{position:'absolute',top:'-1px',right:'50%',transform:'translateX(50%)',background:'linear-gradient(135deg,#F7C948,#E07B54)',borderRadius:'0 0 14px 14px',padding:'6px 24px',fontSize:'12px',fontWeight:'800',color:'#020814',whiteSpace:'nowrap',letterSpacing:'.04em'}}>
             StockLens Academy · גישה מלאה
           </div>
-          <div style={{marginBottom:'6px',fontSize:'12px',fontWeight:'700',color:'#00E5A0',letterSpacing:'.1em'}}>שוק ההון מ-0 עד 100</div>
-          <div style={{fontSize:'13px',color:'#94A3B8',marginBottom:'20px'}}>12 פרקים · +60 נושאים · 9 כלים · עברית 100%</div>
-          <div style={{display:'flex',gap:'12px',marginBottom:'24px'}}>
-            {[['₪980','Bit / Paybox','#F7C948'],['$320','PayPal','#5AABFF']].map(([price,method,color])=>(
-              <div key={method} style={{flex:1,background:'rgba(255,255,255,.04)',border:`1px solid ${color}33`,borderRadius:'14px',padding:'16px',textAlign:'center'}}>
-                <div style={{fontSize:'28px',fontWeight:'900',color,fontVariantNumeric:'tabular-nums',lineHeight:'1',marginBottom:'6px'}}>{price}</div>
-                <div style={{fontSize:'12px',color:'#475569'}}>{method}</div>
-              </div>
-            ))}
+          <div style={{marginTop:'18px'}}>
+            <div style={{fontSize:'12px',fontWeight:'700',color:'#00E5A0',letterSpacing:'.1em',marginBottom:'6px',textTransform:'uppercase'}}>שוק ההון מ-0 עד 100</div>
+            <div style={{fontSize:'13px',color:'#475569',marginBottom:'24px'}}>12 פרקים · +60 נושאים · 9 כלים · עברית 100%</div>
+
+            {/* Price options */}
+            <div style={{display:'flex',gap:'12px',marginBottom:'28px'}}>
+              {[{price:'₪980',method:'Bit / Paybox',color:'#F7C948',bg:'rgba(247,201,72,.08)',border:'rgba(247,201,72,.25)'},{price:'$320',method:'PayPal',color:'#5AABFF',bg:'rgba(90,171,255,.08)',border:'rgba(90,171,255,.25)'}].map(({price,method,color,bg,border})=>(
+                <div key={method} style={{flex:1,background:bg,border:`1px solid ${border}`,borderRadius:'16px',padding:'18px',textAlign:'center'}}>
+                  <div style={{fontSize:'30px',fontWeight:'900',color,fontVariantNumeric:'tabular-nums',lineHeight:'1',marginBottom:'6px'}}>{price}</div>
+                  <div style={{fontSize:'12px',color:'#475569',fontWeight:'500'}}>{method}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{height:'1px',background:'rgba(255,255,255,.07)',marginBottom:'24px'}}/>
+
+            {/* Features list */}
+            <ul style={{listStyle:'none',padding:0,margin:'0 0 28px 0'}}>
+              {PITEMS.map((f,i)=>(
+                <li key={i} className="check-item">
+                  <Ic.Check size={18}/>
+                  <span style={{fontSize:'14px',color:'#CBD5E1',lineHeight:'1.5'}}>{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button className="btn-green" onClick={onBuy} style={{width:'100%',padding:'17px',borderRadius:'14px',fontSize:'16px',justifyContent:'center'}}>
+              רכוש גישה עכשיו
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+            </button>
+            <p style={{textAlign:'center',fontSize:'12px',color:'#334155',marginTop:'14px'}}>גישה ללא הגבלת זמן · עדכונים שוטפים כלולים · תשלום חד פעמי</p>
           </div>
-          <div style={{height:'1px',background:'rgba(255,255,255,.07)',marginBottom:'22px'}}/>
-          <ul style={{listStyle:'none',padding:0,margin:'0 0 28px 0'}}>
-            {PITEMS.map((f,i)=>(
-              <li key={i} className="check-item"><Ic.Check/><span style={{fontSize:'14px',color:'#CBD5E1'}}>{f}</span></li>
-            ))}
-          </ul>
-          <button className="btn-green" onClick={onBuy} style={{width:'100%',padding:'16px',borderRadius:'14px',fontSize:'16px',justifyContent:'center'}}>
-            📚 רכוש גישה עכשיו <Ic.ArrowL/>
-          </button>
-          <p style={{textAlign:'center',fontSize:'12px',color:'#475569',marginTop:'14px'}}>גישה ללא הגבלת זמן · עדכונים שוטפים כלולים · תשלום חד פעמי</p>
         </div>
+
         <div style={{display:'flex',justifyContent:'center',gap:'28px',marginTop:'28px',flexWrap:'wrap'}}>
-          {['אתר מאובטח SSL','גישה מיידית','עדכונים לנצח'].map(t=>(
-            <div key={t} style={{display:'flex',alignItems:'center',gap:'6px'}}><Ic.Shield/><span style={{fontSize:'13px',color:'#475569'}}>{t}</span></div>
+          {[{ic:<Ic.Shield/>,t:'אתר מאובטח SSL'},{ic:<Ic.Lock/>,t:'גישה מיידית'},{ic:<Ic.Refresh/>,t:'עדכונים לנצח'}].map(({ic,t})=>(
+            <div key={t} style={{display:'flex',alignItems:'center',gap:'6px'}}>
+              {ic}<span style={{fontSize:'12px',color:'#334155',fontWeight:'500'}}>{t}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -400,215 +663,249 @@ const Pricing=({onBuy})=>(
   </section>
 );
 
-const CTABanner=({onBuy})=>(
-  <section style={{background:'linear-gradient(135deg,rgba(0,229,160,.1) 0%,rgba(90,171,255,.07) 100%)',borderTop:'1px solid rgba(0,229,160,.14)',borderBottom:'1px solid rgba(90,171,255,.1)',padding:'80px 24px'}}>
-    <div style={{maxWidth:'680px',margin:'0 auto',textAlign:'center'}}>
-      <h2 style={{fontSize:'clamp(24px,4vw,40px)',fontWeight:'900',color:'#EDF2FF',marginBottom:'16px',lineHeight:'1.2'}}>מוכן לנתח מניות כמו מקצוען?</h2>
-      <p style={{fontSize:'17px',color:'#94A3B8',marginBottom:'32px',lineHeight:'1.75'}}>
-        9 כלי ניתוח · 12 פרקים · מועצת 6 משקיעים אגדיים. תשלום חד פעמי · ₪980 Bit/Paybox · $320 PayPal.
-      </p>
-      <div style={{display:'flex',justifyContent:'center',gap:'12px',flexWrap:'wrap'}}>
-        <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}><button className="btn-ghost" style={{padding:'14px 32px',borderRadius:'12px',fontSize:'16px'}}>📚 Academy</button></a>
-        <button className="btn-green" onClick={onBuy} style={{padding:'14px 24px',borderRadius:'12px',fontSize:'16px'}}>רכוש — ₪980</button>
-        <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener"><button className="btn-ghost" style={{padding:'14px 24px',borderRadius:'12px',fontSize:'16px'}}>📊 StockLens</button></a>
+/* ══════════════ FAQ ══════════════ */
+const FAQS=[
+  {q:'מה קורה לאחר הרכישה?',a:'לאחר אישור התשלום תקבל גישה לאקדמיה תוך שעות ספורות. תשלח אליך כתובת כניסה ישירות למייל שהזנת בטופס.'},
+  {q:'האם מדובר בתשלום חד פעמי?',a:'כן, לחלוטין. תשלום פעם אחת — גישה מלאה לכל הכלים, כל הפרקים, וכל העדכונים העתידיים. ללא מנוי חודשי, ללא הפתעות.'},
+  {q:'מה ה-Investment Board?',a:'מועצת 6 משקיעים אגדיים — וורן באפט, קאת׳י ווד, מייקל ברי, פיטר לינץ׳, ריי דליו ובנג׳מין גראהם — שמנתחים כל מניה בקולם, מופעל על ידי Gemini AI.'},
+  {q:'האם הכלים מחוברים לנתונים בזמן אמת?',a:'כן! כל 9 הכלים מחוברים ל-API חי ומספקים נתונים עדכניים. מחירי מניות, פרמטרים פיננסיים ומדדי שוק מתעדכנים ברציפות.'},
+  {q:'מה רמת הידע הנדרשת?',a:'הקורס מתאים לכל אחד — גם למי שלא יודע כלום על שוק ההון. 12 הפרקים בנויים מהבסיס ועולים בהדרגה לאסטרטגיות מתקדמות.'},
+  {q:'מה אפשרויות התשלום?',a:'ניתן לשלם דרך Bit/Paybox (₪980) או PayPal ($320). לאחר התשלום ממלאים טופס קצר ומקבלים גישה תוך שעות.'},
+];
+
+const FaqItem=({q,a})=>{
+  const [open,setOpen]=useState(false);
+  return(
+    <div className="faq-item" style={{padding:'0'}}>
+      <button onClick={()=>setOpen(!open)} style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'22px 0',gap:'16px',textAlign:'right'}}>
+        <span style={{fontSize:'15px',fontWeight:'700',color:open?'#00E5A0':'#EDF2FF',transition:'color .2s',flex:1}}>{q}</span>
+        <div style={{transform:open?'rotate(180deg)':'rotate(0)',transition:'transform .25s',color:open?'#00E5A0':'#475569',flexShrink:0}}>
+          <Ic.ChevronDown/>
+        </div>
+      </button>
+      <div style={{maxHeight:open?'200px':'0',overflow:'hidden',transition:'max-height .3s ease'}}>
+        <p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.8',paddingBottom:'22px'}}>{a}</p>
+      </div>
+    </div>
+  );
+};
+
+const FAQ=()=>(
+  <section id="faq" style={{background:'#060E1C',padding:'100px 24px'}}>
+    <div style={{maxWidth:'760px',margin:'0 auto'}}>
+      <div style={{textAlign:'center',marginBottom:'60px'}}>
+        <div className="slabel" style={{marginBottom:'14px'}}>שאלות נפוצות</div>
+        <h2 style={{fontSize:'clamp(26px,4vw,48px)',fontWeight:'900',lineHeight:'1.1',marginBottom:'16px'}}>
+          יש לך שאלות? <span className="tg">יש לנו תשובות</span>
+        </h2>
+      </div>
+      <div className="glass reveal" style={{borderRadius:'24px',padding:'8px 32px',border:'1px solid rgba(255,255,255,.07)'}}>
+        {FAQS.map((item,i)=><FaqItem key={i} {...item}/>)}
+      </div>
+      <div style={{textAlign:'center',marginTop:'32px'}}>
+        <p style={{fontSize:'14px',color:'#475569'}}>
+          עדיין יש שאלות?{' '}
+          <a href="mailto:Lidorfiliba@gmail.com" style={{color:'#00E5A0',textDecoration:'none',fontWeight:'600'}}>צור קשר</a>
+        </p>
       </div>
     </div>
   </section>
 );
 
-const Footer=({onBuy})=>{
-  const ANALYZER='https://lidorfiliba.github.io/StockLens/';
-  const ACADEMY='https://lidorfiliba.github.io/StockLensAcademy/';
-  const cols=[
-    {title:'כלים',items:[
-      {l:'Overview',            href:ANALYZER},
-      {l:'Quarter Compare',     href:ANALYZER},
-      {l:'Stock vs Stock',      href:ANALYZER},
-      {l:'Intelligence',        href:ANALYZER},
-      {l:'Market Pulse',        href:ANALYZER},
-      {l:'Options P/C',         href:ANALYZER},
-    ]},
-    {title:'תוכן',items:[
-      {l:'12 פרקי לימוד',       href:ACADEMY},
-      {l:'+60 נושאים',          href:ACADEMY},
-      {l:'Investment Board',    href:ACADEMY},
-      {l:'Spread Simulator',    href:ACADEMY},
-      {l:'Watchlist',           href:ACADEMY},
-    ]},
-    {title:'כללי',items:[
-      {l:'אודות',               href:'#tools'},
-      {l:'צור קשר',             href:'mailto:Lidorfiliba@gmail.com'},
-      {l:'פרטיות',              href:'#'},
-      {l:'תנאי שימוש',          href:'#'},
-      {l:'רכוש גישה',           buy:true},
-    ]},
-  ];
-  return(
-  <footer style={{background:'#04080F',borderTop:'1px solid rgba(255,255,255,.06)',padding:'56px 24px 32px'}}>
-    <div style={{maxWidth:'1240px',margin:'0 auto'}}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'40px',marginBottom:'48px'}}>
-        <div>
-          <div style={{display:'flex',alignItems:'center',gap:'9px',marginBottom:'14px'}}>
-            <Ic.Lens s={26}/>
-            <div>
-              <div style={{fontSize:'20px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
-              <div style={{fontSize:'9px',letterSpacing:'2px',color:'#475569',textTransform:'uppercase'}}>Academy</div>
-            </div>
-          </div>
-          <p style={{fontSize:'13px',color:'#475569',lineHeight:'1.75',maxWidth:'210px'}}>9 כלי ניתוח חיים · 12 פרקים · עברית 100% · תשלום חד פעמי · גישה לנצח.</p>
-        </div>
-        {cols.map(col=>(
-          <div key={col.title}>
-            <div style={{fontSize:'13px',fontWeight:'700',color:'#EDF2FF',marginBottom:'16px',letterSpacing:'.04em'}}>{col.title}</div>
-            <ul style={{listStyle:'none',padding:0,margin:0}}>
-              {col.items.map(item=>(
-                <li key={item.l} style={{marginBottom:'10px'}}>
-                  {item.buy
-                    ? <button onClick={onBuy} style={{background:'none',border:'none',padding:0,fontSize:'13px',color:'#00E5A0',cursor:'pointer',fontFamily:'Heebo,sans-serif',transition:'color .2s'}}
-                        onMouseEnter={e=>e.target.style.color='#00FFB3'} onMouseLeave={e=>e.target.style.color='#00E5A0'}>{item.l} ←</button>
-                    : <a href={item.href} target={item.href.startsWith('http')?'_blank':'_self'} rel="noopener"
-                        style={{fontSize:'13px',color:'#475569',textDecoration:'none',transition:'color .2s'}}
-                        onMouseEnter={e=>e.target.style.color='#94A3B8'} onMouseLeave={e=>e.target.style.color='#475569'}>{item.l}</a>
-                  }
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+/* ══════════════ CTA BANNER ══════════════ */
+const CTABanner=({onBuy})=>(
+  <section style={{position:'relative',padding:'100px 24px',overflow:'hidden',background:'#020814'}}>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(135deg,rgba(0,229,160,.06) 0%,rgba(90,171,255,.04) 100%)'}}/>
+    <div style={{position:'absolute',top:0,insetInline:0,height:'1px',background:'linear-gradient(90deg,transparent,rgba(0,229,160,.2),transparent)'}}/>
+    <div style={{position:'absolute',bottom:0,insetInline:0,height:'1px',background:'linear-gradient(90deg,transparent,rgba(90,171,255,.15),transparent)'}}/>
+    <div style={{maxWidth:'700px',margin:'0 auto',textAlign:'center',position:'relative',zIndex:1}}>
+      <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(0,229,160,.08)',border:'1px solid rgba(0,229,160,.2)',borderRadius:'20px',padding:'6px 16px',marginBottom:'24px'}}>
+        <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#00E5A0',boxShadow:'0 0 8px #00E5A0'}} className="glow-pulse"/>
+        <span style={{fontSize:'12px',fontWeight:'700',color:'#00E5A0'}}>גישה מיידית לאחר רכישה</span>
       </div>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'12px',paddingTop:'24px',borderTop:'1px solid rgba(255,255,255,.06)'}}>
-        <div style={{fontSize:'13px',color:'#475569'}}>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
-        <div style={{fontSize:'13px',color:'#475569'}}>StockLens • Academy</div>
+      <h2 style={{fontSize:'clamp(24px,4vw,44px)',fontWeight:'900',color:'#EDF2FF',marginBottom:'16px',lineHeight:'1.1'}}>
+        מוכן לנתח מניות <span className="tg">כמו מקצוען?</span>
+      </h2>
+      <p style={{fontSize:'17px',color:'#94A3B8',marginBottom:'36px',lineHeight:'1.8'}}>
+        9 כלי ניתוח · 12 פרקים · מועצת 6 משקיעים אגדיים.<br/>
+        תשלום חד פעמי · ₪980 Bit/Paybox · $320 PayPal
+      </p>
+      <div style={{display:'flex',justifyContent:'center',gap:'12px',flexWrap:'wrap'}}>
+        <button className="btn-green" onClick={onBuy} style={{padding:'15px 32px',borderRadius:'13px',fontSize:'16px'}}>
+          רכוש גישה — ₪980
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+        </button>
+        <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+          <button className="btn-ghost" style={{padding:'15px 28px',borderRadius:'13px',fontSize:'16px'}}>Academy</button>
+        </a>
+        <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
+          <button className="btn-ghost" style={{padding:'15px 28px',borderRadius:'13px',fontSize:'16px'}}>StockLens</button>
+        </a>
       </div>
     </div>
-  </footer>
+  </section>
+);
+
+/* ══════════════ FOOTER ══════════════ */
+const Footer=({onBuy})=>{
+  const A='https://lidorfiliba.github.io/StockLens/';
+  const AC='https://lidorfiliba.github.io/StockLensAcademy/';
+  const cols=[
+    {title:'כלים',items:[{l:'Overview',href:A},{l:'Quarter Compare',href:A},{l:'Stock vs Stock',href:A},{l:'Intelligence',href:A},{l:'Market Pulse',href:A},{l:'Options P/C',href:A}]},
+    {title:'תוכן',items:[{l:'12 פרקי לימוד',href:AC},{l:'+60 נושאים',href:AC},{l:'Investment Board',href:AC},{l:'Spread Simulator',href:AC},{l:'Watchlist',href:AC}]},
+    {title:'כללי',items:[{l:'אודות',href:'#tools'},{l:'צור קשר',href:'mailto:Lidorfiliba@gmail.com'},{l:'פרטיות',href:'#'},{l:'תנאי שימוש',href:'#'},{l:'רכוש גישה',buy:true}]},
+  ];
+  const linkStyle={fontSize:'13px',color:'#334155',textDecoration:'none',transition:'color .2s',fontWeight:'500'};
+  return(
+    <footer style={{background:'#020814',borderTop:'1px solid rgba(255,255,255,.05)',padding:'60px 24px 32px'}}>
+      <div style={{maxWidth:'1280px',margin:'0 auto'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'40px',marginBottom:'48px'}}>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:'9px',marginBottom:'16px'}}>
+              <Ic.Lens s={24}/>
+              <div>
+                <div style={{fontSize:'19px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
+                <div style={{fontSize:'8px',letterSpacing:'2.5px',color:'#334155',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
+              </div>
+            </div>
+            <p style={{fontSize:'13px',color:'#334155',lineHeight:'1.8',maxWidth:'200px'}}>9 כלי ניתוח חיים · 12 פרקים · עברית 100% · תשלום חד פעמי · גישה לנצח.</p>
+          </div>
+          {cols.map(col=>(
+            <div key={col.title}>
+              <div style={{fontSize:'12px',fontWeight:'700',color:'#EDF2FF',marginBottom:'18px',letterSpacing:'.06em',textTransform:'uppercase'}}>{col.title}</div>
+              <ul style={{listStyle:'none',padding:0,margin:0}}>
+                {col.items.map(item=>(
+                  <li key={item.l} style={{marginBottom:'10px'}}>
+                    {item.buy
+                      ? <button onClick={onBuy} style={{background:'none',border:'none',padding:0,fontSize:'13px',color:'#00E5A0',cursor:'pointer',fontFamily:'Heebo,sans-serif',fontWeight:'600',transition:'color .2s'}}
+                          onMouseEnter={e=>e.target.style.color='#00FFB3'} onMouseLeave={e=>e.target.style.color='#00E5A0'}>{item.l} ←</button>
+                      : <a href={item.href} target={item.href.startsWith('http')?'_blank':'_self'} rel="noopener"
+                          style={linkStyle}
+                          onMouseEnter={e=>e.target.style.color='#94A3B8'} onMouseLeave={e=>e.target.style.color='#334155'}>{item.l}</a>
+                    }
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'12px',paddingTop:'24px',borderTop:'1px solid rgba(255,255,255,.05)'}}>
+          <div style={{fontSize:'13px',color:'#1E293B',fontWeight:'500'}}>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+          <div style={{fontSize:'13px',color:'#1E293B'}}>StockLens • Academy</div>
+        </div>
+      </div>
+    </footer>
   );
 };
 
-
-/* ── PURCHASE MODAL ── */
+/* ══════════════ PURCHASE MODAL ══════════════ */
 const PurchaseModal=({onClose})=>{
   const [step,setStep]=React.useState('choose');
   const [name,setName]=React.useState('');
   const [email,setEmail]=React.useState('');
   const [phone,setPhone]=React.useState('');
   const [username,setUsername]=React.useState('');
-  const [sent,setSent]=React.useState(false);
-  React.useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow='';};},[]);
   const [loading,setLoading]=React.useState(false);
   const [err,setErr]=React.useState('');
+
+  React.useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow='';};},[]);
+
+  const allFilled=name.trim()&&email.trim()&&phone.trim()&&username.trim();
+
   const submit=async()=>{
-    if(!name.trim()||!email.trim())return;
+    if(!allFilled)return;
     setLoading(true);setErr('');
     try{
       await emailjs.send('service_s5wzeck','template_3pfjg4g',{
-        from_name:name,
-        from_email:email,
-        phone:phone||'לא צוין',
-        username:username||'לא צוין',
-        payment_method:step==='bit'?'Bit / Paybox':'PayPal',
-        price:step==='bit'?'₪980':'$320',
-        order_time:new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'}),
-        reply_to:email,
+        from_name:name,from_email:email,phone:phone||'לא צוין',username:username||'לא צוין',
+        payment_method:step==='bit'?'Bit / Paybox':'PayPal',price:step==='bit'?'₪980':'$320',
+        order_time:new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'}),reply_to:email,
       });
       setStep('success');
-    }catch(e){
-      setErr('שגיאה בשליחה, נסה שנית או שלח מייל ל-Lidorfiliba@gmail.com');
-    }
+    }catch{setErr('שגיאה בשליחה, נסה שנית או שלח מייל ל-Lidorfiliba@gmail.com');}
     setLoading(false);
   };
-  const overlay={position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,.8)',backdropFilter:'blur(10px)',WebkitBackdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'};
-  const card={background:'rgba(6,10,22,.97)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.8),0 0 0 1px rgba(0,229,160,.08)',maxHeight:'92vh',overflowY:'auto'};
-  const closeBtn={position:'absolute',top:'16px',left:'16px',background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'50%',width:'34px',height:'34px',cursor:'pointer',color:'#94A3B8',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center'};
-  const inp={width:'100%',background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.12)',borderRadius:'10px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'12px 14px',outline:'none',marginTop:'6px',boxSizing:'border-box'};
-  const payBtn=(color,border)=>({background:`rgba(${color},.1)`,border:`1px solid rgba(${color},.35)`,borderRadius:'18px',padding:'20px 22px',cursor:'pointer',display:'flex',alignItems:'center',gap:'16px',width:'100%',textAlign:'right',marginBottom:'12px',transition:'all .2s'});
+
+  const inp={width:'100%',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'11px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'13px 15px',outline:'none',marginTop:'6px',boxSizing:'border-box',transition:'border-color .2s,box-shadow .2s'};
+
+  const InputField=({label,type='text',value,onChange,placeholder})=>(
+    <div style={{marginBottom:'14px'}}>
+      <div style={{fontSize:'12px',color:'#64748B',marginBottom:'4px',fontWeight:'600'}}>{label}</div>
+      <input style={inp} type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
+        onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.45)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.08)';}}
+        onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.1)';e.target.style.boxShadow='';}}/>
+    </div>
+  );
 
   return(
-    <div style={overlay} onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
-      <div style={card}>
-        <button style={closeBtn} onClick={onClose}>✕</button>
+    <div style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,.85)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}
+      onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div style={{background:'rgba(4,8,20,.98)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.9),0 0 0 1px rgba(0,229,160,.07)',maxHeight:'92vh',overflowY:'auto'}}>
+        <button onClick={onClose} style={{position:'absolute',top:'16px',left:'16px',background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'50%',width:'34px',height:'34px',cursor:'pointer',color:'#64748B',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .2s'}}
+          onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,.08)';e.currentTarget.style.color='#94A3B8';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.color='#64748B';}}>✕</button>
 
-        {step==='choose'&&(<>
-          <div style={{textAlign:'center',marginBottom:'28px'}}>
-            <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',color:'#00E5A0',marginBottom:'10px',textTransform:'uppercase'}}>StockLens Academy</div>
-            <h2 style={{fontSize:'26px',fontWeight:'900',color:'#EDF2FF',marginBottom:'8px'}}>בחר שיטת תשלום</h2>
-            <p style={{fontSize:'14px',color:'#94A3B8'}}>תשלום חד פעמי · גישה לנצח</p>
-          </div>
-          <button style={payBtn('247,201,72','247,201,72')} onClick={()=>setStep('bit')}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.borderColor='rgba(247,201,72,.7)';}}
-            onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor='rgba(247,201,72,.35)';}}>
-            <div style={{width:'50px',height:'50px',borderRadius:'14px',background:'rgba(247,201,72,.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'24px',flexShrink:0}}>💳</div>
-            <div style={{flex:1}}>
-              <div style={{fontSize:'20px',fontWeight:'900',color:'#F7C948',lineHeight:'1'}}>₪980</div>
-              <div style={{fontSize:'13px',color:'#94A3B8',marginTop:'3px'}}>Bit · Paybox · העברה בנקאית</div>
+        {step==='choose'&&(
+          <>
+            <div style={{textAlign:'center',marginBottom:'28px'}}>
+              <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',color:'#00E5A0',marginBottom:'10px',textTransform:'uppercase'}}>StockLens Academy</div>
+              <h2 style={{fontSize:'24px',fontWeight:'900',color:'#EDF2FF',marginBottom:'8px'}}>בחר שיטת תשלום</h2>
+              <p style={{fontSize:'14px',color:'#64748B'}}>תשלום חד פעמי · גישה לנצח</p>
             </div>
-            <span style={{color:'#F7C948',fontSize:'18px'}}>←</span>
-          </button>
-          <button style={payBtn('90,171,255','90,171,255')} onClick={()=>setStep('paypal')}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.borderColor='rgba(90,171,255,.7)';}}
-            onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor='rgba(90,171,255,.35)';}}>
-            <div style={{width:'50px',height:'50px',borderRadius:'14px',background:'rgba(90,171,255,.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'24px',flexShrink:0}}>🌐</div>
-            <div style={{flex:1}}>
-              <div style={{fontSize:'20px',fontWeight:'900',color:'#5AABFF',lineHeight:'1'}}>$320</div>
-              <div style={{fontSize:'13px',color:'#94A3B8',marginTop:'3px'}}>PayPal</div>
-            </div>
-            <span style={{color:'#5AABFF',fontSize:'18px'}}>←</span>
-          </button>
-          <div style={{borderTop:'1px solid rgba(255,255,255,.07)',paddingTop:'18px',display:'flex',flexDirection:'column',gap:'7px'}}>
-            {['✅ 12 פרקים + 9 כלי ניתוח חיים','✅ גישה לנצח — ללא מנוי','✅ עדכונים עתידיים כלולים','✅ עברית 100%'].map(f=>(
-              <div key={f} style={{fontSize:'13px',color:'#94A3B8'}}>{f}</div>
+            {[{step:'bit',color:'247,201,72',price:'₪980',sub:'Bit · Paybox · העברה בנקאית'},{step:'paypal',color:'90,171,255',price:'$320',sub:'PayPal'}].map(({step:s,color,price,sub})=>(
+              <button key={s} onClick={()=>setStep(s)} style={{background:`rgba(${color},.07)`,border:`1px solid rgba(${color},.25)`,borderRadius:'16px',padding:'18px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:'16px',width:'100%',textAlign:'right',marginBottom:'12px',transition:'all .2s'}}
+                onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.borderColor=`rgba(${color},.6)`;e.currentTarget.style.background=`rgba(${color},.1)`;}}
+                onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor=`rgba(${color},.25)`;e.currentTarget.style.background=`rgba(${color},.07)`;}}>
+                <div style={{width:'48px',height:'48px',borderRadius:'13px',background:`rgba(${color},.12)`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px',flexShrink:0}}>{s==='bit'?'💳':'🌐'}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:'22px',fontWeight:'900',color:`rgb(${color})`,lineHeight:'1'}}>{price}</div>
+                  <div style={{fontSize:'12px',color:'#64748B',marginTop:'3px'}}>{sub}</div>
+                </div>
+                <span style={{color:`rgb(${color})`,fontSize:'16px'}}>←</span>
+              </button>
             ))}
-          </div>
-        </>)}
+            <div style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:'18px',display:'flex',flexDirection:'column',gap:'8px'}}>
+              {['גישה לכל 12 הפרקים + 9 כלי ניתוח','גישה לנצח — ללא מנוי','עדכונים עתידיים כלולים','עברית 100%'].map(f=>(
+                <div key={f} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                  <Ic.Check size={15}/>
+                  <span style={{fontSize:'13px',color:'#64748B'}}>{f}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-        {(step==='bit'||step==='paypal')&&(<>
-          <button onClick={()=>setStep('choose')} style={{background:'transparent',border:'none',color:'#94A3B8',cursor:'pointer',fontSize:'13px',display:'flex',alignItems:'center',gap:'6px',marginBottom:'22px',padding:0}}>→ חזרה</button>
-          <div style={{textAlign:'center',marginBottom:'22px'}}>
-            <div style={{fontSize:'40px',marginBottom:'10px'}}>{step==='bit'?'💳':'🌐'}</div>
-            <h3 style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',marginBottom:'8px'}}>{step==='bit'?'תשלום ₪980':'תשלום $320 — PayPal'}</h3>
-          </div>
-          <div style={{background:step==='bit'?'rgba(247,201,72,.08)':'rgba(90,171,255,.08)',border:`1px solid ${step==='bit'?'rgba(247,201,72,.3)':'rgba(90,171,255,.3)'}`,borderRadius:'14px',padding:'18px',marginBottom:'22px',textAlign:'center'}}>
-            <div style={{fontSize:'11px',color:step==='bit'?'#F7C948':'#5AABFF',fontWeight:'700',letterSpacing:'.1em',marginBottom:'8px',textTransform:'uppercase'}}>{step==='bit'?'מספר Bit / Paybox':'PayPal'}</div>
-            <div style={{fontSize:'22px',fontWeight:'900',color:'#EDF2FF',fontFamily:'monospace',letterSpacing:'1px'}}>{step==='bit'?'054-6667812':'Lidorfiliba@gmail.com'}</div>
-            <div style={{fontSize:'11px',color:'#475569',marginTop:'6px'}}>לאחר התשלום, מלא את הפרטים למטה ✓</div>
-          </div>
-          <div style={{marginBottom:'12px'}}>
-            <div style={{fontSize:'12px',color:'#94A3B8',marginBottom:'4px',fontWeight:'600'}}>שם מלא</div>
-            <input style={inp} value={name} onChange={e=>setName(e.target.value)} placeholder="לידור פיליבה"
-              onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.5)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.1)';}}
-              onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.12)';e.target.style.boxShadow='';}}/>
-          </div>
-          <div style={{marginBottom:'12px'}}>
-            <div style={{fontSize:'12px',color:'#94A3B8',marginBottom:'4px',fontWeight:'600'}}>כתובת מייל</div>
-            <input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@email.com"
-              onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.5)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.1)';}}
-              onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.12)';e.target.style.boxShadow='';}}/>
-          </div>
-          <div style={{marginBottom:'12px'}}>
-            <div style={{fontSize:'12px',color:'#94A3B8',marginBottom:'4px',fontWeight:'600'}}>טלפון</div>
-            <input style={inp} type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="050-0000000"
-              onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.5)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.1)';}}
-              onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.12)';e.target.style.boxShadow='';}}/>
-          </div>
-          <div style={{marginBottom:'20px'}}>
-            <div style={{fontSize:'12px',color:'#94A3B8',marginBottom:'4px',fontWeight:'600'}}>שם משתמש רצוי לאקדמיה</div>
-            <input style={inp} value={username} onChange={e=>setUsername(e.target.value)} placeholder="lidor123"
-              onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.5)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.1)';}}
-              onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.12)';e.target.style.boxShadow='';}}/>
-          </div>
-          <button onClick={submit} disabled={!name.trim()||!email.trim()||!phone.trim()||!username.trim()||loading} style={{width:'100%',background:(!name.trim()||!email.trim()||!phone.trim()||!username.trim()||loading)?'rgba(255,255,255,.07)':'linear-gradient(135deg,#00E5A0,#00B87D)',color:(!name.trim()||!email.trim()||!phone.trim()||!username.trim()||loading)?'#475569':'#02060E',border:'none',borderRadius:'14px',padding:'15px',fontFamily:'Heebo,sans-serif',fontSize:'16px',fontWeight:'700',cursor:(!name.trim()||!email.trim()||!phone.trim()||!username.trim()||loading)?'not-allowed':'pointer',boxShadow:(!name.trim()||!email.trim()||!phone.trim()||!username.trim()||loading)?'none':'0 4px 24px rgba(0,229,160,.35)',transition:'all .2s'}}>
-            {loading?'שולח...':'שלחתי — תן לי גישה ✓'}
-          </button>
-          {err&&<p style={{textAlign:'center',fontSize:'12px',color:'#fb7185',marginTop:'8px'}}>{err}</p>}
-          <p style={{textAlign:'center',fontSize:'11px',color:'#475569',marginTop:'10px'}}>תקבל גישה תוך שעות ספורות לאחר אישור התשלום</p>
-        </>)}
+        {(step==='bit'||step==='paypal')&&(
+          <>
+            <button onClick={()=>setStep('choose')} style={{background:'transparent',border:'none',color:'#64748B',cursor:'pointer',fontSize:'13px',display:'flex',alignItems:'center',gap:'6px',marginBottom:'22px',padding:0,fontFamily:'Heebo,sans-serif',fontWeight:'600'}}>→ חזרה</button>
+            <div style={{textAlign:'center',marginBottom:'22px'}}>
+              <div style={{fontSize:'36px',marginBottom:'10px'}}>{step==='bit'?'💳':'🌐'}</div>
+              <h3 style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',marginBottom:'6px'}}>{step==='bit'?'תשלום ₪980':'תשלום $320 — PayPal'}</h3>
+            </div>
+            <div style={{background:step==='bit'?'rgba(247,201,72,.06)':'rgba(90,171,255,.06)',border:`1px solid ${step==='bit'?'rgba(247,201,72,.25)':'rgba(90,171,255,.25)'}`,borderRadius:'14px',padding:'18px',marginBottom:'22px',textAlign:'center'}}>
+              <div style={{fontSize:'11px',color:step==='bit'?'#F7C948':'#5AABFF',fontWeight:'700',letterSpacing:'.1em',marginBottom:'8px',textTransform:'uppercase'}}>{step==='bit'?'מספר Bit / Paybox':'PayPal'}</div>
+              <div style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',fontFamily:'monospace',letterSpacing:'1px'}}>{step==='bit'?'054-6667812':'Lidorfiliba@gmail.com'}</div>
+              <div style={{fontSize:'11px',color:'#334155',marginTop:'6px',fontWeight:'500'}}>לאחר התשלום, מלא את הפרטים למטה</div>
+            </div>
+            <InputField label="שם מלא" value={name} onChange={setName} placeholder="שם מלא"/>
+            <InputField label="כתובת מייל" type="email" value={email} onChange={setEmail} placeholder="you@email.com"/>
+            <InputField label="טלפון" type="tel" value={phone} onChange={setPhone} placeholder="050-0000000"/>
+            <InputField label="שם משתמש רצוי לאקדמיה" value={username} onChange={setUsername} placeholder="lidor123"/>
+            <button onClick={submit} disabled={!allFilled||loading}
+              style={{width:'100%',background:(!allFilled||loading)?'rgba(255,255,255,.05)':'linear-gradient(135deg,#00E5A0,#00C48A)',color:(!allFilled||loading)?'#334155':'#020814',border:'none',borderRadius:'13px',padding:'15px',fontFamily:'Heebo,sans-serif',fontSize:'15px',fontWeight:'700',cursor:(!allFilled||loading)?'not-allowed':'pointer',boxShadow:(!allFilled||loading)?'none':'0 4px 24px rgba(0,229,160,.3)',transition:'all .2s'}}>
+              {loading?'שולח...':'שלחתי — תן לי גישה ✓'}
+            </button>
+            {err&&<p style={{textAlign:'center',fontSize:'12px',color:'#fb7185',marginTop:'8px'}}>{err}</p>}
+            <p style={{textAlign:'center',fontSize:'11px',color:'#1E293B',marginTop:'10px'}}>תקבל גישה תוך שעות ספורות לאחר אישור התשלום</p>
+          </>
+        )}
 
         {step==='success'&&(
           <div style={{textAlign:'center',padding:'10px 0'}}>
-            <div style={{fontSize:'60px',marginBottom:'16px'}}>🎉</div>
-            <h3 style={{fontSize:'24px',fontWeight:'900',color:'#00E5A0',marginBottom:'10px'}}>תודה, {name}!</h3>
-            <p style={{fontSize:'15px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'24px'}}>הפרטים התקבלו.<br/>תקבל גישה לאקדמיה תוך שעות ספורות למייל <b style={{color:'#EDF2FF'}}>{email}</b></p>
-            <button className="btn-green" onClick={onClose} style={{padding:'13px 32px',borderRadius:'14px',fontSize:'16px',border:'none',cursor:'pointer'}}>סגור</button>
+            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>🎉</div>
+            <h3 style={{fontSize:'24px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>תודה, {name}!</h3>
+            <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'28px'}}>הפרטים התקבלו בהצלחה.<br/>תקבל גישה לאקדמיה תוך שעות ספורות<br/>למייל <b style={{color:'#EDF2FF'}}>{email}</b></p>
+            <button className="btn-green" onClick={onClose} style={{padding:'13px 36px',borderRadius:'13px',fontSize:'15px',border:'none',cursor:'pointer'}}>סגור</button>
           </div>
         )}
       </div>
@@ -616,24 +913,39 @@ const PurchaseModal=({onClose})=>{
   );
 };
 
+/* ══════════════ APP ══════════════ */
 const App=()=>{
   const [scrolled,setScrolled]=useState(false);
   const [modal,setModal]=useState(false);
-  const buy=()=>setModal(true);
+  const {user,loading,signOut}=useAuth();
+  const buy=()=>{ if(!user) setModal(true); };
+
   useEffect(()=>{
-    const h=()=>setScrolled(window.scrollY>55);
-    window.addEventListener('scroll',h,{passive:true});
-    return()=>window.removeEventListener('scroll',h);
+    const onScroll=()=>setScrolled(window.scrollY>50);
+    window.addEventListener('scroll',onScroll,{passive:true});
+    return()=>window.removeEventListener('scroll',onScroll);
   },[]);
+
+  useEffect(()=>{
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+    },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    return()=>obs.disconnect();
+  },[]);
+
   return(
     <>
       {modal&&<PurchaseModal onClose={()=>setModal(false)}/>}
-      <Navbar scrolled={scrolled} onBuy={buy}/>
+      <Navbar scrolled={scrolled} onBuy={buy} user={user} signOut={signOut}/>
       <main>
-        <Hero onBuy={buy}/>
+        <Hero onBuy={buy} user={user}/>
+        <HowItWorks/>
         <Tools/>
-        <Board/>
+        <Platform/>
+        <Testimonials/>
         <Pricing onBuy={buy}/>
+        <FAQ/>
         <CTABanner onBuy={buy}/>
       </main>
       <Footer onBuy={buy}/>
