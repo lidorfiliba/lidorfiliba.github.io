@@ -202,6 +202,10 @@
     </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>emailjs.init("ZWYqaiqD2U5oWexSq");</script>
+  <!-- ── CINEMATIC ENGINE CDN ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style id="parallax-system">
 /* ── PARALLAX ORBS × 5 ── */
@@ -570,6 +574,135 @@ html, body {
   [style*="fontSize:'44px'"], [style*="fontSize:'48px'"], [style*="fontSize:'52px'"] { font-size: 32px !important; }
   [style*="padding:'40px"] { padding: 20px 14px !important; }
   .btn-green, .btn-ghost { font-size: 14px !important; padding: 12px 18px !important; }
+}
+</style>
+
+
+<style id="cinematic-css">
+/* ════════════════════════════════════════════════════
+   CINEMATIC SCROLL ENGINE — CSS
+   Three.js tunnel + GSAP ScrollTrigger + Vignette
+   ════════════════════════════════════════════════════ */
+
+/* ── Three.js canvas ── */
+#ccanvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: -1; pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: cBgFadeIn 2.4s 3.6s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes cBgFadeIn { to { opacity: .45; } }
+
+/* ── Cinematic progress bar ── */
+#cbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 999; pointer-events: none;
+  transform-origin: left; transform: scaleX(0);
+  background: linear-gradient(90deg, #00FFB3 0%, #5AABFF 45%, #A78BFA 100%);
+  box-shadow: 0 0 14px rgba(0,255,179,.9), 0 0 35px rgba(0,255,179,.5), 0 0 70px rgba(0,255,179,.2);
+  will-change: transform;
+  transition: transform .07s linear;
+}
+
+/* ── Cinematic vignette ── */
+#cvign {
+  position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(2,8,20,.92) 100%);
+  opacity: .55; transition: opacity .28s ease; will-change: opacity;
+}
+
+/* ── Film scan lines ── */
+#cscan {
+  position: fixed; inset: 0; pointer-events: none; z-index: 3;
+  background: repeating-linear-gradient(
+    180deg, transparent 0px, transparent 2px,
+    rgba(2,8,20,.05) 2px, rgba(2,8,20,.05) 4px
+  );
+  opacity: .9; mix-blend-mode: multiply;
+}
+
+/* ── Colour temperature overlay ── */
+#ctemp {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  opacity: .1; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 90% 70% at 50% 15%, rgba(0,255,179,.9), transparent 65%);
+  transition: background 1.9s cubic-bezier(.16,1,.3,1);
+}
+
+/* ── Letterbox bars ── */
+.cbar-lb {
+  position: fixed; left: 0; right: 0; height: 0;
+  background: #020814; z-index: 98; pointer-events: none;
+  transition: height .45s cubic-bezier(.16,1,.3,1);
+}
+#cbar-top  { top: 0; }
+#cbar-btm  { bottom: 0; }
+.cbar-lb.show { height: 44px; }
+
+/* ── Hero cinematic zoom entry (triggers after 3.1s splash) ── */
+@keyframes heroZoomIn {
+  from {
+    transform: scale(1.15) translateZ(0);
+    filter: blur(22px) brightness(1.7);
+    opacity: .2;
+  }
+  to {
+    transform: scale(1) translateZ(0);
+    filter: blur(0px) brightness(1);
+    opacity: 1;
+  }
+}
+main > section:first-child {
+  animation: heroZoomIn 2.4s 3.15s cubic-bezier(.16,1,.3,1) both;
+  transform-origin: center 38%;
+  will-change: transform, filter, opacity;
+}
+
+/* ── Section depth layers ── */
+main > section {
+  position: relative;
+  transform-origin: center top;
+  will-change: transform;
+}
+
+/* ── Heading depth shadow ── */
+main h1, main h2 {
+  text-shadow: 0 12px 48px rgba(0,0,0,.65), 0 4px 16px rgba(0,0,0,.4);
+  will-change: transform;
+}
+
+/* ── Enhanced card depth ── */
+.tilt3d {
+  box-shadow:
+    0 6px 28px rgba(0,0,0,.55),
+    0 1px 0 rgba(255,255,255,.05) inset !important;
+  will-change: transform, box-shadow;
+}
+
+/* ── Stats grid depth ── */
+.stats-grid {
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* ── Reduce motion compliance ── */
+@media (prefers-reduced-motion: reduce) {
+  main > section:first-child { animation: none !important; }
+  #ccanvas, #cvign, #cscan, #ctemp, #cbar, .cbar-lb { display: none !important; }
+  main > section, main h1, main h2, .stats-grid { will-change: auto; }
+}
+
+/* ── Mobile: lighter engine ── */
+@media (max-width: 768px) {
+  #ccanvas { display: none !important; }
+  #cscan   { display: none !important; }
+  #cvign   { opacity: .35 !important; }
+  main > section:first-child {
+    animation-duration: 1.6s !important;
+    animation-delay: 3.15s !important;
+  }
 }
 </style>
 
@@ -1746,6 +1879,418 @@ if('serviceWorker' in navigator){
 
   setTimeout(initAfterRender,950);
   setTimeout(initTilt,2800);
+})();
+</script>
+
+
+<script id="cinematic-engine">
+(function(){
+'use strict';
+
+/* ════════════════════════════════════════════════════
+   CINEMATIC SCROLL ENGINE
+   Three.js star tunnel + GSAP ScrollTrigger
+   Vignette · Scan lines · Colour temperature · Letterbox
+   ════════════════════════════════════════════════════ */
+
+const MOBILE = window.innerWidth < 768;
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (REDUCED) return;
+
+/* ──────────────────────────────────────────────────
+   1. CINEMATIC PROGRESS BAR
+   Thin gradient line at top, scaleX driven by scroll
+─────────────────────────────────────────────────── */
+{
+  const bar = document.createElement('div');
+  bar.id = 'cbar';
+  document.body.appendChild(bar);
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY /
+      Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    bar.style.transform = 'scaleX(' + Math.min(1, pct) + ')';
+  }, { passive: true });
+}
+
+/* ──────────────────────────────────────────────────
+   2. CINEMATIC VIGNETTE
+   Radial dark-edge overlay; opacity spikes on fast scroll
+─────────────────────────────────────────────────── */
+{
+  const v = document.createElement('div');
+  v.id = 'cvign';
+  document.body.appendChild(v);
+  let lastY = 0, vig_t;
+  window.addEventListener('scroll', () => {
+    const vel = Math.abs(window.scrollY - lastY);
+    lastY = window.scrollY;
+    v.style.opacity = String(Math.min(.94, .55 + vel * .009));
+    clearTimeout(vig_t);
+    vig_t = setTimeout(() => { v.style.opacity = '.55'; }, 280);
+  }, { passive: true });
+}
+
+/* ──────────────────────────────────────────────────
+   3. FILM SCAN LINES
+   Fine repeating horizontal lines (cinema texture)
+─────────────────────────────────────────────────── */
+if (!MOBILE) {
+  const s = document.createElement('div');
+  s.id = 'cscan';
+  document.body.appendChild(s);
+}
+
+/* ──────────────────────────────────────────────────
+   4. COLOUR TEMPERATURE OVERLAY
+   Per-section light hue: green → blue → violet → gold
+─────────────────────────────────────────────────── */
+{
+  const ov = document.createElement('div');
+  ov.id = 'ctemp';
+  document.body.appendChild(ov);
+
+  const temps = [
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(0,255,179,.9),transparent 65%)',   // Hero  – green
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(90,171,255,.9),transparent 65%)',  // How   – blue
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(0,255,179,.8),transparent 65%)',   // Tools – green
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(167,139,250,.9),transparent 65%)', // Platform – violet
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(247,201,72,.7),transparent 65%)',  // Testimonials – gold
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(0,255,179,.9),transparent 65%)',   // Pricing – green
+    'radial-gradient(ellipse 90% 70% at 50% 15%,rgba(90,171,255,.8),transparent 65%)',  // FAQ – blue
+  ];
+
+  setTimeout(() => {
+    const secs = document.querySelectorAll('main > section');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.intersectionRatio >= .22) {
+          const i = [...secs].indexOf(e.target);
+          if (i >= 0) ov.style.background = temps[i] || temps[0];
+        }
+      });
+    }, { threshold: [.22] });
+    secs.forEach(s => io.observe(s));
+  }, 1800);
+}
+
+/* ──────────────────────────────────────────────────
+   5. LETTERBOX FLASH
+   Brief cinematic bars appear on section boundary cross
+─────────────────────────────────────────────────── */
+{
+  const lb_t = document.createElement('div');
+  const lb_b = document.createElement('div');
+  lb_t.id = 'cbar-top'; lb_t.className = 'cbar-lb';
+  lb_b.id = 'cbar-btm'; lb_b.className = 'cbar-lb';
+  document.body.appendChild(lb_t);
+  document.body.appendChild(lb_b);
+
+  let lastSec = -1, lb_timer;
+  const secEls = [];
+
+  setTimeout(() => {
+    document.querySelectorAll('main > section').forEach(s => secEls.push(s));
+
+    window.addEventListener('scroll', () => {
+      let cur = -1;
+      secEls.forEach((s, i) => {
+        const r = s.getBoundingClientRect();
+        if (r.top <= 90 && r.bottom > 90) cur = i;
+      });
+      if (cur !== lastSec && cur >= 0) {
+        lastSec = cur;
+        lb_t.classList.add('show'); lb_b.classList.add('show');
+        clearTimeout(lb_timer);
+        lb_timer = setTimeout(() => {
+          lb_t.classList.remove('show'); lb_b.classList.remove('show');
+        }, 480);
+      }
+    }, { passive: true });
+  }, 2200);
+}
+
+/* ──────────────────────────────────────────────────
+   6. THREE.JS STAR-FIELD TUNNEL
+   1800 particles in tunnel formation.
+   Camera flies forward through scroll (z-axis travel).
+   Rotation drift gives "floating in space" feel.
+─────────────────────────────────────────────────── */
+if (!MOBILE && window.THREE) {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'ccanvas';
+  document.body.prepend(canvas);
+
+  let W = window.innerWidth, H = window.innerHeight;
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: false,
+    powerPreference: 'low-power',
+  });
+  renderer.setSize(W, H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x020814, 0.00055);
+
+  const camera = new THREE.PerspectiveCamera(72, W / H, 1, 3500);
+  camera.position.z = 700;
+
+  /* ── Particle geometry ── */
+  const N = 1800;
+  const positions  = new Float32Array(N * 3);
+  const pColors    = new Float32Array(N * 3);
+  // colour palette  [R, G, B] (normalised)
+  const PAL = [
+    [0, 1, .70],          // green
+    [.35, .67, 1],        // blue
+    [.66, .55, .98],      // violet
+    [1, 1, 1],            // white
+    [1, .84, .28],        // gold
+    [.78, 1, .90],        // mint
+  ];
+
+  for (let i = 0; i < N; i++) {
+    const tunnelStar = i < N * .72;
+    if (tunnelStar) {
+      const angle  = Math.random() * Math.PI * 2;
+      const radius = 35 + Math.pow(Math.random(), .42) * 580;
+      positions[i*3]   = Math.cos(angle) * radius;
+      positions[i*3+1] = Math.sin(angle) * radius;
+      positions[i*3+2] = (Math.random() - .5) * 2800;
+    } else {
+      // scattered background stars
+      positions[i*3]   = (Math.random() - .5) * 1600;
+      positions[i*3+1] = (Math.random() - .5) * 1600;
+      positions[i*3+2] = (Math.random() - .5) * 2800;
+    }
+    const c = PAL[Math.floor(Math.random() * PAL.length)];
+    pColors[i*3] = c[0]; pColors[i*3+1] = c[1]; pColors[i*3+2] = c[2];
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(pColors, 3));
+
+  const mat = new THREE.PointsMaterial({
+    size: 1.7,
+    vertexColors: true,
+    transparent: true,
+    opacity: .62,
+    sizeAttenuation: true,
+  });
+
+  const stars = new THREE.Points(geo, mat);
+  scene.add(stars);
+
+  /* ── Nebula haze planes (distant depth) ── */
+  [
+    { color: 0x001a0d, z: -800, x:  200, y: -100 },
+    { color: 0x00081a, z: -400, x: -180, y:  120 },
+  ].forEach(({ color, z, x, y }) => {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(1200, 900),
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .35, side: THREE.DoubleSide })
+    );
+    mesh.position.set(x, y, z);
+    mesh.rotation.x = .18;
+    scene.add(mesh);
+  });
+
+  /* ── Scroll-driven camera depth ── */
+  let scrollPct = 0;
+  window.addEventListener('scroll', () => {
+    scrollPct = window.scrollY /
+      Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  }, { passive: true });
+
+  let camZ = 700, camTargetZ = 700;
+  let rotZ = 0,   rotTargetZ = 0;
+
+  (function renderLoop() {
+    requestAnimationFrame(renderLoop);
+
+    // Camera flies toward vanishing point as scroll increases
+    camTargetZ = 700 - scrollPct * 1400;
+    rotTargetZ = scrollPct * 0.55;
+
+    // Smooth damping  (lerp)
+    camZ += (camTargetZ - camZ) * .024;
+    rotZ += (rotTargetZ - rotZ) * .02;
+
+    camera.position.z = camZ;
+
+    // Slow ambient drift
+    const t = Date.now() * .0001;
+    stars.rotation.z  = rotZ + Math.sin(t)       * .022;
+    stars.rotation.x  =        Math.sin(t * .8)  * .042;
+    stars.rotation.y  =        Math.sin(t * .55) * .018;
+
+    renderer.render(scene, camera);
+  })();
+
+  window.addEventListener('resize', () => {
+    W = window.innerWidth; H = window.innerHeight;
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+    renderer.setSize(W, H);
+  });
+}
+
+/* ──────────────────────────────────────────────────
+   7. GSAP ScrollTrigger CINEMATIC SCROLL
+   Hero pull-back · section BG parallax ·
+   heading depth parallax · stats zoom reveal
+─────────────────────────────────────────────────── */
+function initGSAP() {
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const secs = document.querySelectorAll('main > section');
+  if (!secs.length) { setTimeout(initGSAP, 400); return; }
+
+  const hero = secs[0];
+
+  /* ── Hero: slow pull-back as user scrolls (parallax depth) ── */
+  gsap.to(hero, {
+    scrollTrigger: {
+      trigger: hero,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1.6,
+    },
+    y:      -90,
+    scale:  1.065,
+    ease:   'none',
+  });
+
+  /* ── Hero aurora blobs: deeper parallax than content ── */
+  hero.querySelectorAll('[class*="aurora"]').forEach((blob, i) => {
+    gsap.to(blob, {
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: .9 + i * .35,
+      },
+      y:     -260 - i * 70,
+      x:      i % 2 === 0 ? -50 : 50,
+      scale:  1.22,
+      ease:  'none',
+    });
+  });
+
+  /* ── Each subsequent section: parallax ambient background blobs ── */
+  secs.forEach((sec, i) => {
+    if (i === 0) return;
+
+    // The first radial-gradient div inside the section acts as depth layer
+    const bgBlob = sec.querySelector('[style*="absolute"][style*="radial-gradient"]');
+    if (bgBlob) {
+      gsap.to(bgBlob, {
+        scrollTrigger: {
+          trigger: sec,
+          start: 'top bottom',
+          end:   'bottom top',
+          scrub: 1.8,
+        },
+        y:    180,
+        ease: 'none',
+      });
+    }
+
+    /* ── Heading parallax: closer to viewer → moves faster ── */
+    const h2 = sec.querySelector('h2');
+    if (h2) {
+      gsap.fromTo(h2,
+        { y: 38 },
+        {
+          scrollTrigger: {
+            trigger: sec,
+            start: 'top 80%',
+            end:   'top 15%',
+            scrub: .75,
+          },
+          y:    -22,
+          ease: 'none',
+        }
+      );
+    }
+  });
+
+  /* ── Stats grid: cinematic scale-in reveal ── */
+  const statsGrid = document.querySelector('.stats-grid');
+  if (statsGrid) {
+    gsap.fromTo(statsGrid,
+      { scale: .86, opacity: 0, y: 64 },
+      {
+        scrollTrigger: {
+          trigger: statsGrid,
+          start: 'top 88%',
+          end:   'top 42%',
+          scrub: 1.1,
+        },
+        scale:   1,
+        opacity: 1,
+        y:       0,
+        ease:    'none',
+      }
+    );
+  }
+
+  /* ── Pricing card: dramatic zoom-in from depth ── */
+  const pricingCard = document.querySelector('.pricing-card');
+  if (pricingCard) {
+    gsap.fromTo(pricingCard,
+      { scale: .80, opacity: 0, filter: 'blur(14px)' },
+      {
+        scrollTrigger: {
+          trigger: pricingCard,
+          start: 'top 90%',
+          end:   'top 45%',
+          scrub: 1.2,
+        },
+        scale:   1,
+        opacity: 1,
+        filter:  'blur(0px)',
+        ease:    'none',
+      }
+    );
+  }
+
+  /* ── CTA banner: flythrough entrance ── */
+  const ctaBanner = secs[secs.length - 2];
+  if (ctaBanner) {
+    gsap.fromTo(ctaBanner,
+      { y: 100, scale: .93, opacity: 0, filter: 'blur(10px)' },
+      {
+        scrollTrigger: {
+          trigger: ctaBanner,
+          start: 'top 85%',
+          end:   'top 30%',
+          scrub: 1,
+        },
+        y:       0,
+        scale:   1,
+        opacity: 1,
+        filter:  'blur(0px)',
+        ease:    'none',
+      }
+    );
+  }
+
+  ScrollTrigger.refresh();
+}
+
+// Wait for React to finish rendering before attaching ScrollTrigger
+setTimeout(initGSAP, 1700);
+// Second refresh after full page settle
+setTimeout(() => {
+  if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+}, 5200);
+
 })();
 </script>
 
