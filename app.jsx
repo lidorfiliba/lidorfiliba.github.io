@@ -1,25 +1,60 @@
 const {useState,useEffect,useRef}=React;
 
-/* ── SUPABASE AUTH ── */
+/* ── SUPABASE AUTH (lazy: script loads only when first hook mounts) ── */
 const SUPA_URL='https://flcakringwxebpeifhke.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsY2FrcmluZ3d4ZWJwZWlmaGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk2NTY5NDIsImV4cCI6MjAyNTIzMjk0Mn0.Yw1234placeholder';
-const supa=supabase.createClient(SUPA_URL,SUPA_KEY);
+
+let supaPromise=null;
+const loadSupa=()=>{
+  if(supaPromise)return supaPromise;
+  supaPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.crossOrigin='anonymous';
+    s.onload=()=>resolve(window.supabase.createClient(SUPA_URL,SUPA_KEY));
+    s.onerror=reject;
+    document.head.appendChild(s);
+  });
+  return supaPromise;
+};
 
 const useAuth=()=>{
   const [user,setUser]=useState(null);
   const [loading,setLoading]=useState(true);
+  const supaRef=useRef(null);
   useEffect(()=>{
-    supa.auth.getSession().then(({data:{session}})=>{
-      setUser(session?.user??null);
-      setLoading(false);
-    });
-    const {data:{subscription}}=supa.auth.onAuthStateChange((_,session)=>{
-      setUser(session?.user??null);
-    });
-    return()=>subscription.unsubscribe();
+    let sub;
+    loadSupa().then(client=>{
+      supaRef.current=client;
+      client.auth.getSession().then(({data:{session}})=>{
+        setUser(session?.user??null);
+        setLoading(false);
+      });
+      sub=client.auth.onAuthStateChange((_,session)=>{
+        setUser(session?.user??null);
+      }).data.subscription;
+    }).catch(()=>setLoading(false));
+    return()=>{if(sub)sub.unsubscribe();};
   },[]);
-  const signOut=async()=>{await supa.auth.signOut();setUser(null);};
+  const signOut=async()=>{
+    if(supaRef.current)await supaRef.current.auth.signOut();
+    setUser(null);
+  };
   return{user,loading,signOut};
+};
+
+/* ── EmailJS lazy loader (used by PurchaseModal) ── */
+let emailPromise=null;
+const loadEmail=()=>{
+  if(emailPromise)return emailPromise;
+  emailPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    s.onload=()=>{window.emailjs.init("ZWYqaiqD2U5oWexSq");resolve(window.emailjs);};
+    s.onerror=reject;
+    document.head.appendChild(s);
+  });
+  return emailPromise;
 };
 
 
@@ -845,6 +880,7 @@ const PurchaseModal=({onClose})=>{
     if(!allFilled)return;
     setLoading(true);setErr('');
     try{
+      const emailjs=await loadEmail();
       await emailjs.send('service_s5wzeck','template_3pfjg4g',{
         from_name:name,from_email:email,phone:phone||'לא צוין',username:username||'לא צוין',
         payment_method:step==='bit'?'Bit / Paybox':'PayPal',price:step==='bit'?'₪980':'$320',

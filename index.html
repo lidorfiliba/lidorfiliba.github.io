@@ -14,7 +14,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script defer src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script defer src="app.js"></script>
@@ -206,8 +205,6 @@
     }
 
     </style>
-  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>document.addEventListener('DOMContentLoaded',()=>{if(window.emailjs)emailjs.init("ZWYqaiqD2U5oWexSq");});</script>
   <!-- ── CINEMATIC ENGINE CDN ── -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -713,30 +710,35 @@ main h1, main h2 {
 
 </head>
 <body>
-<!-- TradingView Ticker Tape — real-time prices, no API key needed -->
+<!-- TradingView Ticker Tape — injected after window.load to keep it off critical path -->
 <div id="tv-ticker" style="position:fixed;top:66px;left:0;right:0;z-index:48;overflow:hidden;border-bottom:1px solid rgba(0,255,179,.07);background:rgba(2,8,20,.97);">
   <div class="tradingview-widget-container">
     <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {
-      "symbols": [
-        {"proName": "NASDAQ:AAPL", "title": "Apple"},
-        {"proName": "NASDAQ:MSFT", "title": "Microsoft"},
-        {"proName": "NASDAQ:NVDA", "title": "Nvidia"},
-        {"proName": "NASDAQ:AMZN", "title": "Amazon"},
-        {"proName": "NASDAQ:META", "title": "Meta"},
-        {"proName": "NASDAQ:TSLA", "title": "Tesla"},
-        {"proName": "NASDAQ:GOOGL", "title": "Google"}
-      ],
-      "showSymbolLogo": true,
-      "isTransparent": true,
-      "displayMode": "adaptive",
-      "colorTheme": "dark",
-      "locale": "en"
-    }
-    </script>
   </div>
 </div>
+<script>
+window.addEventListener('load',function(){
+  var container=document.querySelector('#tv-ticker .tradingview-widget-container');
+  if(!container)return;
+  var s=document.createElement('script');
+  s.type='text/javascript';
+  s.async=true;
+  s.src='https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+  s.textContent=JSON.stringify({
+    symbols:[
+      {proName:'NASDAQ:AAPL',title:'Apple'},
+      {proName:'NASDAQ:MSFT',title:'Microsoft'},
+      {proName:'NASDAQ:NVDA',title:'Nvidia'},
+      {proName:'NASDAQ:AMZN',title:'Amazon'},
+      {proName:'NASDAQ:META',title:'Meta'},
+      {proName:'NASDAQ:TSLA',title:'Tesla'},
+      {proName:'NASDAQ:GOOGL',title:'Google'}
+    ],
+    showSymbolLogo:true,isTransparent:true,displayMode:'adaptive',colorTheme:'dark',locale:'en'
+  });
+  container.appendChild(s);
+});
+</script>
 <div id="root"></div>
 
 <script>
