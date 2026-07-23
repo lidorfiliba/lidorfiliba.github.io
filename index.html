@@ -11,7 +11,6 @@
   <link rel="apple-touch-icon" href="icon-192.png"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StockLens Academy | שוק ההון מ-0 עד 100</title>
-  <script defer src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -23,6 +22,13 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;font-family:'Heebo','Arial Hebrew',sans-serif;}
     html{scroll-behavior:smooth;direction:rtl;}
     body{background:#020814;color:#EDF2FF;direction:rtl;overflow-x:hidden;}
+
+    /* Minimal Tailwind-compatible utilities (replaces cdn.tailwindcss.com — only 3 tw classes were actually used) */
+    .hidden{display:none;}
+    @media(min-width:768px){
+      .md\:flex{display:flex;}
+      .md\:hidden{display:none;}
+    }
     ::-webkit-scrollbar{width:4px;}
     ::-webkit-scrollbar-track{background:#020814;}
     ::-webkit-scrollbar-thumb{background:rgba(0,229,160,.2);border-radius:4px;}
