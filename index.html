@@ -817,23 +817,33 @@ if('serviceWorker' in navigator){
     });
   },{passive:true});
 
-  /* ═══ 6. CARD 3D TILT — 24° max, vivid shadow ═══ */
+  /* ═══ 6. CARD 3D TILT — single delegated listener, rAF-throttled ═══ */
+  let tiltActive=null,tiltEvent=null,tiltTicking=false;
+  const TILT_SHADOW='0 50px 120px rgba(0,255,179,.28),0 0 0 1.5px rgba(0,255,179,.4),0 0 100px rgba(0,255,179,.14)';
   function initTilt(){
-    document.querySelectorAll('.tilt3d').forEach(card=>{
-      if(card._tiltInit)return;
-      card._tiltInit=true;
-      card.addEventListener('mousemove',e=>{
+    if(initTilt._done)return;initTilt._done=true;
+    document.addEventListener('mousemove',e=>{
+      tiltEvent=e;
+      if(tiltTicking)return;
+      tiltTicking=true;
+      requestAnimationFrame(()=>{
+        tiltTicking=false;
+        const ev=tiltEvent;
+        const card=ev.target.closest?ev.target.closest('.tilt3d'):null;
+        if(tiltActive&&tiltActive!==card){
+          tiltActive.style.transform='';
+          tiltActive.style.boxShadow='';
+          tiltActive=null;
+        }
+        if(!card)return;
+        tiltActive=card;
         const r=card.getBoundingClientRect();
-        const x=((e.clientX-r.left)/r.width-.5)*24;
-        const y=((e.clientY-r.top)/r.height-.5)*-24;
+        const x=((ev.clientX-r.left)/r.width-.5)*24;
+        const y=((ev.clientY-r.top)/r.height-.5)*-24;
         card.style.transform=`perspective(750px) rotateX(${y}deg) rotateY(${x}deg) translateY(-14px) scale(1.03)`;
-        card.style.boxShadow=`0 50px 120px rgba(0,255,179,.28),0 0 0 1.5px rgba(0,255,179,.4),0 0 100px rgba(0,255,179,.14)`;
-      },{passive:true});
-      card.addEventListener('mouseleave',()=>{
-        card.style.transform='';
-        card.style.boxShadow='';
-      },{passive:true});
-    });
+        card.style.boxShadow=TILT_SHADOW;
+      });
+    },{passive:true});
   }
 
   /* ═══ 7. INIT AFTER REACT RENDERS ═══ */
@@ -875,7 +885,6 @@ if('serviceWorker' in navigator){
   }
 
   setTimeout(initAfterRender,950);
-  setTimeout(initTilt,2800);
 })();
 </script>
 
