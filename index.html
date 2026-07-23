@@ -268,17 +268,6 @@
   50%{transform:translate(-70px,65px) scale(1.22)}
 }
 
-/* ── CURSOR GLOW — large, vivid ── */
-.cursor-glow{
-  position:fixed;width:1000px;height:1000px;border-radius:50%;
-  pointer-events:none;z-index:2;
-  background:radial-gradient(circle,rgba(0,255,179,.22) 0%,rgba(0,255,179,.08) 28%,rgba(90,171,255,.03) 50%,transparent 65%);
-  transform:translate(-50%,-50%);
-  transition:left .06s ease,top .06s ease;
-  mix-blend-mode:screen;
-  filter:blur(6px);
-}
-
 /* ── PARTICLES ── */
 @keyframes particleFloat{
   0%,100%{transform:translateY(0) translateX(0) scale(1);opacity:.3;}
@@ -550,7 +539,6 @@ html, body {
     opacity: .5 !important;
   }
   .p-orb-3 { display: none !important; }
-  .cursor-glow { display: none !important; }
 
   /* MODAL */
   [style*="maxWidth:'460px'"], [style*="maxWidth:'480px'"] {
@@ -751,20 +739,13 @@ if('serviceWorker' in navigator){
 
 <script id="parallax-engine">
 (function(){
-  /* ═══ 1. INJECT ORBS × 5 + CURSOR GLOW + DEPTH GRID ═══ */
+  /* ═══ 1. INJECT ORBS × 5 + DEPTH GRID (cursor glow removed — battery/GPU cost) ═══ */
   ['p-orb p-orb-1','p-orb p-orb-2','p-orb p-orb-3','p-orb p-orb-4','p-orb p-orb-5'].forEach(cls=>{
     const d=document.createElement('div');d.className=cls;document.body.prepend(d);
   });
-  const cg=document.createElement('div');cg.className='cursor-glow';document.body.appendChild(cg);
   const dg=document.createElement('div');dg.className='depth-grid';document.body.prepend(dg);
 
-  /* ═══ 2. CURSOR GLOW ═══ */
-  document.addEventListener('mousemove',e=>{
-    cg.style.left=e.clientX+'px';
-    cg.style.top=e.clientY+'px';
-  },{passive:true});
-
-  /* ═══ 3. PARTICLE FIELD — 60 glowing dots ═══ */
+  /* ═══ 2. PARTICLE FIELD — 30 glowing dots (halved from 60 per excessive-motion rule) ═══ */
   (function(){
     const wrap=document.createElement('div');
     wrap.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;';
@@ -774,7 +755,7 @@ if('serviceWorker' in navigator){
       'rgba(167,139,250,.55)','rgba(34,211,238,.65)',
       'rgba(251,113,133,.45)','rgba(247,201,72,.4)'
     ];
-    for(let i=0;i<60;i++){
+    for(let i=0;i<30;i++){
       const p=document.createElement('div');
       const sz=(Math.random()*2.8+.6).toFixed(2);
       const col=palette[Math.floor(Math.random()*palette.length)];
@@ -914,6 +895,19 @@ const MOBILE = window.innerWidth < 768;
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (REDUCED) return;
 
+/* ── Single rAF-throttled scroll dispatcher — subscribers register a callback ── */
+const scrollSubs = [];
+let scrollTicking = false;
+window.addEventListener('scroll', () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    for (let i = 0; i < scrollSubs.length; i++) scrollSubs[i]();
+    scrollTicking = false;
+  });
+}, { passive: true });
+const onScroll = fn => scrollSubs.push(fn);
+
 /* ──────────────────────────────────────────────────
    1. CINEMATIC PROGRESS BAR
    Thin gradient line at top, scaleX driven by scroll
@@ -922,11 +916,11 @@ if (REDUCED) return;
   const bar = document.createElement('div');
   bar.id = 'cbar';
   document.body.appendChild(bar);
-  window.addEventListener('scroll', () => {
+  onScroll(() => {
     const pct = window.scrollY /
       Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     bar.style.transform = 'scaleX(' + Math.min(1, pct) + ')';
-  }, { passive: true });
+  });
 }
 
 /* ──────────────────────────────────────────────────
@@ -938,13 +932,13 @@ if (REDUCED) return;
   v.id = 'cvign';
   document.body.appendChild(v);
   let lastY = 0, vig_t;
-  window.addEventListener('scroll', () => {
+  onScroll(() => {
     const vel = Math.abs(window.scrollY - lastY);
     lastY = window.scrollY;
     v.style.opacity = String(Math.min(.94, .55 + vel * .009));
     clearTimeout(vig_t);
     vig_t = setTimeout(() => { v.style.opacity = '.55'; }, 280);
-  }, { passive: true });
+  });
 }
 
 /* ──────────────────────────────────────────────────
@@ -1008,7 +1002,7 @@ if (!MOBILE) {
   setTimeout(() => {
     document.querySelectorAll('main > section').forEach(s => secEls.push(s));
 
-    window.addEventListener('scroll', () => {
+    onScroll(() => {
       let cur = -1;
       secEls.forEach((s, i) => {
         const r = s.getBoundingClientRect();
@@ -1022,7 +1016,7 @@ if (!MOBILE) {
           lb_t.classList.remove('show'); lb_b.classList.remove('show');
         }, 480);
       }
-    }, { passive: true });
+    });
   }, 2200);
 }
 
