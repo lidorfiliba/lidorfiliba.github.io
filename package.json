@@ -1,0 +1,12 @@
+{
+  "name": "stocklens-academy-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "StockLens Academy landing page (static, hosted on GitHub Pages)",
+  "scripts": {
+    "build": "esbuild app.jsx --minify --jsx-factory=React.createElement --jsx-fragment=React.Fragment --target=es2020 --outfile=app.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
