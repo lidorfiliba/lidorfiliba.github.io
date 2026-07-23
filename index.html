@@ -129,7 +129,6 @@
     /* Stronger green glows throughout */
     :root {
       --green: #00FFB3;
-      --accent: #00FFB3;
     }
 
     /* Boost glow animations */
@@ -201,7 +200,6 @@
       .btn-green {
         box-shadow: 0 0 32px rgba(0,255,179,.5), 0 6px 24px rgba(0,255,179,.3) !important;
       }
-      body { background: #060d1f !important; }
     }
 
     </style>
@@ -571,17 +569,6 @@ html, body {
    Three.js tunnel + GSAP ScrollTrigger + Vignette
    ════════════════════════════════════════════════════ */
 
-/* ── Three.js canvas ── */
-#ccanvas {
-  position: fixed; inset: 0;
-  width: 100%; height: 100%;
-  z-index: -1; pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: screen;
-  animation: cBgFadeIn 2.4s 3.6s cubic-bezier(.16,1,.3,1) forwards;
-}
-@keyframes cBgFadeIn { to { opacity: .45; } }
-
 /* ── Cinematic progress bar ── */
 #cbar {
   position: fixed; top: 0; left: 0; right: 0;
@@ -713,7 +700,7 @@ main h1, main h2 {
 /* ── Reduce motion compliance ── */
 @media (prefers-reduced-motion: reduce) {
   main > section:first-child { animation: none !important; }
-  #ccanvas, #cvign, #cscan, #ctemp, #cbar, .cbar-lb { display: none !important; }
+  #cvign, #cscan, #ctemp, #cbar, .cbar-lb { display: none !important; }
   main > section, main h1, main h2, .stats-grid { will-change: auto; }
   .reveal-stats, .reveal-pricing, .reveal-cta {
     opacity: 1 !important; transform: none !important; filter: none !important;
@@ -723,7 +710,6 @@ main h1, main h2 {
 
 /* ── Mobile: lighter engine ── */
 @media (max-width: 768px) {
-  #ccanvas { display: none !important; }
   #cscan   { display: none !important; }
   #cvign   { opacity: .35 !important; }
   main > section:first-child {
