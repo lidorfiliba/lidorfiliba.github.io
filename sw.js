@@ -1,4 +1,4 @@
-const CACHE = 'sl-home-v7';
+const CACHE = 'sl-home-v8';
 const PRECACHE = [
   './',
   '/index.html',

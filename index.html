@@ -729,6 +729,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+/* autoConfig off BEFORE init: Meta's automatic configuration scans the DOM and
+   binds its own handlers to buttons and form fields for auto-matching. This page
+   fires every event explicitly, so that scanning buys nothing and is the one part
+   of the pixel that can touch the purchase form's inputs. Leave this off. */
+fbq('set', 'autoConfig', false, '27572902432409101');
 fbq('init', '27572902432409101');
 fbq('track', 'PageView');
 </script>
@@ -1130,8 +1135,12 @@ setTimeout(initReveals, 900);
   var TXT_BUY     = 'רכוש';
   /* "shalachti" = I sent — the purchase form's submit button */
   var TXT_SUBMIT  = 'שלחתי';
-  /* "the details were received successfully" — the success screen */
-  var TXT_SUCCESS = 'הפרטים התקבלו בהצלחה';
+
+  /* Stable element ids rendered by app.jsx (PurchaseModal). Using ids instead
+     of scanning textContent means the observer never reads text and never has
+     to watch characterData. Keep these in sync with app.jsx. */
+  var ID_MODAL   = 'purchase-modal';
+  var ID_SUCCESS = 'purchase-success';
 
   /* Fire-once flags — in memory only, no localStorage */
   var sentView = false;
@@ -1182,6 +1191,18 @@ setTimeout(initReveals, 900);
      A submit click alone is not enough: the EmailJS call can
      fail and render an error instead. So clicking submit arms
      a watcher that waits for the success screen to appear.
+
+     SAFETY RULES — a previous version of this block was blamed for
+     breaking typing in the purchase form. Do not relax any of these:
+       · characterData is NEVER observed. Text is never read.
+       · The observer is scoped to #purchase-modal, not #root, so nothing
+         outside the modal can trigger it.
+       · Nothing here listens to input / keydown / keyup / focus, and no
+         listener is ever attached to the form or its inputs.
+       · The observer is armed only by a submit click, and disconnects the
+         instant Lead fires (or after 90s, whichever comes first).
+       · The callback only calls getElementById — it never touches, reads
+         or writes the focused input, so it cannot disturb typing.
   ─────────────────────────────────────────────────── */
   var leadObserver = null, leadTimer = null;
 
@@ -1190,22 +1211,29 @@ setTimeout(initReveals, 900);
     if (leadTimer){ clearTimeout(leadTimer); leadTimer = null; }
   }
 
+  function fireLead(){
+    if (sentLead) return;
+    sentLead = true;
+    track('Lead', { content_name: NAME, value: VALUE, currency: CURRENCY });
+    stopLeadWatch();
+  }
+
   function armLeadWatch(){
     if (sentLead || leadObserver) return;
-    var root = document.getElementById('root');
-    if (!root) return;
+
+    /* Narrowest container that survives the step swap. The modal card stays
+       mounted while its contents change from the form to the success screen. */
+    var modal = document.getElementById(ID_MODAL);
+    if (!modal) return;
 
     var check = function(){
       if (sentLead){ stopLeadWatch(); return; }
-      if ((root.textContent || '').indexOf(TXT_SUCCESS) > -1){
-        sentLead = true;
-        track('Lead', { content_name: NAME, value: VALUE, currency: CURRENCY });
-        stopLeadWatch();
-      }
+      if (document.getElementById(ID_SUCCESS)) fireLead();
     };
 
+    /* childList only — never characterData, never attributes. */
     leadObserver = new MutationObserver(check);
-    leadObserver.observe(root, { childList: true, subtree: true, characterData: true });
+    leadObserver.observe(modal, { childList: true, subtree: true });
     /* Give up after 90s so the observer never lives on indefinitely */
     leadTimer = setTimeout(stopLeadWatch, 90000);
     check();

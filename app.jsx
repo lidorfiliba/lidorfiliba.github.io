@@ -863,6 +863,21 @@ const Footer=({onBuy})=>{
 };
 
 /* ══════════════ PURCHASE MODAL ══════════════ */
+/* InputField and its style object live at module scope on purpose.
+   Defining a component inside another component creates a NEW function
+   identity on every render, so React unmounts and remounts the <input>
+   on each keystroke and the field loses focus after every character. */
+const inp={width:'100%',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'11px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'13px 15px',outline:'none',marginTop:'6px',boxSizing:'border-box',transition:'border-color .2s,box-shadow .2s'};
+
+const InputField=({label,type='text',value,onChange,placeholder})=>(
+  <div style={{marginBottom:'14px'}}>
+    <div style={{fontSize:'12px',color:'#64748B',marginBottom:'4px',fontWeight:'600'}}>{label}</div>
+    <input style={inp} type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
+      onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.45)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.08)';}}
+      onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.1)';e.target.style.boxShadow='';}}/>
+  </div>
+);
+
 const PurchaseModal=({onClose})=>{
   const [step,setStep]=React.useState('choose');
   const [name,setName]=React.useState('');
@@ -891,21 +906,10 @@ const PurchaseModal=({onClose})=>{
     setLoading(false);
   };
 
-  const inp={width:'100%',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'11px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'13px 15px',outline:'none',marginTop:'6px',boxSizing:'border-box',transition:'border-color .2s,box-shadow .2s'};
-
-  const InputField=({label,type='text',value,onChange,placeholder})=>(
-    <div style={{marginBottom:'14px'}}>
-      <div style={{fontSize:'12px',color:'#64748B',marginBottom:'4px',fontWeight:'600'}}>{label}</div>
-      <input style={inp} type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
-        onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.45)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.08)';}}
-        onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.1)';e.target.style.boxShadow='';}}/>
-    </div>
-  );
-
   return(
     <div style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,.85)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}
       onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
-      <div style={{background:'rgba(4,8,20,.98)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.9),0 0 0 1px rgba(0,229,160,.07)',maxHeight:'92vh',overflowY:'auto'}}>
+      <div id="purchase-modal" style={{background:'rgba(4,8,20,.98)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.9),0 0 0 1px rgba(0,229,160,.07)',maxHeight:'92vh',overflowY:'auto'}}>
         <button onClick={onClose} style={{position:'absolute',top:'16px',left:'16px',background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'50%',width:'34px',height:'34px',cursor:'pointer',color:'#64748B',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .2s'}}
           onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,.08)';e.currentTarget.style.color='#94A3B8';}}
           onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.color='#64748B';}}>✕</button>
@@ -966,7 +970,9 @@ const PurchaseModal=({onClose})=>{
         )}
 
         {step==='success'&&(
-          <div style={{textAlign:'center',padding:'10px 0'}}>
+          /* id is the Meta Pixel's Lead signal — see #fb-events in index.html.
+             Renaming it silently stops Lead from firing. */
+          <div id="purchase-success" style={{textAlign:'center',padding:'10px 0'}}>
             <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>🎉</div>
             <h3 style={{fontSize:'24px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>תודה, {name}!</h3>
             <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'28px'}}>הפרטים התקבלו בהצלחה.<br/>תקבל גישה לאקדמיה תוך שעות ספורות<br/>למייל <b style={{color:'#EDF2FF'}}>{email}</b></p>
