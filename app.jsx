@@ -223,9 +223,13 @@ const SplashScreen=({onDone})=>{
         </div>
         <div style={{width:'clamp(220px,36vw,320px)',height:'2px',background:'rgba(255,255,255,.07)',
           borderRadius:'999px',overflow:'hidden',marginBottom:'18px'}}>
+          {/* scaleX, not width: animating width relayouts on every frame during
+              the splash, which is the busiest second of the page's life. The
+              parent clips overflow, so the result is pixel-identical. */}
           <div style={{height:'100%',borderRadius:'999px',
             background:'linear-gradient(90deg,#00FFB3,#5AABFF,#A78BFA)',
-            width:0,animation:'splashBar 1.6s .42s cubic-bezier(.16,1,.3,1) forwards'}}/>
+            width:'100%',transform:'scaleX(0)',transformOrigin:'left',
+            animation:'splashBar 1.6s .42s cubic-bezier(.16,1,.3,1) forwards'}}/>
         </div>
         <div style={{fontSize:'11px',fontWeight:600,color:'#1E3A5F',letterSpacing:'.1em',
           opacity:0,animation:'splashFade .5s .55s ease forwards'}}>שוק ההון מ-0 עד 100</div>
