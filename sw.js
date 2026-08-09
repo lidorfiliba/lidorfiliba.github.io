@@ -1,7 +1,8 @@
-const CACHE = 'sl-home-v6';
+const CACHE = 'sl-home-v7';
 const PRECACHE = [
   './',
   '/index.html',
+  '/privacy.html',
   '/app.js',
   '/manifest.json',
   '/icon-192.png',

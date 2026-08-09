@@ -719,6 +719,24 @@ main h1, main h2 {
 }
 </style>
 
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '27572902432409101');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 </head>
 <body>
 <!-- TradingView Ticker Tape — injected after window.load to keep it off critical path -->
@@ -1084,6 +1102,148 @@ setTimeout(initReveals, 900);
 
 })();
 });
+</script>
+
+
+<script id="fb-events">
+/* ════════════════════════════════════════════════════
+   META PIXEL — CONVERSION EVENTS
+   Behaviour-driven: this is a single-page React app with no
+   route changes, so every event binds to a real user action.
+
+   NOTE: no Purchase event is fired anywhere. Payment happens
+   off-site (Bit / PayPal) with no callback, so a client-side
+   Purchase would be self-reported and false. Purchases are
+   uploaded manually as offline conversions instead.
+   ════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+
+  var NAME     = 'StockLens Academy';
+  var VALUE    = 980;
+  var CURRENCY = 'ILS';
+
+  /* Text markers, matched against what React actually renders. The page
+     is served as UTF-8 (<meta charset> + Hebrew <title>), so these string
+     literals compare correctly against the bundle's \u-escaped output. */
+  /* "rakhosh" = buy — appears on all 6 purchase CTAs */
+  var TXT_BUY     = 'רכוש';
+  /* "shalachti" = I sent — the purchase form's submit button */
+  var TXT_SUBMIT  = 'שלחתי';
+  /* "the details were received successfully" — the success screen */
+  var TXT_SUCCESS = 'הפרטים התקבלו בהצלחה';
+
+  /* Fire-once flags — in memory only, no localStorage */
+  var sentView = false;
+  var sentLead = false;
+
+  function track(ev, params){
+    if (!window.fbq) return;
+    try { window.fbq('track', ev, params); } catch(e){}
+  }
+
+  /* ──────────────────────────────────────────────────
+     1. ViewContent — pricing card reaches 35% visibility.
+     React renders after load, so the observer attaches late
+     (the parallax-engine uses the same trick at 950ms).
+  ─────────────────────────────────────────────────── */
+  function watchPricing(tries){
+    var el = document.querySelector('.pricing-card') || document.getElementById('pricing');
+    if (!el){
+      if (tries > 0) setTimeout(function(){ watchPricing(tries - 1); }, 1000);
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (sentView) return;
+        /* Normal case: 35% of the card is on screen.
+           Tall-card case (small phones): the card can be taller than the
+           viewport, so its ratio may never reach .35 — treat "covers 60%
+           of the screen" as the equivalent signal.                      */
+        var fillsScreen = e.intersectionRect.height >= window.innerHeight * 0.6;
+        if (e.intersectionRatio >= 0.35 || (e.isIntersecting && fillsScreen)){
+          sentView = true;
+          track('ViewContent', {
+            content_name: NAME,
+            content_category: 'course',
+            value: VALUE,
+            currency: CURRENCY
+          });
+          io.disconnect();
+        }
+      });
+    }, { threshold: [0.15, 0.35, 0.6] });
+    io.observe(el);
+  }
+  setTimeout(function(){ watchPricing(6); }, 1500);
+
+  /* ──────────────────────────────────────────────────
+     2. Lead — ONLY on a confirmed successful submission.
+     A submit click alone is not enough: the EmailJS call can
+     fail and render an error instead. So clicking submit arms
+     a watcher that waits for the success screen to appear.
+  ─────────────────────────────────────────────────── */
+  var leadObserver = null, leadTimer = null;
+
+  function stopLeadWatch(){
+    if (leadObserver){ leadObserver.disconnect(); leadObserver = null; }
+    if (leadTimer){ clearTimeout(leadTimer); leadTimer = null; }
+  }
+
+  function armLeadWatch(){
+    if (sentLead || leadObserver) return;
+    var root = document.getElementById('root');
+    if (!root) return;
+
+    var check = function(){
+      if (sentLead){ stopLeadWatch(); return; }
+      if ((root.textContent || '').indexOf(TXT_SUCCESS) > -1){
+        sentLead = true;
+        track('Lead', { content_name: NAME, value: VALUE, currency: CURRENCY });
+        stopLeadWatch();
+      }
+    };
+
+    leadObserver = new MutationObserver(check);
+    leadObserver.observe(root, { childList: true, subtree: true, characterData: true });
+    /* Give up after 90s so the observer never lives on indefinitely */
+    leadTimer = setTimeout(stopLeadWatch, 90000);
+    check();
+  }
+
+  /* ──────────────────────────────────────────────────
+     3. Delegated click handling — capture phase on document
+     so it survives every React re-render.
+       · InitiateCheckout — any purchase CTA
+       · Contact          — mailto / WhatsApp links
+       · arms the Lead watcher on form submit
+  ─────────────────────────────────────────────────── */
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t || typeof t.closest !== 'function') return;
+
+    var btn = t.closest('button');
+    if (btn){
+      var label = btn.textContent || '';
+      if (label.indexOf(TXT_BUY) > -1){
+        track('InitiateCheckout', { content_name: NAME, value: VALUE, currency: CURRENCY });
+      } else if (label.indexOf(TXT_SUBMIT) > -1 && !btn.disabled){
+        armLeadWatch();
+      }
+    }
+
+    var a = t.closest('a[href]');
+    if (a){
+      var href = a.getAttribute('href') || '';
+      if (/^mailto:/i.test(href) ||
+          /^whatsapp:/i.test(href) ||
+          /(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com)/i.test(href)){
+        track('Contact', { content_name: NAME });
+      }
+    }
+  }, true);
+
+})();
 </script>
 
 </body>

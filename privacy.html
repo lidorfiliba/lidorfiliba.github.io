@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>מדיניות פרטיות | StockLens Academy</title>
+  <meta name="description" content="מדיניות הפרטיות של StockLens Academy — איזה מידע נאסף באתר, השימוש ב-Meta Pixel ובקובצי Cookie, וכיצד ניתן לבטל את המעקב."/>
+  <link rel="icon" href="icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;
+      --surface:rgba(14,24,52,.7);
+      --border:rgba(255,255,255,.1);
+      --text:#F0F6FF;
+      --text2:#9FB4CE;
+      --text3:#6F87A6;
+      --green:#00FFB3;
+      --blue:#5AABFF;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;
+      line-height:1.75;
+      direction:rtl;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Ambient glow — decorative only */
+    .glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+    .glow-a{width:70vw;height:70vw;max-width:700px;max-height:700px;top:-20%;right:-15%;
+      background:radial-gradient(circle,rgba(0,255,179,.16) 0%,rgba(0,255,179,.04) 40%,transparent 68%);}
+    .glow-b{width:60vw;height:60vw;max-width:600px;max-height:600px;bottom:-15%;left:-15%;
+      background:radial-gradient(circle,rgba(90,171,255,.14) 0%,rgba(90,171,255,.03) 40%,transparent 68%);}
+
+    .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    /* ── Header ── */
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      min-height:44px;padding:10px 16px;margin-bottom:32px;
+      border:1px solid var(--border);border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:var(--text2);text-decoration:none;
+      font-size:14px;font-weight:600;
+      transition:color .2s,border-color .2s,background .2s;
+    }
+    .back:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
+
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .brand-name{font-size:20px;font-weight:900;line-height:1.1;
+      background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:8px;letter-spacing:3px;color:#476282;text-transform:uppercase;font-weight:600;}
+
+    h1{font-size:clamp(30px,5.5vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px;}
+    h1 .tg{background:linear-gradient(135deg,#00FFB3,#5AABFF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .updated{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:12px;}
+    .lede{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:40px;max-width:65ch;}
+
+    hr.grad{height:1px;border:none;margin:0 0 40px;
+      background:linear-gradient(90deg,transparent,rgba(0,255,179,.35),rgba(90,171,255,.22),transparent);}
+
+    /* ── Sections ── */
+    section{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 26px;
+      margin-bottom:16px;
+    }
+    h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.35;
+      display:flex;align-items:center;gap:10px;}
+    h2 .num{
+      flex-shrink:0;width:28px;height:28px;border-radius:9px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.22);
+      color:var(--green);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;
+      direction:ltr;
+    }
+    h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 8px;}
+    p{color:var(--text2);margin-bottom:12px;max-width:65ch;}
+    p:last-child,ul:last-child{margin-bottom:0;}
+
+    ul{list-style:none;padding:0;margin:0 0 12px;}
+    li{position:relative;color:var(--text2);padding-inline-start:20px;margin-bottom:9px;max-width:65ch;}
+    li::before{
+      content:'';position:absolute;inset-inline-start:0;top:.65em;
+      width:6px;height:6px;border-radius:50%;background:var(--green);opacity:.75;
+    }
+    li strong{color:var(--text);font-weight:700;}
+
+    a{color:var(--green);text-decoration:none;font-weight:600;
+      border-bottom:1px solid rgba(0,255,179,.3);transition:border-color .2s,color .2s;}
+    a:hover{border-bottom-color:var(--green);}
+    a.back{border-bottom:1px solid var(--border);}
+
+    /* Accessible focus — never removed */
+    a:focus-visible,.back:focus-visible{
+      outline:2px solid var(--green);outline-offset:3px;border-radius:4px;
+    }
+
+    .note{
+      background:rgba(90,171,255,.06);
+      border:1px solid rgba(90,171,255,.22);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .note p{color:#BBD2EC;margin-bottom:0;font-size:15px;}
+
+    footer{
+      margin-top:40px;padding-top:24px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;gap:12px;
+      font-size:13px;color:var(--text3);
+    }
+
+    @media(max-width:600px){
+      .wrap{padding:28px 16px 60px;}
+      section{padding:22px 18px;border-radius:16px;}
+      h2{font-size:17px;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *{transition:none!important;animation:none!important;}
+    }
+  </style>
+</head>
+<body>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <a href="index.html" class="back">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/>
+      </svg>
+      חזרה לאתר
+    </a>
+
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
+        <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
+        <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">StockLens</div>
+        <div class="brand-sub">Academy</div>
+      </div>
+    </div>
+
+    <h1>מדיניות <span class="tg">פרטיות</span></h1>
+    <div class="updated">עודכן לאחרונה: 9 באוגוסט 2026</div>
+    <p class="lede">
+      מסמך זה מסביר איזה מידע נאסף באתר StockLens Academy, כיצד נעשה בו שימוש, עם מי הוא משותף,
+      וכיצד באפשרותך לשלוט בכך. השימוש באתר מהווה הסכמה למדיניות זו.
+    </p>
+
+    <hr class="grad"/>
+
+    <section>
+      <h2><span class="num">1</span>מי אנחנו</h2>
+      <p>
+        האתר StockLens Academy מופעל על ידי לידור פליבה, ומשמש לשיווק ומכירה של קורס בתחום שוק ההון
+        ושל כלי ניתוח מניות. לכל שאלה בנושא פרטיות ניתן לפנות בכתובת
+        <a href="mailto:Lidorfiliba@gmail.com">Lidorfiliba@gmail.com</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span>איזה מידע נאסף</h2>
+
+      <h3>מידע שאתה מוסר מרצונך</h3>
+      <p>בעת מילוי טופס הרכישה באתר, נאספים הפרטים הבאים:</p>
+      <ul>
+        <li><strong>שם מלא</strong> — לצורך זיהוי ההזמנה</li>
+        <li><strong>כתובת דואר אלקטרוני</strong> — לצורך משלוח פרטי הגישה לאקדמיה</li>
+        <li><strong>מספר טלפון</strong> — לצורך יצירת קשר במקרה של בעיה בהזמנה</li>
+        <li><strong>שם משתמש רצוי</strong> — לצורך פתיחת החשבון באקדמיה</li>
+      </ul>
+
+      <h3>מידע שנאסף באופן אוטומטי</h3>
+      <p>בעת הגלישה באתר נאסף מידע טכני ושיווקי, בין היתר באמצעות Meta Pixel וקובצי Cookie:</p>
+      <ul>
+        <li>כתובת IP ומיקום גיאוגרפי משוער</li>
+        <li>סוג המכשיר, מערכת ההפעלה והדפדפן</li>
+        <li>הדפים והמקטעים שנצפו באתר ומשך השהייה בהם</li>
+        <li>פעולות שבוצעו באתר — למשל צפייה בעמוד התמחור, לחיצה על כפתור רכישה או שליחת טופס</li>
+        <li>מקור ההגעה לאתר (לדוגמה: מודעה בפייסבוק או באינסטגרם)</li>
+      </ul>
+
+      <div class="note">
+        <p>
+          חשוב לדעת: תהליך התשלום עצמו מתבצע מחוץ לאתר, בפלטפורמות חיצוניות (Bit / Paybox או PayPal).
+          האתר אינו אוסף, אינו מקבל ואינו שומר פרטי כרטיס אשראי או פרטי חשבון בנק.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="num">3</span>Meta Pixel וקובצי Cookie</h2>
+      <p>
+        באתר מותקן <strong>Meta Pixel</strong> — כלי מדידה ופרסום של חברת Meta Platforms, Inc.
+        (הבעלים של פייסבוק ואינסטגרם). ה-Pixel עושה שימוש בקובצי Cookie ובטכנולוגיות מעקב דומות
+        המאוחסנים בדפדפן שלך.
+      </p>
+      <p>ה-Pixel מדווח ל-Meta על אירועים כגון:</p>
+      <ul>
+        <li>כניסה לעמוד באתר</li>
+        <li>צפייה במידע על הקורס ובעמוד התמחור</li>
+        <li>התחלת תהליך רכישה (לחיצה על כפתור רכישה)</li>
+        <li>השלמת שליחה של טופס פרטים</li>
+        <li>לחיצה על קישורי יצירת קשר</li>
+      </ul>
+      <p>
+        מידע זה משותף עם Meta לצורכי <strong>פרסום, מדידת ביצועי מודעות ויצירת קהלי יעד</strong>,
+        לרבות הצגת מודעות חוזרות (רימרקטינג) למי שביקר באתר. השימוש של Meta במידע כפוף
+        <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer">למדיניות הפרטיות של Meta</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2><span class="num">4</span>למה נעשה שימוש במידע</h2>
+      <ul>
+        <li>אספקת המוצר שנרכש ופתיחת גישה לאקדמיה</li>
+        <li>יצירת קשר בנוגע להזמנה ומתן תמיכה</li>
+        <li>מדידת ביצועי האתר והמודעות ושיפורם</li>
+        <li>הצגת מודעות רלוונטיות בפלטפורמות של Meta</li>
+        <li>עמידה בדרישות חוקיות ככל שיידרש</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num">5</span>שיתוף מידע עם צדדים שלישיים</h2>
+      <p>המידע אינו נמכר. הוא מועבר לספקי שירות המשמשים להפעלת האתר בלבד:</p>
+      <ul>
+        <li><strong>Meta Platforms</strong> — נתוני שימוש ואירועי המרה, לצורכי פרסום ומדידה</li>
+        <li><strong>EmailJS</strong> — העברת פרטי טופס הרכישה לתיבת הדואר שלנו</li>
+        <li><strong>Supabase</strong> — ניהול חשבונות משתמשים והתחברות</li>
+        <li><strong>GitHub Pages</strong> — אחסון האתר והגשתו</li>
+        <li><strong>TradingView</strong> — הצגת נתוני שוק בזמן אמת בראש העמוד</li>
+      </ul>
+      <p>חלק מהספקים פועלים מחוץ לישראל, ולכן ייתכן שהמידע יעובד ויאוחסן בשרתים בחו״ל.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">6</span>כיצד לבטל את המעקב</h2>
+      <p>באפשרותך למנוע או להגביל את איסוף המידע בכל עת:</p>
+      <ul>
+        <li>
+          <strong>חסימת קובצי Cookie בדפדפן</strong> — בהגדרות הדפדפן (Chrome, Safari, Firefox, Edge)
+          ניתן לחסום קובצי Cookie של צד שלישי, למחוק קבצים קיימים או לגלוש במצב פרטי/אנונימי
+        </li>
+        <li>
+          <strong>הגדרות הפרסום של Meta</strong> — ניתן לנהל את העדפות הפרסום ואת השימוש בנתונים
+          מחוץ לפייסבוק דרך
+          <a href="https://www.facebook.com/settings?tab=ads" target="_blank" rel="noopener noreferrer">הגדרות המודעות בחשבונך</a>
+        </li>
+        <li>
+          <strong>תוספי חסימה</strong> — שימוש בתוסף דפדפן לחסימת סקריפטים של מעקב ימנע את טעינת ה-Pixel
+        </li>
+        <li>
+          <strong>הימנעות ממסירת פרטים</strong> — אין חובה למלא את טופס הרכישה; ללא מילויו לא ייאסף מידע מזהה
+        </li>
+      </ul>
+      <p>חסימת קובצי Cookie אינה פוגעת ביכולת לגלוש באתר ולצפות בתכניו.</p>
+    </section>
+
+    <section>
+      <h2><span class="num">7</span>שמירת מידע ואבטחתו</h2>
+      <p>
+        פרטי ההזמנה נשמרים למשך הזמן הדרוש לאספקת השירות ולעמידה בחובות חוקיות. האתר מוגש
+        בחיבור מוצפן (HTTPS), ואנו נוקטים אמצעים סבירים להגנה על המידע. יחד עם זאת, לא ניתן
+        להבטיח הגנה מוחלטת בהעברת מידע ברשת האינטרנט.
+      </p>
+    </section>
+
+    <section>
+      <h2><span class="num">8</span>הזכויות שלך</h2>
+      <p>
+        בהתאם לחוק הגנת הפרטיות, התשמ״א-1981, עומדת לך הזכות לעיין במידע המוחזק אודותיך,
+        לבקש את תיקונו או את מחיקתו. לבקשה בנושא ניתן לפנות לכתובת
+        <a href="mailto:Lidorfiliba@gmail.com">Lidorfiliba@gmail.com</a> ונטפל בה בהקדם.
+      </p>
+    </section>
+
+    <section>
+      <h2><span class="num">9</span>שינויים במדיניות</h2>
+      <p>
+        מדיניות זו עשויה להתעדכן מעת לעת. הגרסה המעודכנת תפורסם בעמוד זה, ותאריך העדכון
+        שבראש העמוד ישתנה בהתאם. מומלץ לעיין בעמוד מדי פעם.
+      </p>
+    </section>
+
+    <section>
+      <h2><span class="num">10</span>יצירת קשר</h2>
+      <p>
+        לשאלות, בקשות או הבהרות בנוגע לפרטיות:
+        <a href="mailto:Lidorfiliba@gmail.com">Lidorfiliba@gmail.com</a>
+      </p>
+    </section>
+
+    <footer>
+      <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+      <div><a href="index.html" style="border:none;color:var(--text3);font-weight:500;">חזרה לעמוד הבית</a></div>
+    </footer>
+  </div>
+</body>
+</html>

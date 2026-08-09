@@ -817,7 +817,7 @@ const Footer=({onBuy})=>{
   const cols=[
     {title:'כלים',items:[{l:'Overview',href:A},{l:'Quarter Compare',href:A},{l:'Stock vs Stock',href:A},{l:'Intelligence',href:A},{l:'Market Pulse',href:A},{l:'Options P/C',href:A}]},
     {title:'תוכן',items:[{l:'12 פרקי לימוד',href:AC},{l:'+60 נושאים',href:AC},{l:'Investment Board',href:AC},{l:'Spread Simulator',href:AC},{l:'Watchlist',href:AC}]},
-    {title:'כללי',items:[{l:'אודות',href:'#tools'},{l:'צור קשר',href:'mailto:Lidorfiliba@gmail.com'},{l:'פרטיות',href:'#'},{l:'תנאי שימוש',href:'#'},{l:'רכוש גישה',buy:true}]},
+    {title:'כללי',items:[{l:'אודות',href:'#tools'},{l:'צור קשר',href:'mailto:Lidorfiliba@gmail.com'},{l:'פרטיות',href:'privacy.html'},{l:'תנאי שימוש',href:'#'},{l:'רכוש גישה',buy:true}]},
   ];
   const linkStyle={fontSize:'13px',color:'#334155',textDecoration:'none',transition:'color .2s',fontWeight:'500'};
   return(
