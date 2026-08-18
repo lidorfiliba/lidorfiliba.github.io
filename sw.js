@@ -10,7 +10,7 @@
    The version bump alone fixes it once. The strategy change below is what stops
    it recurring: app.js is now network-first, so a missed version bump costs a
    cache refresh, not a permanently stale deploy. */
-const CACHE = 'sl-home-v10';
+const CACHE = 'sl-home-v11';
 const PRECACHE = [
   './',
   '/index.html',
