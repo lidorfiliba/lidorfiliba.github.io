@@ -87,6 +87,9 @@
       color:var(--text2);border-radius:9px;padding:5px 11px;
       font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
       transition:color .2s,border-color .2s,background .2s;
+      /* 44px minimum touch target — measured 32px from the padding alone. */
+      min-height:44px;min-width:44px;
+      display:inline-flex;align-items:center;justify-content:center;
     }
     .copy:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
 

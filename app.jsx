@@ -308,11 +308,17 @@ const Navbar=({scrolled,onBuy,user,signOut})=>{
               <div style={{fontSize:'8px',letterSpacing:'3px',color:'#334155',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
             </div>
           </a>
-          <nav style={{flex:1,justifyContent:'center',display:'flex',gap:'2px'}} className="hidden md:flex">
+          {/* No inline `display` here on purpose. `.hidden` sets display:none and
+              `.md\:flex` restores display:flex at >=768px; an inline display
+              beats both, which is what made the desktop nav render on phones
+              and collide with the logo. Layout props that are not `display`
+              are safe to keep inline. */}
+          <nav style={{flex:1,justifyContent:'center',gap:'2px'}} className="hidden md:flex">
             {links.map(({l,h})=><a key={h} href={h} className="nav-link">{l}</a>)}
           </nav>
           <div style={{flex:1}} className="md:hidden"/>
-          <div className="hidden md:flex" style={{display:'flex',alignItems:'center',gap:'8px'}}>
+          {/* Same rule as the nav above — no inline `display`. */}
+          <div className="hidden md:flex" style={{alignItems:'center',gap:'8px'}}>
             <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
               <button className="btn-ghost" style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px'}}>StockLens</button>
             </a>
@@ -373,9 +379,15 @@ const Hero=({onBuy,user})=>(
             שוק ההון{' '}<span className="tg-gold">מ-0</span><br/>
             <span className="tg">עד 100</span>
           </h1>
-          <p className="fade-up-d2" style={{fontSize:'17px',lineHeight:'1.85',color:'#8BA3C0',marginBottom:'40px',maxWidth:'520px'}}>
-            12 פרקים · +60 נושאים · 9 כלי ניתוח חיים. Intelligence Radar, מועצת 6 משקיעים אגדיים עם Gemini AI,
-            Quarter Compare, Spread Simulator — הכל בעברית, גישה ללא הגבלה, תשלום חד פעמי.
+          {/* Direction is declared on the container, not sprinkled through the
+              copy. Each Latin product name is wrapped in <bdi>, which isolates
+              it as its own LTR run: without that, the bidi algorithm lets a
+              Latin run and the Hebrew punctuation next to it reorder across a
+              line break, which is what made this paragraph read out of order
+              once it wrapped to 5+ lines on a phone. The wording is unchanged. */}
+          <p className="fade-up-d2" dir="rtl" lang="he" style={{fontSize:'17px',lineHeight:'1.85',color:'#8BA3C0',marginBottom:'40px',maxWidth:'520px'}}>
+            12 פרקים · +60 נושאים · 9 כלי ניתוח חיים. <bdi lang="en">Intelligence Radar</bdi>, מועצת 6 משקיעים אגדיים עם <bdi lang="en">Gemini AI</bdi>,{' '}
+            <bdi lang="en">Quarter Compare</bdi>, <bdi lang="en">Spread Simulator</bdi> — הכל בעברית, גישה ללא הגבלה, תשלום חד פעמי.
           </p>
           {/* CTA */}
           <div className="fade-up-d3" style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'48px'}}>

@@ -562,6 +562,79 @@ html, body {
 }
 </style>
 
+<style id="mobile-layout-fix">
+/* ════════════════════════════════════════════════════
+   MOBILE LAYOUT FIXES
+   Each rule fixes one measured defect at one width. Nothing here changes a
+   colour, the type scale, copy, section order or component structure.
+   ════════════════════════════════════════════════════ */
+
+/* ── 1. Reserve flow space for the fixed ticker ──
+   #tv-ticker is position:fixed at top:66px and measures ~74px tall, so it
+   occupies the viewport down to y=140 while contributing nothing to the flow.
+   The hero reserved 160px of top padding for exactly this, until the blanket
+   `section{padding:60px 16px!important}` above overrode it to 48px — which is
+   what pushed the trust pill and sub-headline underneath the ticker on phones.
+
+   --ticker-h is measured at runtime (script beside the ticker markup) because
+   the widget's adaptive layout changes height with viewport width. The 74px
+   fallback is the measured value across 320-768px and holds if the widget is
+   slow; the script sets it to 0 if the widget never renders, so no space is
+   reserved for something that is not there. */
+:root { --ticker-h: 74px; }
+
+@media (max-width: 768px) {
+  /* Only padding-top is set, so the horizontal padding set above is kept. */
+  section.bg-grid {
+    padding-top: calc(66px + var(--ticker-h) + 24px) !important;
+  }
+}
+
+/* ── 2. Trust badges — no orphan row ──
+   Three badges in a wrapping flex row with a 22px gap fit two-up at 320px and
+   leave the third alone on a second row. A three-column grid keeps them on one
+   even row down to 320px (measured content 87+85+91px plus two gaps = 279px,
+   inside the 292px available at 320px). */
+@media (max-width: 480px) {
+  .fade-up-d4 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  .fade-up-d4 > * { min-width: 0 !important; }
+}
+
+/* ── 3. Touch targets ──
+   The <=480px rule above sets .btn-green/.btn-ghost padding to 12px 18px,
+   landing the pricing CTA at 35px tall. min-height restores a 44px target
+   without altering the font size or padding the design specifies. Both button
+   classes are already inline-flex and centred, so the extra height is
+   distributed around the label rather than pushing it off-centre.
+
+   .nav-link uses padding rather than min-height because the mobile menu sets
+   display:block inline on each link, which would leave the label pinned to the
+   top of a min-height box. 12px + 12px + ~21px line box = ~45px. */
+@media (max-width: 768px) {
+  .btn-green, .btn-ghost { min-height: 44px; }
+}
+
+/* 767.98px, not 768px, on purpose. The desktop rules that hide the hamburger
+   and show the nav live in `@media(min-width:768px)`, so at exactly 768px both
+   queries match. A `display` declaration here would then out-specify
+   `.md\:hidden{display:none}` and put the hamburger back on screen alongside
+   the desktop nav — which is exactly what it did before this was scoped. Keep
+   these two rules strictly below the desktop breakpoint. */
+@media (max-width: 767.98px) {
+  .nav-link { padding-top: 12px !important; padding-bottom: 12px !important; }
+  /* The menu toggle measured 40x34 from its 6px padding. It is the only route
+     to the navigation on a phone, so it gets a full 44px square. */
+  header button.md\:hidden {
+    min-width: 44px; min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+}
+</style>
+
 
 <style id="cinematic-css">
 /* ════════════════════════════════════════════════════
@@ -889,6 +962,39 @@ window.addEventListener('load',function(){
   });
   container.appendChild(s);
 });
+</script>
+<script>
+/* Publish the fixed ticker's real height as --ticker-h so the hero can reserve
+   exactly that much space in the flow (see #mobile-layout-fix). The widget is a
+   third-party iframe whose height varies with viewport width and with
+   TradingView's adaptive layout, so it is measured rather than hard-coded. */
+(function(){
+  var el = document.getElementById('tv-ticker');
+  if (!el) return;
+
+  /* A height of 0 is ambiguous early on: it means "not rendered yet" while the
+     widget is still loading, and "never going to render" if it is blocked or
+     fails. Until we know which, the CSS fallback stands, so the hero always
+     errs towards reserving space rather than sliding under the ticker. */
+  var trustZero = false;
+
+  function apply(){
+    var h = Math.round(el.getBoundingClientRect().height);
+    if (h > 0 || trustZero) {
+      document.documentElement.style.setProperty('--ticker-h', h + 'px');
+    }
+  }
+
+  apply();
+  if (window.ResizeObserver) new ResizeObserver(apply).observe(el);
+  window.addEventListener('resize', apply, {passive:true});
+  window.addEventListener('load', function(){
+    setTimeout(apply, 500);
+    /* By now the widget has had ample time; a still-empty container means it is
+       not coming, so reclaim the reserved space instead of leaving a gap. */
+    setTimeout(function(){ trustZero = true; apply(); }, 2500);
+  });
+})();
 </script>
 <div id="root"></div>
 
