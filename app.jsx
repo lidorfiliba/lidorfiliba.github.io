@@ -128,6 +128,11 @@ const postOrderOnce=async payload=>{
     if(timer)clearTimeout(timer);
     const d=await r.json().catch(()=>({}));
     if(r.ok&&d.ok&&d.stored)return{ok:true,detail:'stored'};
+    /* 429 is a decision, not a fault. It is surfaced separately so the caller
+       can stop retrying, stop queueing, and show the customer a calm notice
+       instead of treating it as a broken backup. */
+    if(r.status===429)return{ok:false,rateLimited:true,reason:d.reason||'rate_limited',
+      detail:'rate limited ('+(d.reason||'')+')'};
     return{ok:false,detail:'HTTP '+r.status+' '+(d.error||'')+(d.code?' ('+d.code+')':'')};
   }catch(e){
     return{ok:false,detail:String(e&&e.message?e.message:e)};
@@ -156,6 +161,11 @@ const flushFailedOrders=async()=>{
   for(const item of q){
     const res=await postOrderOnce(item);
     if(res.ok)console.warn('[log-order] recovered a queued order backup:',item.order_id);
+    /* Dropped, not retained. A queued entry that is rate limited would other-
+       wise be re-sent on every page load for as long as the browser lives,
+       which is both useless and its own small flood. The order is already in
+       the admin's inbox from the EmailJS message. */
+    else if(res.rateLimited)console.warn('[log-order] dropping rate-limited queued order:',item.order_id);
     else left.push(item);
   }
   try{localStorage.setItem(RETRY_KEY,JSON.stringify(left));}catch(e){}
@@ -179,6 +189,11 @@ const logOrder=async payload=>{
   for(let attempt=1;attempt<=3;attempt++){
     const res=await postOrderOnce(payload);
     if(res.ok)return{ok:true,status:'ok'};
+    /* A rate limit will not clear within a retry loop, and queueing would make
+       the browser re-send it on every future page load forever. Stop here and
+       let the caller show the customer the calm notice. */
+    if(res.rateLimited)return{ok:false,rateLimited:true,reason:res.reason,
+      status:'rate_limited: '+res.reason};
     last=res.detail;
     console.error('[log-order] backup attempt '+attempt+'/3 failed for '+payload.order_id+': '+last);
     /* Short linear backoff. Total worst case ~1.5s of waiting on top of the
@@ -1119,6 +1134,17 @@ const PurchaseModal=({onClose})=>{
          redirect stayed invisible in production. The step below only shows a
          "redirecting" notice, so if navigation ever fails the modal looks
          unfinished rather than complete. */
+      /* Rate limited: the details still went out by email above, so the order
+         is not lost — but sending this customer to a fresh thank-you page with
+         a fresh order id would contradict the notice they are about to read.
+         Show the calm notice instead and stop. A first-time customer never
+         reaches this branch. */
+      if(backup.rateLimited){
+        setStep('received');
+        setLoading(false);
+        return;
+      }
+
       const url='thank-you.html?order_id='+encodeURIComponent(orderId)
         +'&value='+encodeURIComponent(value)+'&currency='+encodeURIComponent(currency);
       setRedirectUrl(url);
@@ -1198,6 +1224,30 @@ const PurchaseModal=({onClose})=>{
             {err&&<p style={{textAlign:'center',fontSize:'12px',color:'#fb7185',marginTop:'8px'}}>{err}</p>}
             <p style={{textAlign:'center',fontSize:'11px',color:'#1E293B',marginTop:'10px'}}>תקבל גישה תוך שעות ספורות לאחר אישור התשלום</p>
           </>
+        )}
+
+        {step==='received'&&(
+          /* Shown when the server declined a further order for this customer.
+             Deliberately reassuring rather than an error: the person reading it
+             has almost certainly already ordered, and the details they just
+             typed have still been emailed through. No status code, no reason
+             string, nothing about limits — just what they need to do next. */
+          <div id="purchase-received" style={{textAlign:'center',padding:'10px 0'}}>
+            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>✓</div>
+            <h3 style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>ההזמנה שלך כבר התקבלה</h3>
+            <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'22px'}}>
+              קיבלנו את הפרטים שלך ואנחנו מטפלים בהם.<br/>
+              אם משהו השתבש או שלא קיבלת מאיתנו עדכון, כתוב לנו ונסדר את זה מיד.
+            </p>
+            <a href="https://wa.me/9720546667812" target="_blank" rel="noopener noreferrer"
+              style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'9px',
+                minHeight:'46px',padding:'13px 20px',borderRadius:'13px',textDecoration:'none',
+                fontSize:'15px',fontWeight:'700',marginBottom:'10px',
+                background:'rgba(37,211,102,.1)',border:'1px solid rgba(37,211,102,.32)',color:'#25D366'}}>
+              💬 דברו איתנו בוואטסאפ
+            </a>
+            <button className="btn-ghost" onClick={onClose} style={{width:'100%',padding:'12px',borderRadius:'13px',fontSize:'14px',cursor:'pointer'}}>סגור</button>
+          </div>
         )}
 
         {step==='redirecting'&&(
