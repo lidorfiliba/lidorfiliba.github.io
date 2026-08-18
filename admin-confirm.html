@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>אישור תשלום — פנימי | StockLens</title>
+
+  <!-- Private admin tool. Never linked from anywhere and never indexed. -->
+  <meta name="robots" content="noindex,nofollow,noarchive"/>
+  <meta name="referrer" content="no-referrer"/>
+
+  <link rel="icon" href="icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;--surface:rgba(14,24,52,.7);--border:rgba(255,255,255,.1);
+      --text:#F0F6FF;--text2:#9FB4CE;--text3:#6F87A6;
+      --green:#00FFB3;--blue:#5AABFF;--gold:#F7C948;--red:#FB7185;
+    }
+    body{
+      background:var(--bg);color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;line-height:1.7;direction:rtl;
+      -webkit-font-smoothing:antialiased;
+      padding:32px 20px 80px;
+    }
+    .wrap{max-width:560px;margin:0 auto;}
+
+    .tag{
+      display:inline-block;font-size:11px;font-weight:800;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--gold);
+      background:rgba(247,201,72,.1);border:1px solid rgba(247,201,72,.28);
+      border-radius:8px;padding:4px 10px;margin-bottom:14px;
+    }
+    h1{font-size:26px;font-weight:900;letter-spacing:-.02em;margin-bottom:8px;}
+    .lede{font-size:14px;color:var(--text2);margin-bottom:26px;}
+
+    section{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:18px;padding:24px 22px;margin-bottom:16px;
+    }
+    h2{font-size:16px;font-weight:800;margin-bottom:16px;}
+
+    label{display:block;font-size:12px;color:var(--text3);font-weight:700;margin-bottom:5px;}
+    input,select{
+      width:100%;background:rgba(255,255,255,.04);
+      border:1px solid var(--border);border-radius:11px;
+      color:var(--text);font-family:inherit;font-size:15px;
+      padding:12px 14px;outline:none;margin-bottom:14px;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    input:focus,select:focus{border-color:rgba(0,255,179,.45);box-shadow:0 0 0 3px rgba(0,255,179,.08);}
+    .mono{font-family:ui-monospace,Consolas,monospace;direction:ltr;text-align:left;}
+    .row{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+    .hint{font-size:11px;color:var(--text3);margin:-9px 0 14px;}
+
+    button{
+      width:100%;border:none;border-radius:12px;
+      padding:14px;font-family:inherit;font-size:15px;font-weight:800;
+      cursor:pointer;transition:filter .2s,transform .2s;
+      background:linear-gradient(135deg,#00E5A0,#00C48A);color:#020814;
+    }
+    button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px);}
+    button:disabled{background:rgba(255,255,255,.05);color:var(--text3);cursor:not-allowed;transform:none;}
+    button.ghost{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);margin-top:10px;}
+
+    .msg{
+      margin-top:14px;padding:14px 16px;border-radius:12px;
+      font-size:14px;line-height:1.6;display:none;
+      white-space:pre-wrap;word-break:break-word;
+    }
+    .msg.show{display:block;}
+    .msg.ok{background:rgba(0,255,179,.08);border:1px solid rgba(0,255,179,.3);color:var(--green);}
+    .msg.err{background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.3);color:var(--red);}
+    .msg.warn{background:rgba(247,201,72,.08);border:1px solid rgba(247,201,72,.3);color:var(--gold);}
+    .msg code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;direction:ltr;display:inline-block;}
+
+    .who{font-size:12px;color:var(--text3);margin-bottom:16px;}
+    .who b{color:var(--green);}
+    .warnbox{
+      background:rgba(247,201,72,.06);border:1px solid rgba(247,201,72,.22);
+      border-radius:12px;padding:14px 16px;margin-bottom:18px;
+      font-size:13px;color:#E8D9A8;line-height:1.65;
+    }
+    #panel{display:none;}
+    @media(max-width:520px){.row{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag">פנימי · Admin</div>
+  <h1>אישור תשלום</h1>
+  <p class="lede">
+    רישום רכישה אמיתית ב-Meta Conversions API. זהו האירוע היחיד שנספר כהכנסה.
+  </p>
+
+  <!-- ── STEP 1: admin login ── -->
+  <section id="auth">
+    <h2>כניסת מנהל</h2>
+    <label for="u">שם משתמש</label>
+    <input id="u" class="mono" type="text" autocomplete="username" placeholder="lidor_admin"/>
+    <label for="p">סיסמה</label>
+    <input id="p" type="password" autocomplete="current-password" placeholder="••••••••"/>
+    <button id="login-btn" type="button">כניסה</button>
+    <div class="msg" id="auth-msg"></div>
+  </section>
+
+  <!-- ── STEP 2: confirm a payment ── -->
+  <section id="panel">
+    <div class="who">מחובר כ-<b id="who-name"></b></div>
+
+    <div class="warnbox">
+      שלח רק אחרי שראית שהכסף התקבל בפועל. האירוע נשלח כ-Purchase אמיתי ונספר כהכנסה.
+      שליחה חוזרת של אותו מספר הזמנה לא תיספר פעמיים — Meta מאחד לפי event_id.
+    </div>
+
+    <h2>פרטי ההזמנה</h2>
+
+    <label for="oid">מספר הזמנה</label>
+    <input id="oid" class="mono" type="text" placeholder="SLA-1755512345678-K3F9QA" autocapitalize="off" spellcheck="false"/>
+    <div class="hint">מהמייל של ההזמנה או מדף התודה של הלקוח.</div>
+
+    <div class="row">
+      <div>
+        <label for="amt">סכום ששולם</label>
+        <input id="amt" class="mono" type="number" step="0.01" min="0" placeholder="980"/>
+      </div>
+      <div>
+        <label for="cur">מטבע</label>
+        <select id="cur">
+          <option value="ILS">ILS ₪</option>
+          <option value="USD">USD $</option>
+          <option value="EUR">EUR €</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="em">אימייל הלקוח</label>
+    <input id="em" class="mono" type="email" placeholder="customer@email.com" autocapitalize="off" spellcheck="false"/>
+
+    <label for="ph">טלפון הלקוח</label>
+    <input id="ph" class="mono" type="tel" placeholder="054-0000000"/>
+    <div class="hint">צריך אימייל או טלפון — לפחות אחד. שניהם משפרים את ההתאמה. הערכים עוברים גיבוב SHA-256 בשרת ולא נשלחים גלויים.</div>
+
+    <label for="nm">שם הלקוח (רשות)</label>
+    <input id="nm" type="text" placeholder="ישראל ישראלי"/>
+
+    <label for="tec">Test Event Code (רשות)</label>
+    <input id="tec" class="mono" type="text" placeholder="TEST12345" autocapitalize="off" spellcheck="false"/>
+    <div class="hint">אם ממולא, האירוע מגיע ל-Test Events ב-Events Manager ולא לדיווח החי. השאר ריק לרכישה אמיתית.</div>
+
+    <button id="send-btn" type="button">שלח Purchase ל-Meta</button>
+    <button id="logout-btn" class="ghost" type="button">התנתק</button>
+    <div class="msg" id="send-msg"></div>
+  </section>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   ADMIN CONFIRMATION PAGE
+
+   Two calls, both to existing infrastructure:
+     1. smart-function `login` — unchanged, used exactly as the course app and
+        the StockLens tool use it. Nothing about the login flow is modified
+        here; this page is just another client of it.
+     2. meta-capi — the new function, which re-verifies admin status server-side
+        on every call. The admin id held below is a convenience, not a
+        credential: forging it gets you nothing, because meta-capi checks the
+        users table itself.
+
+   The admin id lives in memory only. It is never written to localStorage or
+   sessionStorage, so closing or reloading the tab drops it.
+   ════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+
+  var SB_URL = 'https://flcakringwxebpeifhke.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsY2FrcmluZ3d4ZWJwZWlmaGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTIwMjAsImV4cCI6MjA4OTA4ODAyMH0.-j-id8o3FeYig15Xmq6QHV4eDMXUB98e3Z8p30Eaf2U';
+
+  var admin = null; // { id, username } — in memory only
+
+  function $(id){ return document.getElementById(id); }
+
+  function say(el, kind, text){
+    el.className = 'msg show ' + kind;
+    el.textContent = text;
+  }
+  function clear(el){ el.className = 'msg'; el.textContent = ''; }
+
+  /* Identical to the course app's hashPassword — same algorithm, same salt.
+     The raw password never leaves this page. */
+  async function hashPassword(password){
+    var data = new TextEncoder().encode(password + 'sl_salt_2024');
+    var hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(function(b){
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function callFn(fn, payload){
+    return fetch(SB_URL + '/functions/v1/' + fn, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+  }
+
+  // ── LOGIN ────────────────────────────────────────────
+  $('login-btn').addEventListener('click', async function(){
+    var msg = $('auth-msg');
+    var btn = $('login-btn');
+    var username = $('u').value.trim();
+    var password = $('p').value;
+
+    clear(msg);
+    if (!username || !password){ say(msg, 'err', 'נא למלא שם משתמש וסיסמה.'); return; }
+
+    btn.disabled = true; btn.textContent = 'מתחבר...';
+    try {
+      var hash = await hashPassword(password);
+      /* app:'admin' keeps this session in its own bucket. smart-function caps
+         sessions per app, so signing in here can never evict the course or the
+         StockLens tool session. */
+      var r = await callFn('smart-function', { username: username, passwordHash: hash, app: 'admin' });
+      var d = await r.json();
+
+      if (!r.ok || !d.ok){
+        var m = {
+          wrong_password: 'שם משתמש או סיסמה שגויים',
+          account_suspended: 'החשבון מושהה',
+          server_error: 'שגיאת שרת — נסה שוב'
+        };
+        say(msg, 'err', m[d.error] || ('שגיאה: ' + (d.error || r.status)));
+        return;
+      }
+
+      /* The server is the real gate — meta-capi rejects any non-admin caller on
+         its own. This check just avoids showing the panel to a normal user who
+         signed in here by mistake. */
+      if (!d.user || d.user.username !== 'lidor_admin'){
+        say(msg, 'err', 'המשתמש הזה אינו מנהל.');
+        return;
+      }
+
+      admin = { id: d.user.id, username: d.user.username };
+      $('who-name').textContent = admin.username;
+      $('auth').style.display = 'none';
+      $('panel').style.display = 'block';
+      $('p').value = '';
+    } catch(e){
+      say(msg, 'err', 'לא ניתן להתחבר: ' + e);
+    } finally {
+      btn.disabled = false; btn.textContent = 'כניסה';
+    }
+  });
+
+  $('p').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') $('login-btn').click();
+  });
+
+  // ── SEND PURCHASE ────────────────────────────────────
+  $('send-btn').addEventListener('click', async function(){
+    var msg = $('send-msg');
+    var btn = $('send-btn');
+    clear(msg);
+
+    if (!admin){ say(msg, 'err', 'לא מחובר.'); return; }
+
+    var orderId = $('oid').value.trim();
+    var amount  = parseFloat($('amt').value);
+    var email   = $('em').value.trim();
+    var phone   = $('ph').value.trim();
+
+    if (!/^[A-Za-z0-9._-]{1,64}$/.test(orderId)){
+      say(msg, 'err', 'מספר הזמנה לא תקין. צפוי משהו כמו SLA-1755512345678-K3F9QA'); return;
+    }
+    if (!isFinite(amount) || amount <= 0){
+      say(msg, 'err', 'נא להזין סכום חיובי.'); return;
+    }
+    if (!email && !phone){
+      say(msg, 'err', 'צריך אימייל או טלפון של הלקוח — לפחות אחד.'); return;
+    }
+
+    btn.disabled = true; btn.textContent = 'שולח...';
+    try {
+      var payload = {
+        admin_id: admin.id,
+        admin_username: admin.username,
+        order_id: orderId,
+        value: amount,
+        currency: $('cur').value,
+        email: email,
+        phone: phone,
+        name: $('nm').value.trim()
+      };
+      var tec = $('tec').value.trim();
+      if (tec) payload.test_event_code = tec;
+
+      var r = await callFn('meta-capi', payload);
+      var d = await r.json();
+
+      if (d.ok){
+        say(msg, 'ok',
+          '✓ נשלח ל-Meta כ-Purchase.\n' +
+          'הזמנה: ' + d.order_id + '\n' +
+          'סכום: ' + d.value + ' ' + d.currency + '\n' +
+          'התאמה לפי: ' + Object.keys(d.matched_on || {}).filter(function(k){
+            return d.matched_on[k];
+          }).join(', ') +
+          (tec ? '\n(נשלח כ-Test Event — לא נספר בדיווח החי)' : ''));
+        return;
+      }
+
+      if (d.error === 'missing_credentials'){
+        say(msg, 'warn',
+          '⚠ האירוע לא נשלח — חסרות הגדרות.\n\n' +
+          'חסר: ' + (d.missing || []).join(', ') + '\n\n' +
+          'הרץ:\n' + (d.how_to_fix || ''));
+        return;
+      }
+
+      if (d.error === 'unauthorized'){
+        say(msg, 'err', 'השרת דחה את הבקשה: אין הרשאת מנהל.'); return;
+      }
+
+      say(msg, 'err', 'שגיאה (' + r.status + '): ' + JSON.stringify(d, null, 2));
+    } catch(e){
+      say(msg, 'err', 'שליחה נכשלה: ' + e);
+    } finally {
+      btn.disabled = false; btn.textContent = 'שלח Purchase ל-Meta';
+    }
+  });
+
+  $('logout-btn').addEventListener('click', function(){
+    admin = null;
+    $('panel').style.display = 'none';
+    $('auth').style.display = 'block';
+    clear($('send-msg'));
+    clear($('auth-msg'));
+  });
+})();
+</script>
+</body>
+</html>
