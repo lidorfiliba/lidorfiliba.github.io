@@ -1425,10 +1425,21 @@ setTimeout(initReveals, 900);
    Behaviour-driven: this is a single-page React app with no
    route changes, so every event binds to a real user action.
 
-   NOTE: no Purchase event is fired anywhere. Payment happens
-   off-site (Bit / PayPal) with no callback, so a client-side
-   Purchase would be self-reported and false. Purchases are
-   uploaded manually as offline conversions instead.
+   NOTE: no Purchase event is fired anywhere client-side. Payment happens
+   off-site (Bit / PayPal) with no callback, so a client-side Purchase
+   would be self-reported and false. The real Purchase is sent server-side
+   by the `meta-capi` Supabase Edge Function, once payment has been
+   confirmed by hand on the admin page. Do not add Purchase here.
+
+   WHAT THIS BLOCK STILL OWNS: ViewContent and Contact only.
+   InitiateCheckout and Lead used to live here, matched by button text and
+   by watching the modal for a success screen. Both have moved:
+     · InitiateCheckout — fired inside PurchaseModal.submit() in app.jsx,
+       where the order id exists and can be used as the eventID.
+     · Lead            — fired on /thank-you.html, which the modal now
+       redirects to after a successful submit.
+   They were removed rather than left in place because firing them from two
+   places would double-count both events. Do not reinstate them here.
    ════════════════════════════════════════════════════ */
 (function(){
   'use strict';
@@ -1437,23 +1448,8 @@ setTimeout(initReveals, 900);
   var VALUE    = 980;
   var CURRENCY = 'ILS';
 
-  /* Text markers, matched against what React actually renders. The page
-     is served as UTF-8 (<meta charset> + Hebrew <title>), so these string
-     literals compare correctly against the bundle's \u-escaped output. */
-  /* "rakhosh" = buy — appears on all 6 purchase CTAs */
-  var TXT_BUY     = 'רכוש';
-  /* "shalachti" = I sent — the purchase form's submit button */
-  var TXT_SUBMIT  = 'שלחתי';
-
-  /* Stable element ids rendered by app.jsx (PurchaseModal). Using ids instead
-     of scanning textContent means the observer never reads text and never has
-     to watch characterData. Keep these in sync with app.jsx. */
-  var ID_MODAL   = 'purchase-modal';
-  var ID_SUCCESS = 'purchase-success';
-
-  /* Fire-once flags — in memory only, no localStorage */
+  /* Fire-once flag — in memory only, no localStorage */
   var sentView = false;
-  var sentLead = false;
 
   function track(ev, params){
     if (!window.fbq) return;
@@ -1496,78 +1492,19 @@ setTimeout(initReveals, 900);
   setTimeout(function(){ watchPricing(6); }, 1500);
 
   /* ──────────────────────────────────────────────────
-     2. Lead — ONLY on a confirmed successful submission.
-     A submit click alone is not enough: the EmailJS call can
-     fail and render an error instead. So clicking submit arms
-     a watcher that waits for the success screen to appear.
-
-     SAFETY RULES — a previous version of this block was blamed for
-     breaking typing in the purchase form. Do not relax any of these:
-       · characterData is NEVER observed. Text is never read.
-       · The observer is scoped to #purchase-modal, not #root, so nothing
-         outside the modal can trigger it.
-       · Nothing here listens to input / keydown / keyup / focus, and no
-         listener is ever attached to the form or its inputs.
-       · The observer is armed only by a submit click, and disconnects the
-         instant Lead fires (or after 90s, whichever comes first).
-       · The callback only calls getElementById — it never touches, reads
-         or writes the focused input, so it cannot disturb typing.
-  ─────────────────────────────────────────────────── */
-  var leadObserver = null, leadTimer = null;
-
-  function stopLeadWatch(){
-    if (leadObserver){ leadObserver.disconnect(); leadObserver = null; }
-    if (leadTimer){ clearTimeout(leadTimer); leadTimer = null; }
-  }
-
-  function fireLead(){
-    if (sentLead) return;
-    sentLead = true;
-    track('Lead', { content_name: NAME, value: VALUE, currency: CURRENCY });
-    stopLeadWatch();
-  }
-
-  function armLeadWatch(){
-    if (sentLead || leadObserver) return;
-
-    /* Narrowest container that survives the step swap. The modal card stays
-       mounted while its contents change from the form to the success screen. */
-    var modal = document.getElementById(ID_MODAL);
-    if (!modal) return;
-
-    var check = function(){
-      if (sentLead){ stopLeadWatch(); return; }
-      if (document.getElementById(ID_SUCCESS)) fireLead();
-    };
-
-    /* childList only — never characterData, never attributes. */
-    leadObserver = new MutationObserver(check);
-    leadObserver.observe(modal, { childList: true, subtree: true });
-    /* Give up after 90s so the observer never lives on indefinitely */
-    leadTimer = setTimeout(stopLeadWatch, 90000);
-    check();
-  }
-
-  /* ──────────────────────────────────────────────────
-     3. Delegated click handling — capture phase on document
+     2. Delegated click handling — capture phase on document
      so it survives every React re-render.
-       · InitiateCheckout — any purchase CTA
-       · Contact          — mailto / WhatsApp links
-       · arms the Lead watcher on form submit
+       · Contact — mailto / WhatsApp links
+
+     This listener reads nothing but link hrefs. It must stay that way: an
+     earlier version of this file also watched the purchase modal for text
+     changes and was blamed for breaking typing in the form. Nothing here
+     may listen to input / keydown / keyup / focus, attach a listener to the
+     form or its inputs, or observe characterData anywhere.
   ─────────────────────────────────────────────────── */
   document.addEventListener('click', function(e){
     var t = e.target;
     if (!t || typeof t.closest !== 'function') return;
-
-    var btn = t.closest('button');
-    if (btn){
-      var label = btn.textContent || '';
-      if (label.indexOf(TXT_BUY) > -1){
-        track('InitiateCheckout', { content_name: NAME, value: VALUE, currency: CURRENCY });
-      } else if (label.indexOf(TXT_SUBMIT) > -1 && !btn.disabled){
-        armLeadWatch();
-      }
-    }
 
     var a = t.closest('a[href]');
     if (a){

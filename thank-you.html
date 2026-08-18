@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>תודה על ההזמנה | StockLens Academy</title>
+
+  <!-- This page is reached only after a form submission and carries an order id
+       in the URL. It must never appear in search results or be crawled. -->
+  <meta name="robots" content="noindex,nofollow"/>
+  <meta name="referrer" content="no-referrer"/>
+
+  <link rel="icon" href="icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* Design tokens copied verbatim from privacy.html so the two standalone
+       pages stay visually identical to each other and to the landing page. */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;
+      --surface:rgba(14,24,52,.7);
+      --border:rgba(255,255,255,.1);
+      --text:#F0F6FF;
+      --text2:#9FB4CE;
+      --text3:#6F87A6;
+      --green:#00FFB3;
+      --blue:#5AABFF;
+      --gold:#F7C948;
+      --whatsapp:#25D366;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;
+      line-height:1.75;
+      direction:rtl;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Ambient glow — decorative only */
+    .glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+    .glow-a{width:70vw;height:70vw;max-width:700px;max-height:700px;top:-20%;right:-15%;
+      background:radial-gradient(circle,rgba(0,255,179,.16) 0%,rgba(0,255,179,.04) 40%,transparent 68%);}
+    .glow-b{width:60vw;height:60vw;max-width:600px;max-height:600px;bottom:-15%;left:-15%;
+      background:radial-gradient(circle,rgba(90,171,255,.14) 0%,rgba(90,171,255,.03) 40%,transparent 68%);}
+
+    .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .brand-name{font-size:20px;font-weight:900;line-height:1.1;
+      background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:8px;letter-spacing:3px;color:#476282;text-transform:uppercase;font-weight:600;}
+
+    /* ── Hero ── */
+    .tick{
+      width:74px;height:74px;border-radius:50%;margin-bottom:22px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.28);
+      display:flex;align-items:center;justify-content:center;
+    }
+    h1{font-size:clamp(30px,5.5vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px;}
+    h1 .tg{background:linear-gradient(135deg,#00FFB3,#5AABFF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .lede{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:24px;max-width:65ch;}
+
+    /* ── Order id chip ── */
+    .order{
+      display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;
+      background:rgba(0,255,179,.06);border:1px solid rgba(0,255,179,.22);
+      border-radius:14px;padding:12px 18px;margin-bottom:32px;
+    }
+    .order-label{font-size:12px;color:var(--text3);font-weight:600;letter-spacing:.04em;}
+    .order-id{
+      font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;
+      font-size:15px;font-weight:700;color:var(--green);
+      direction:ltr;unicode-bidi:isolate;letter-spacing:.5px;
+      word-break:break-all;
+    }
+    .copy{
+      background:rgba(255,255,255,.05);border:1px solid var(--border);
+      color:var(--text2);border-radius:9px;padding:5px 11px;
+      font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+      transition:color .2s,border-color .2s,background .2s;
+    }
+    .copy:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
+
+    hr.grad{height:1px;border:none;margin:0 0 32px;
+      background:linear-gradient(90deg,transparent,rgba(0,255,179,.35),rgba(90,171,255,.22),transparent);}
+
+    /* ── Sections ── */
+    section{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 26px;
+      margin-bottom:16px;
+    }
+    h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:16px;line-height:1.35;
+      display:flex;align-items:center;gap:10px;}
+    h2 .num{
+      flex-shrink:0;width:28px;height:28px;border-radius:9px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.22);
+      color:var(--green);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;direction:ltr;
+    }
+    p{color:var(--text2);margin-bottom:12px;max-width:65ch;}
+    p:last-child,ul:last-child{margin-bottom:0;}
+
+    /* ── Numbered "what happens next" steps ── */
+    ol.steps{list-style:none;padding:0;margin:0;counter-reset:step;}
+    ol.steps li{
+      position:relative;counter-increment:step;
+      padding-inline-start:42px;margin-bottom:18px;color:var(--text2);max-width:65ch;
+    }
+    ol.steps li:last-child{margin-bottom:0;}
+    ol.steps li::before{
+      content:counter(step);
+      position:absolute;inset-inline-start:0;top:2px;
+      width:28px;height:28px;border-radius:9px;
+      background:rgba(90,171,255,.1);border:1px solid rgba(90,171,255,.25);
+      color:var(--blue);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;direction:ltr;
+    }
+    ol.steps li b{color:var(--text);font-weight:700;display:block;margin-bottom:2px;}
+
+    /* ── Payment cards ── */
+    .pay{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
+    .pay-card{
+      border-radius:16px;padding:20px 18px;text-align:center;
+      display:flex;flex-direction:column;
+    }
+    .pay-bit{background:rgba(247,201,72,.06);border:1px solid rgba(247,201,72,.25);}
+    .pay-pp{background:rgba(90,171,255,.06);border:1px solid rgba(90,171,255,.25);}
+    .pay-kind{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+    .pay-bit .pay-kind{color:var(--gold);}
+    .pay-pp .pay-kind{color:var(--blue);}
+    .pay-amount{font-size:26px;font-weight:900;color:var(--text);line-height:1.1;margin-bottom:6px;}
+    .pay-detail{
+      font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;
+      font-size:15px;font-weight:700;color:var(--text);
+      direction:ltr;unicode-bidi:isolate;margin-bottom:4px;word-break:break-all;
+    }
+    .pay-note{font-size:12px;color:var(--text3);margin-top:auto;padding-top:10px;}
+    .pay-btn{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      min-height:44px;margin-top:12px;padding:11px 14px;
+      border-radius:11px;font-size:14px;font-weight:700;
+      text-decoration:none;border:none;transition:filter .2s,transform .2s;
+    }
+    .pay-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+    .btn-pp{background:#0070BA;color:#fff;}
+
+    /* ── Contact fallback ── */
+    .contact{display:flex;gap:12px;flex-wrap:wrap;}
+    .contact a{
+      flex:1;min-width:200px;
+      display:flex;align-items:center;justify-content:center;gap:9px;
+      min-height:48px;padding:13px 18px;border-radius:13px;
+      font-size:14px;font-weight:700;text-decoration:none;border:1px solid;
+      transition:filter .2s,transform .2s;
+    }
+    .contact a:hover{filter:brightness(1.15);transform:translateY(-1px);}
+    .c-wa{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.32);color:var(--whatsapp);}
+    .c-mail{background:rgba(90,171,255,.08);border-color:rgba(90,171,255,.28);color:var(--blue);}
+
+    a{color:var(--green);text-decoration:none;font-weight:600;}
+
+    /* Accessible focus — never removed */
+    a:focus-visible,button:focus-visible{
+      outline:2px solid var(--green);outline-offset:3px;border-radius:4px;
+    }
+
+    .note{
+      background:rgba(90,171,255,.06);
+      border:1px solid rgba(90,171,255,.22);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .note p{color:#BBD2EC;margin-bottom:0;font-size:15px;}
+
+    footer{
+      margin-top:40px;padding-top:24px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;gap:12px;
+      font-size:13px;color:var(--text3);
+    }
+    footer a{color:var(--text3);font-weight:500;}
+
+    @media(max-width:600px){
+      .wrap{padding:28px 16px 60px;}
+      section{padding:22px 18px;border-radius:16px;}
+      h2{font-size:17px;}
+      .pay{grid-template-columns:1fr;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *{transition:none!important;animation:none!important;}
+    }
+  </style>
+
+  <!-- Meta Pixel base code — identical id and settings to index.html.
+       autoConfig stays off here for the same reason it is off on the landing
+       page: it must never attach itself to form fields. -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('set','autoConfig',false,'27572902432409101');
+  fbq('init','27572902432409101');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
+  /></noscript>
+</head>
+<body>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
+        <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
+        <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">StockLens</div>
+        <div class="brand-sub">Academy</div>
+      </div>
+    </div>
+
+    <div class="tick" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#00FFB3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20,6 9,17 4,12"/>
+      </svg>
+    </div>
+
+    <h1>ההזמנה <span class="tg">התקבלה</span></h1>
+    <p class="lede">
+      תודה! קיבלנו את הפרטים שלך והם ממתינים לטיפול.
+      כאן מופיע מספר ההזמנה שלך ומה קורה מכאן והלאה — כולל פרטי התשלום,
+      אם עדיין לא שילמת.
+    </p>
+
+    <!-- Populated by JS when an order_id is present; hidden otherwise. -->
+    <div class="order" id="order-box" hidden>
+      <span class="order-label">מספר הזמנה</span>
+      <span class="order-id" id="order-id"></span>
+      <button class="copy" id="copy-btn" type="button">העתק</button>
+    </div>
+
+    <hr class="grad"/>
+
+    <section>
+      <h2><span class="num">1</span>מה קורה עכשיו</h2>
+      <ol class="steps">
+        <li>
+          <b>הפרטים שלך התקבלו</b>
+          שם, אימייל, טלפון ושם המשתמש שביקשת נשלחו אלינו ונשמרו יחד עם מספר ההזמנה.
+        </li>
+        <li>
+          <b>השלמת התשלום — אם עדיין לא שילמת</b>
+          התשלום מתבצע דרך Bit / פייבוקס או PayPal, מחוץ לאתר. פרטי התשלום מופיעים למטה.
+          חשוב: ציין את מספר ההזמנה בהערת התשלום כדי שנוכל לשייך אותו במהירות.
+        </li>
+        <li>
+          <b>אימות ידני של התשלום</b>
+          אנחנו מאמתים כל תשלום באופן ידני. זה קורה בדרך כלל תוך מספר שעות בשעות הפעילות.
+        </li>
+        <li>
+          <b>פרטי הגישה נשלחים אליך במייל</b>
+          לאחר האימות תקבל שם משתמש וסיסמה לאקדמיה — אותם פרטים משמשים גם את כלי StockLens.
+          אם לא הגיע מייל, בדוק את תיקיית הספאם ואז פנה אלינו.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span>פרטי תשלום</h2>
+      <p>תשלום חד פעמי · גישה ללא הגבלת זמן. בחר את האמצעי שנוח לך:</p>
+      <div class="pay">
+        <div class="pay-card pay-bit">
+          <div class="pay-kind">Bit · פייבוקס</div>
+          <div class="pay-amount">₪980</div>
+          <div class="pay-detail">054-6667812</div>
+          <div class="pay-note">לידור פיליבה · העברה בביט, פייבוקס או העברה בנקאית</div>
+        </div>
+        <div class="pay-card pay-pp">
+          <div class="pay-kind">PayPal</div>
+          <div class="pay-amount">$320</div>
+          <div class="pay-detail">Lidorfiliba@gmail.com</div>
+          <a class="pay-btn btn-pp" href="https://www.paypal.me/ShareSomeLoveRL/320" target="_blank" rel="noopener noreferrer">
+            שלם $320 ב-PayPal
+          </a>
+        </div>
+      </div>
+      <div class="note">
+        <p>כבר שילמת? מצוין — אין צורך לשלם שוב. פשוט המתן למייל עם פרטי הגישה.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="num">3</span>צריך עזרה?</h2>
+      <p>
+        משהו לא ברור, התשלום לא עבר, או שעברו יותר מ-24 שעות ולא קיבלת פרטי גישה?
+        כתוב לנו עם מספר ההזמנה ונטפל בזה.
+      </p>
+      <div class="contact">
+        <a class="c-wa" id="wa-link" href="https://wa.me/9720546667812" target="_blank" rel="noopener noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/>
+          </svg>
+          וואטסאפ · 054-6667812
+        </a>
+        <a class="c-mail" id="mail-link" href="mailto:Lidorfiliba@gmail.com">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,6 12,13 22,6"/>
+          </svg>
+          Lidorfiliba@gmail.com
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+      <div><a href="index.html">חזרה לעמוד הבית</a></div>
+    </footer>
+  </div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   THANK-YOU PAGE — order id rendering + Meta Pixel Lead
+
+   Deliberately NOT firing Purchase. At this point the customer has only
+   submitted their details; payment happens off-site via Bit or PayPal with
+   no callback, so nothing here can confirm money changed hands. The real
+   Purchase is sent server-side by the `meta-capi` Edge Function once the
+   payment is confirmed manually. Do not add a Purchase event to this page.
+   ════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+
+  var NAME     = 'StockLens Academy';
+  var DEF_VAL  = 980;
+  var DEF_CUR  = 'ILS';
+
+  /* Query params are attacker-controllable — anyone can hand out a link to
+     this page with whatever they like in it. Every value is validated against
+     a strict whitelist below and only ever written with textContent, never
+     innerHTML, so nothing from the URL can become markup. */
+  var params;
+  try { params = new URLSearchParams(window.location.search); }
+  catch(e){ params = null; }
+
+  function param(key){
+    if (!params) return '';
+    try { return (params.get(key) || '').trim(); } catch(e){ return ''; }
+  }
+
+  /* Order ids are generated as SLA-<timestamp>-<suffix>. Accept that shape and
+     a little slack around it, cap the length, and reject anything else. */
+  function cleanOrderId(raw){
+    if (!raw) return '';
+    if (raw.length > 64) return '';
+    return /^[A-Za-z0-9._-]+$/.test(raw) ? raw : '';
+  }
+
+  function cleanValue(raw){
+    var n = parseFloat(raw);
+    /* Guards against NaN, Infinity, negatives and absurd figures — a bogus
+       value must not be reported to the pixel as revenue. */
+    if (!isFinite(n) || n <= 0 || n > 1000000) return DEF_VAL;
+    return Math.round(n * 100) / 100;
+  }
+
+  function cleanCurrency(raw){
+    var c = (raw || '').toUpperCase();
+    return (c === 'ILS' || c === 'USD' || c === 'EUR') ? c : DEF_CUR;
+  }
+
+  var orderId = cleanOrderId(param('order_id'));
+  var value   = cleanValue(param('value'));
+  var currency= cleanCurrency(param('currency'));
+
+  /* ── Render the order id ─────────────────────────────
+     With no params the box simply stays hidden and the rest of the page —
+     the steps, the payment details, the contact links — still reads
+     correctly on its own. */
+  if (orderId){
+    var box = document.getElementById('order-box');
+    var idEl = document.getElementById('order-id');
+    if (box && idEl){
+      idEl.textContent = orderId;   // textContent, never innerHTML
+      box.hidden = false;
+    }
+
+    var btn = document.getElementById('copy-btn');
+    if (btn){
+      btn.addEventListener('click', function(){
+        var done = function(){
+          btn.textContent = 'הועתק ✓';
+          setTimeout(function(){ btn.textContent = 'העתק'; }, 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(orderId).then(done, function(){});
+        } else {
+          /* Older mobile browsers with no async clipboard — select a scratch
+             field and use the legacy command. */
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = orderId;
+            ta.setAttribute('readonly','');
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            done();
+          } catch(e){}
+        }
+      });
+    }
+
+    /* Pre-fill the WhatsApp and email fallbacks with the order id so the
+       customer never has to copy it manually to ask about their order. */
+    var msg = 'שלום, שלחתי פרטים לרכישת StockLens Academy. מספר הזמנה: ' + orderId;
+    var wa = document.getElementById('wa-link');
+    if (wa) wa.href = 'https://wa.me/9720546667812?text=' + encodeURIComponent(msg);
+    var mail = document.getElementById('mail-link');
+    if (mail) mail.href = 'mailto:Lidorfiliba@gmail.com'
+      + '?subject=' + encodeURIComponent('StockLens Academy — הזמנה ' + orderId)
+      + '&body=' + encodeURIComponent(msg);
+  }
+
+  /* ── Meta Pixel: Lead ────────────────────────────────
+     Fires only when an order_id is present. A bare visit to /thank-you.html
+     with no params is somebody reloading, bookmarking or poking at the URL —
+     counting that as a Lead would quietly inflate the metric.
+
+     eventID is the order id, which is also what the server sends as event_id
+     on the CAPI Purchase, so Meta can deduplicate the two. */
+  if (orderId && window.fbq){
+    try {
+      window.fbq('track', 'Lead', {
+        content_name: NAME,
+        content_category: 'course',
+        value: value,
+        currency: currency,
+        order_id: orderId
+      }, { eventID: orderId });
+    } catch(e){}
+  }
+})();
+</script>
+</body>
+</html>

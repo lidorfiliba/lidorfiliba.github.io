@@ -57,6 +57,30 @@ const loadEmail=()=>{
   return emailPromise;
 };
 
+/* ── Order id ──────────────────────────────────────────────────────────
+   One id per submitted order, generated on the client at submit time. It
+   travels to three places and must be identical in all of them:
+     · the EmailJS notification, so the order can be matched by hand
+     · the thank-you page URL, where it becomes the Lead event's eventID
+     · the admin confirmation page, where it becomes the CAPI Purchase
+       event_id — which is what lets Meta deduplicate against the Lead
+   Format is SLA-<epoch ms>-<6 random chars>; the thank-you page validates
+   against [A-Za-z0-9._-] so keep it inside that alphabet. */
+const makeOrderId=()=>{
+  const chars='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no I/O/0/1 — these get misread aloud
+  let suffix='';
+  /* Math.random is fine here: this id only has to be unique, never
+     unguessable. It authorises nothing on its own. */
+  for(let i=0;i<6;i++)suffix+=chars[Math.floor(Math.random()*chars.length)];
+  return `SLA-${Date.now()}-${suffix}`;
+};
+
+/* Fire-and-forget pixel helper — never let a tracking failure break a sale. */
+const track=(ev,params,opts)=>{
+  if(!window.fbq)return;
+  try{window.fbq('track',ev,params,opts);}catch(e){}
+};
+
 
 /* ══════════════ ICONS ══════════════ */
 const Ic={
@@ -898,14 +922,39 @@ const PurchaseModal=({onClose})=>{
   const submit=async()=>{
     if(!allFilled)return;
     setLoading(true);setErr('');
+
+    /* One id for this order, minted before anything is sent so the same value
+       reaches EmailJS and the thank-you page. */
+    const orderId=makeOrderId();
+    const value=step==='bit'?980:320;
+    const currency=step==='bit'?'ILS':'USD';
+
+    /* InitiateCheckout fires on the submit click itself — the moment the
+       customer commits — not on opening the modal. eventID is the order id so
+       this event, the Lead on the thank-you page and the server-side Purchase
+       all carry the same id and Meta can tie them together. */
+    track('InitiateCheckout',{
+      content_name:'StockLens Academy',content_category:'course',
+      value,currency,order_id:orderId,
+    },{eventID:orderId});
+
     try{
       const emailjs=await loadEmail();
       await emailjs.send('service_s5wzeck','template_3pfjg4g',{
         from_name:name,from_email:email,phone:phone||'לא צוין',username:username||'לא צוין',
         payment_method:step==='bit'?'Bit / Paybox':'PayPal',price:step==='bit'?'₪980':'$320',
         order_time:new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'}),reply_to:email,
+        /* Additive only — every field above keeps its existing name and meaning
+           so the EmailJS template renders exactly as it did before. */
+        order_id:orderId,
       });
+      /* Render the success screen first, then hand off to the canonical
+         thank-you page. If the navigation is slow or blocked the customer is
+         still looking at a confirmation rather than a spinner. */
       setStep('success');
+      window.location.href='thank-you.html?order_id='+encodeURIComponent(orderId)
+        +'&value='+encodeURIComponent(value)+'&currency='+encodeURIComponent(currency);
+      return; // leaving the page — do not clear loading and re-enable the button
     }catch{setErr('שגיאה בשליחה, נסה שנית או שלח מייל ל-Lidorfiliba@gmail.com');}
     setLoading(false);
   };
