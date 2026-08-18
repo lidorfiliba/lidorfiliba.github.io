@@ -914,6 +914,9 @@ const PurchaseModal=({onClose})=>{
   const [username,setUsername]=React.useState('');
   const [loading,setLoading]=React.useState(false);
   const [err,setErr]=React.useState('');
+  /* Held so the "redirecting" step can offer a manual link to the same URL the
+     automatic navigation targets. */
+  const [redirectUrl,setRedirectUrl]=React.useState('');
 
   React.useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow='';};},[]);
 
@@ -948,12 +951,17 @@ const PurchaseModal=({onClose})=>{
            so the EmailJS template renders exactly as it did before. */
         order_id:orderId,
       });
-      /* Render the success screen first, then hand off to the canonical
-         thank-you page. If the navigation is slow or blocked the customer is
-         still looking at a confirmation rather than a spinner. */
-      setStep('success');
-      window.location.href='thank-you.html?order_id='+encodeURIComponent(orderId)
+      /* Single success path: the thank-you page. There is deliberately no
+         in-modal confirmation any more — two success screens meant customers
+         who never navigated still saw "thanks", which is exactly how a broken
+         redirect stayed invisible in production. The step below only shows a
+         "redirecting" notice, so if navigation ever fails the modal looks
+         unfinished rather than complete. */
+      const url='thank-you.html?order_id='+encodeURIComponent(orderId)
         +'&value='+encodeURIComponent(value)+'&currency='+encodeURIComponent(currency);
+      setRedirectUrl(url);
+      setStep('redirecting');
+      window.location.href=url;
       return; // leaving the page — do not clear loading and re-enable the button
     }catch{setErr('שגיאה בשליחה, נסה שנית או שלח מייל ל-Lidorfiliba@gmail.com');}
     setLoading(false);
@@ -1022,14 +1030,15 @@ const PurchaseModal=({onClose})=>{
           </>
         )}
 
-        {step==='success'&&(
-          /* id is the Meta Pixel's Lead signal — see #fb-events in index.html.
-             Renaming it silently stops Lead from firing. */
-          <div id="purchase-success" style={{textAlign:'center',padding:'10px 0'}}>
-            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>🎉</div>
-            <h3 style={{fontSize:'24px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>תודה, {name}!</h3>
-            <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'28px'}}>הפרטים התקבלו בהצלחה.<br/>תקבל גישה לאקדמיה תוך שעות ספורות<br/>למייל <b style={{color:'#EDF2FF'}}>{email}</b></p>
-            <button className="btn-green" onClick={onClose} style={{padding:'13px 36px',borderRadius:'13px',fontSize:'15px',border:'none',cursor:'pointer'}}>סגור</button>
+        {step==='redirecting'&&(
+          /* Transition state only — NOT a confirmation. The order is confirmed
+             on /thank-you.html and nowhere else. If this ever stays on screen
+             the redirect failed, which is the visible symptom this replaced an
+             invisible one with. The manual link is the escape hatch. */
+          <div id="purchase-redirecting" style={{textAlign:'center',padding:'10px 0'}}>
+            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>⏳</div>
+            <h3 style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>מעביר אותך לאישור ההזמנה...</h3>
+            <p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.8',marginBottom:'22px'}}>אם הדף לא נטען מעצמו,<br/><a href={redirectUrl} style={{color:'#00E5A0',fontWeight:'700'}}>לחץ כאן להמשך</a></p>
           </div>
         )}
       </div>
