@@ -109,13 +109,17 @@ const isIsraeliMobile=raw=>/^05\d{8}$/.test(normalisePhone(raw));
 const SB_URL='https://flcakringwxebpeifhke.supabase.co';
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsY2FrcmluZ3d4ZWJwZWlmaGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTIwMjAsImV4cCI6MjA4OTA4ODAyMH0.-j-id8o3FeYig15Xmq6QHV4eDMXUB98e3Z8p30Eaf2U';
 
-const logOrder=async payload=>{
+const LOG_ORDER_URL=SB_URL+'/functions/v1/log-order';
+const RETRY_KEY='sl_order_backup_queue';
+
+/* One attempt. Resolves to a result object — never throws, never rejects. */
+const postOrderOnce=async payload=>{
   try{
     /* Capped so a hung request cannot hold the customer on a spinner. The
        order still reaches EmailJS either way. */
     const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
     const timer=ctrl?setTimeout(()=>ctrl.abort(),8000):null;
-    const r=await fetch(SB_URL+'/functions/v1/log-order',{
+    const r=await fetch(LOG_ORDER_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON},
       body:JSON.stringify({action:'create',...payload}),
@@ -123,12 +127,67 @@ const logOrder=async payload=>{
     });
     if(timer)clearTimeout(timer);
     const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok){console.error('[log-order] order backup failed',r.status,d);return false;}
-    return true;
+    if(r.ok&&d.ok&&d.stored)return{ok:true,detail:'stored'};
+    return{ok:false,detail:'HTTP '+r.status+' '+(d.error||'')+(d.code?' ('+d.code+')':'')};
   }catch(e){
-    console.error('[log-order] order backup failed',e);
-    return false;
+    return{ok:false,detail:String(e&&e.message?e.message:e)};
   }
+};
+
+/* Queue an order that could not be written, so it is not lost when the browser
+   closes. Flushed on the next page load from any surface. */
+const queueFailedOrder=payload=>{
+  try{
+    const q=JSON.parse(localStorage.getItem(RETRY_KEY)||'[]');
+    if(q.some(x=>x.order_id===payload.order_id))return;
+    q.push(payload);
+    /* Bounded so a persistent outage cannot grow this without limit. */
+    localStorage.setItem(RETRY_KEY,JSON.stringify(q.slice(-20)));
+  }catch(e){}
+};
+
+/* Drain the queue in the background on load. Anything that succeeds is dropped;
+   anything that fails stays for the next load. */
+const flushFailedOrders=async()=>{
+  let q;
+  try{q=JSON.parse(localStorage.getItem(RETRY_KEY)||'[]');}catch(e){return;}
+  if(!q||!q.length)return;
+  const left=[];
+  for(const item of q){
+    const res=await postOrderOnce(item);
+    if(res.ok)console.warn('[log-order] recovered a queued order backup:',item.order_id);
+    else left.push(item);
+  }
+  try{localStorage.setItem(RETRY_KEY,JSON.stringify(left));}catch(e){}
+};
+if(typeof window!=='undefined')setTimeout(flushFailedOrders,4000);
+
+/* ── Durable order backup ──────────────────────────────────────────────────
+   Writes the order to the `orders` table via the log-order Edge Function, so
+   an order survives EmailJS being down or the mail landing in spam.
+
+   Never throws and never rejects: the caller awaits it on the path to the
+   redirect, and a backup that cannot be written must not cost the customer
+   their email or their thank-you page.
+
+   The failure is NOT swallowed. It is retried, queued for the next page load,
+   written to the console, and — critically — returned to the caller so it can
+   be stated in the order email, which is the one channel that reaches the
+   admin whether or not the database write worked. */
+const logOrder=async payload=>{
+  let last='';
+  for(let attempt=1;attempt<=3;attempt++){
+    const res=await postOrderOnce(payload);
+    if(res.ok)return{ok:true,status:'ok'};
+    last=res.detail;
+    console.error('[log-order] backup attempt '+attempt+'/3 failed for '+payload.order_id+': '+last);
+    /* Short linear backoff. Total worst case ~1.5s of waiting on top of the
+       request timeouts, which the customer spends on the existing spinner. */
+    if(attempt<3)await new Promise(r=>setTimeout(r,attempt*500));
+  }
+  queueFailedOrder(payload);
+  console.error('[log-order] ORDER NOT BACKED UP — queued for retry: '+payload.order_id+' ('+last+')');
+  return{ok:false,status:'FAILED: '+last};
 };
 
 
@@ -1016,21 +1075,43 @@ const PurchaseModal=({onClose})=>{
        at once — which is the exact scenario this table exists to survive.
        logOrder never throws, so a backup failure falls through to the email and
        the redirect untouched. */
-    await logOrder({
+    const backup=await logOrder({
       order_id:orderId, name:name.trim(), email:email.trim(),
       phone:normalisePhone(phone), amount:value, currency,
       source_surface:'landing',
     });
+
+    const orderTime=new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'});
 
     try{
       const emailjs=await loadEmail();
       await emailjs.send('service_s5wzeck','template_3pfjg4g',{
         from_name:name,from_email:email,phone:phone||'לא צוין',username:username||'לא צוין',
         payment_method:step==='bit'?'Bit / Paybox':'PayPal',price:step==='bit'?'₪980':'$320',
-        order_time:new Date().toLocaleString('he-IL',{timeZone:'Asia/Jerusalem'}),reply_to:email,
+        order_time:orderTime,reply_to:email,
         /* Additive only — every field above keeps its existing name and meaning
            so the EmailJS template renders exactly as it did before. */
         order_id:orderId,
+        /* When the database write fails, this email is the ONLY place the order
+           exists. It therefore carries the full details AND says so loudly, so
+           a failed backup is something visible in the inbox rather than
+           something noticed weeks later by a missing row.
+           `message` is the same free-text field the course app already sends
+           through this shared template. */
+        backup_status:backup.ok?'DB backup: OK':'DB BACKUP FAILED — ' + backup.status,
+        message:(backup.ok
+          ? '✅ נשמר בגיבוי במסד הנתונים.\n\n'
+          : '🚨 הגיבוי במסד הנתונים נכשל — ההזמנה הזו קיימת רק במייל הזה!\n'
+            +'סיבה: '+backup.status+'\n'
+            +'יש לרשום את ההזמנה ידנית.\n\n')
+          +'מספר הזמנה: '+orderId+'\n'
+          +'שם: '+name+'\n'
+          +'אימייל: '+email+'\n'
+          +'טלפון: '+phone+'\n'
+          +'שם משתמש: '+username+'\n'
+          +'סכום: '+value+' '+currency+'\n'
+          +'מקור: דף הנחיתה\n'
+          +'זמן: '+orderTime,
       });
       /* Single success path: the thank-you page. There is deliberately no
          in-modal confirmation any more — two success screens meant customers
