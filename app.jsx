@@ -81,6 +81,56 @@ const track=(ev,params,opts)=>{
   try{window.fbq('track',ev,params,opts);}catch(e){}
 };
 
+/* ── Israeli mobile format ─────────────────────────────────────────────────
+   Ten digits beginning 05, which covers every Israeli mobile prefix
+   (050/052/053/054/055/058...). Separators people actually type — dashes,
+   spaces, dots, brackets — are stripped before the test, and a +972 / 972
+   country prefix is normalised to the local 0 form, so a valid number is not
+   rejected over punctuation. This is a FORMAT check only: it says the number
+   is shaped like an Israeli mobile, not that it exists or belongs to anyone. */
+const normalisePhone=raw=>{
+  let d=(raw||'').replace(/[^\d+]/g,'');
+  if(d.startsWith('+972'))d='0'+d.slice(4);
+  else if(d.startsWith('972'))d='0'+d.slice(3);
+  return d.replace(/\D/g,'');
+};
+const isIsraeliMobile=raw=>/^05\d{8}$/.test(normalisePhone(raw));
+
+/* ── Durable order backup ──────────────────────────────────────────────────
+   Writes the order to the `orders` table via the log-order Edge Function, so
+   an order survives EmailJS being down or the mail landing in spam.
+
+   Deliberately never throws and never returns a rejected promise: the caller
+   awaits it on the path to the redirect, and a backup that cannot be written
+   must not cost the customer their email or their thank-you page. Failures are
+   logged to the console and swallowed. The anon key below is the same public
+   key already in this page; the service_role key that actually writes the row
+   lives only inside the Edge Function. */
+const SB_URL='https://flcakringwxebpeifhke.supabase.co';
+const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsY2FrcmluZ3d4ZWJwZWlmaGtlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTIwMjAsImV4cCI6MjA4OTA4ODAyMH0.-j-id8o3FeYig15Xmq6QHV4eDMXUB98e3Z8p30Eaf2U';
+
+const logOrder=async payload=>{
+  try{
+    /* Capped so a hung request cannot hold the customer on a spinner. The
+       order still reaches EmailJS either way. */
+    const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+    const timer=ctrl?setTimeout(()=>ctrl.abort(),8000):null;
+    const r=await fetch(SB_URL+'/functions/v1/log-order',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON},
+      body:JSON.stringify({action:'create',...payload}),
+      signal:ctrl?ctrl.signal:undefined,
+    });
+    if(timer)clearTimeout(timer);
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok){console.error('[log-order] order backup failed',r.status,d);return false;}
+    return true;
+  }catch(e){
+    console.error('[log-order] order backup failed',e);
+    return false;
+  }
+};
+
 
 /* ══════════════ ICONS ══════════════ */
 const Ic={
@@ -933,9 +983,16 @@ const PurchaseModal=({onClose})=>{
   React.useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow='';};},[]);
 
   const allFilled=name.trim()&&email.trim()&&phone.trim()&&username.trim();
+  /* Only surfaced once the customer has typed something, so the field does not
+     show an error the moment the form opens. */
+  const phoneBad=phone.trim().length>0&&!isIsraeliMobile(phone);
 
   const submit=async()=>{
     if(!allFilled)return;
+    if(!isIsraeliMobile(phone)){
+      setErr('מספר טלפון לא תקין — נדרש מספר נייד ישראלי (10 ספרות, מתחיל ב-05)');
+      return;
+    }
     setLoading(true);setErr('');
 
     /* One id for this order, minted before anything is sent so the same value
@@ -952,6 +1009,18 @@ const PurchaseModal=({onClose})=>{
       content_name:'StockLens Academy',content_category:'course',
       value,currency,order_id:orderId,
     },{eventID:orderId});
+
+    /* Durable backup FIRST, before EmailJS and before the redirect.
+       Ordered this way on purpose: if it ran after the email, an EmailJS
+       failure would throw past it and the order would be lost from both places
+       at once — which is the exact scenario this table exists to survive.
+       logOrder never throws, so a backup failure falls through to the email and
+       the redirect untouched. */
+    await logOrder({
+      order_id:orderId, name:name.trim(), email:email.trim(),
+      phone:normalisePhone(phone), amount:value, currency,
+      source_surface:'landing',
+    });
 
     try{
       const emailjs=await loadEmail();
@@ -1032,6 +1101,14 @@ const PurchaseModal=({onClose})=>{
             <InputField label="שם מלא" value={name} onChange={setName} placeholder="שם מלא"/>
             <InputField label="כתובת מייל" type="email" value={email} onChange={setEmail} placeholder="you@email.com"/>
             <InputField label="טלפון" type="tel" value={phone} onChange={setPhone} placeholder="050-0000000"/>
+            {/* Rendered from derived state only. Nothing here attaches a
+                listener to the input or reads it during typing — see the
+                warning on #fb-events about what broke typing in this form. */}
+            {phoneBad&&(
+              <p style={{fontSize:'11px',color:'#fb7185',marginTop:'-8px',marginBottom:'14px'}}>
+                נדרש מספר נייד ישראלי — 10 ספרות, מתחיל ב-05
+              </p>
+            )}
             <InputField label="שם משתמש רצוי לאקדמיה" value={username} onChange={setUsername} placeholder="lidor123"/>
             <button onClick={submit} disabled={!allFilled||loading}
               style={{width:'100%',background:(!allFilled||loading)?'rgba(255,255,255,.05)':'linear-gradient(135deg,#00E5A0,#00C48A)',color:(!allFilled||loading)?'#334155':'#020814',border:'none',borderRadius:'13px',padding:'15px',fontFamily:'Heebo,sans-serif',fontSize:'15px',fontWeight:'700',cursor:(!allFilled||loading)?'not-allowed':'pointer',boxShadow:(!allFilled||loading)?'none':'0 4px 24px rgba(0,229,160,.3)',transition:'all .2s'}}>
