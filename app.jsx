@@ -131,7 +131,7 @@ const RETRY_KEY='sl_order_backup_queue';
 
    A Cloudflare TEST key is deliberately not used as the placeholder — a key
    that always passes looks like protection while providing none. */
-const TURNSTILE_SITE_KEY='';
+const TURNSTILE_SITE_KEY='0x4AAAAAAEUYGZlCBlvo82Ag';
 const TURNSTILE_SCRIPT='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 let turnstilePromise=null;
