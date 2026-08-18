@@ -84,7 +84,48 @@
       border-radius:12px;padding:14px 16px;margin-bottom:18px;
       font-size:13px;color:#E8D9A8;line-height:1.65;
     }
-    #panel{display:none;}
+    #panel,#orders{display:none;}
+
+    /* ── Pending orders list ── */
+    .ord{
+      border:1px solid var(--border);border-radius:14px;
+      padding:14px 16px;margin-bottom:10px;
+      background:rgba(255,255,255,.02);
+    }
+    .ord-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+    .ord-id{
+      font-family:ui-monospace,Consolas,monospace;font-size:12.5px;font-weight:700;
+      color:var(--green);direction:ltr;unicode-bidi:isolate;word-break:break-all;
+    }
+    .ord-when{font-size:11px;color:var(--text3);white-space:nowrap;}
+    .ord-who{font-size:14px;font-weight:700;margin-top:6px;}
+    .ord-meta{
+      font-size:12px;color:var(--text2);margin-top:3px;
+      direction:ltr;unicode-bidi:isolate;text-align:right;word-break:break-word;
+    }
+    .ord-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+    .tagchip{
+      font-size:10.5px;font-weight:700;letter-spacing:.04em;
+      border-radius:6px;padding:3px 8px;border:1px solid;
+    }
+    .t-amt{color:var(--gold);background:rgba(247,201,72,.09);border-color:rgba(247,201,72,.28);}
+    .t-src{color:var(--blue);background:rgba(90,171,255,.08);border-color:rgba(90,171,255,.26);}
+    .ord-acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+    .ord-acts button{
+      width:auto;flex:1;min-width:130px;min-height:44px;
+      padding:10px 12px;font-size:13px;font-weight:700;border-radius:10px;
+    }
+    .b-pick{background:rgba(0,255,179,.1);color:var(--green);border:1px solid rgba(0,255,179,.3);}
+    .b-paid{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);}
+    .ord-empty{font-size:13px;color:var(--text3);text-align:center;padding:18px 0;}
+    .ord-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;}
+    .ord-head h2{margin-bottom:0;}
+    .ord-refresh{
+      width:auto;padding:8px 14px;font-size:12px;font-weight:700;min-height:40px;
+      background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);border-radius:10px;
+    }
+    .picked{border-color:rgba(0,255,179,.45)!important;background:rgba(0,255,179,.05)!important;}
+
     @media(max-width:520px){.row{grid-template-columns:1fr;}}
   </style>
 </head>
@@ -107,7 +148,17 @@
     <div class="msg" id="auth-msg"></div>
   </section>
 
-  <!-- ── STEP 2: confirm a payment ── -->
+  <!-- ── STEP 2: pick from the pending orders ── -->
+  <section id="orders">
+    <div class="ord-head">
+      <h2>הזמנות ממתינות</h2>
+      <button class="ord-refresh" id="refresh-btn" type="button">רענן</button>
+    </div>
+    <div id="orders-list"><div class="ord-empty">טוען...</div></div>
+    <div class="msg" id="orders-msg"></div>
+  </section>
+
+  <!-- ── STEP 3: confirm a payment ── -->
   <section id="panel">
     <div class="who">מחובר כ-<b id="who-name"></b></div>
 
@@ -251,8 +302,10 @@
       admin = { id: d.user.id, username: d.user.username };
       $('who-name').textContent = admin.username;
       $('auth').style.display = 'none';
+      $('orders').style.display = 'block';
       $('panel').style.display = 'block';
       $('p').value = '';
+      loadOrders();
     } catch(e){
       say(msg, 'err', 'לא ניתן להתחבר: ' + e);
     } finally {
@@ -263,6 +316,144 @@
   $('p').addEventListener('keydown', function(e){
     if (e.key === 'Enter') $('login-btn').click();
   });
+
+  // ── PENDING ORDERS ───────────────────────────────────
+  /* The list exists so a payment is confirmed against a real row rather than an
+     order id typed from memory. Selecting a row fills the form below it; the
+     row itself is never the thing that reports revenue — meta-capi is. */
+
+  function fmtWhen(iso){
+    if (!iso) return '';
+    try {
+      return new Date(iso).toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem',
+        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    } catch(e) { return iso; }
+  }
+
+  /* Every value below comes from the database and is rendered with textContent
+     or as a value assignment — never innerHTML — because name/email/phone are
+     customer-supplied and reach this page unescaped. */
+  function renderOrders(orders){
+    var wrap = $('orders-list');
+    wrap.textContent = '';
+
+    if (!orders.length){
+      var empty = document.createElement('div');
+      empty.className = 'ord-empty';
+      empty.textContent = 'אין הזמנות ממתינות.';
+      wrap.appendChild(empty);
+      return;
+    }
+
+    orders.forEach(function(o){
+      var card = document.createElement('div');
+      card.className = 'ord';
+      card.setAttribute('data-order', o.order_id);
+
+      var top = document.createElement('div'); top.className = 'ord-top';
+      var id = document.createElement('span'); id.className = 'ord-id'; id.textContent = o.order_id;
+      var when = document.createElement('span'); when.className = 'ord-when'; when.textContent = fmtWhen(o.created_at);
+      top.appendChild(id); top.appendChild(when); card.appendChild(top);
+
+      var who = document.createElement('div'); who.className = 'ord-who'; who.textContent = o.name || '—';
+      card.appendChild(who);
+
+      var meta = document.createElement('div'); meta.className = 'ord-meta';
+      meta.textContent = [o.email, o.phone].filter(Boolean).join('  ·  ');
+      card.appendChild(meta);
+
+      var tags = document.createElement('div'); tags.className = 'ord-tags';
+      var amt = document.createElement('span'); amt.className = 'tagchip t-amt';
+      amt.textContent = o.amount + ' ' + o.currency;
+      var src = document.createElement('span'); src.className = 'tagchip t-src';
+      src.textContent = o.source_surface === 'course' ? 'אפליקציית הקורס' : 'דף הנחיתה';
+      tags.appendChild(amt); tags.appendChild(src); card.appendChild(tags);
+
+      var acts = document.createElement('div'); acts.className = 'ord-acts';
+
+      var pick = document.createElement('button');
+      pick.type = 'button'; pick.className = 'b-pick';
+      pick.textContent = 'בחר להזמנה זו';
+      pick.addEventListener('click', function(){ pickOrder(o, card); });
+
+      /* Kept separate from the CAPI send so an order can still be cleared off
+         the queue while meta-capi is undeployed or its secrets are unset. */
+      var paid = document.createElement('button');
+      paid.type = 'button'; paid.className = 'b-paid';
+      paid.textContent = 'סמן כשולם בלבד';
+      paid.addEventListener('click', function(){ markPaid(o.order_id, paid); });
+
+      acts.appendChild(pick); acts.appendChild(paid); card.appendChild(acts);
+      wrap.appendChild(card);
+    });
+  }
+
+  function pickOrder(o, card){
+    $('oid').value = o.order_id;
+    $('amt').value = o.amount;
+    $('cur').value = o.currency || 'ILS';
+    $('em').value  = o.email || '';
+    $('ph').value  = o.phone || '';
+    $('nm').value  = o.name  || '';
+    [].forEach.call(document.querySelectorAll('.ord'), function(c){ c.classList.remove('picked'); });
+    card.classList.add('picked');
+    clear($('send-msg'));
+    $('panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function loadOrders(){
+    var msg = $('orders-msg');
+    clear(msg);
+    if (!admin) return;
+    try {
+      var r = await callFn('log-order', {
+        action: 'admin_list_orders',
+        admin_id: admin.id, admin_username: admin.username,
+        status: 'pending'
+      });
+      var d = await r.json();
+      if (!r.ok || !d.ok){
+        $('orders-list').textContent = '';
+        say(msg, 'err', 'לא ניתן לטעון הזמנות (' + r.status + '): ' + (d.error || ''));
+        return;
+      }
+      renderOrders(d.orders || []);
+    } catch(e){
+      $('orders-list').textContent = '';
+      say(msg, 'err', 'לא ניתן לטעון הזמנות: ' + e);
+    }
+  }
+  window.loadOrders = loadOrders;
+
+  async function markPaid(orderId, btn){
+    var msg = $('orders-msg');
+    clear(msg);
+    var label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'מסמן...';
+    try {
+      var r = await callFn('log-order', {
+        action: 'admin_mark_paid',
+        admin_id: admin.id, admin_username: admin.username,
+        order_id: orderId
+      });
+      var d = await r.json();
+      if (d.ok){
+        /* Refresh BEFORE reporting: loadOrders() clears this same message
+           element on entry, so saying it first would wipe the confirmation the
+           moment the list came back. */
+        await loadOrders();
+        say(msg, 'ok', '✓ ' + orderId + ' סומן כשולם.');
+        return;
+      }
+      say(msg, 'err', 'לא סומן (' + r.status + '): ' + (d.error || ''));
+    } catch(e){
+      say(msg, 'err', 'לא סומן: ' + e);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  $('refresh-btn').addEventListener('click', loadOrders);
 
   // ── SEND PURCHASE ────────────────────────────────────
   $('send-btn').addEventListener('click', async function(){
@@ -314,6 +505,29 @@
             return d.matched_on[k];
           }).join(', ') +
           (tec ? '\n(נשלח כ-Test Event — לא נספר בדיווח החי)' : ''));
+
+        /* A real Purchase reached Meta, so the order is settled — take it off
+           the pending queue. Skipped for test events, which are not real
+           payments and must not clear a genuinely outstanding order.
+           Best effort: the revenue event has already been recorded, so a
+           failure to flip the row is worth reporting but not worth presenting
+           as a failed confirmation. */
+        if (!tec){
+          try {
+            var mp = await callFn('log-order', {
+              action: 'admin_mark_paid',
+              admin_id: admin.id, admin_username: admin.username,
+              order_id: orderId
+            });
+            var mpd = await mp.json();
+            if (!mpd.ok && mpd.error !== 'not_found_or_already_paid'){
+              say(msg, 'ok', msg.textContent + '\n\n⚠ נשלח ל-Meta, אך סימון ההזמנה כשולמה נכשל: ' + (mpd.error || mp.status));
+            }
+          } catch(e){
+            say(msg, 'ok', msg.textContent + '\n\n⚠ נשלח ל-Meta, אך סימון ההזמנה כשולמה נכשל: ' + e);
+          }
+          loadOrders();
+        }
         return;
       }
 
@@ -340,9 +554,13 @@
   $('logout-btn').addEventListener('click', function(){
     admin = null;
     $('panel').style.display = 'none';
+    /* Hidden too — it holds customer names, emails and phone numbers. */
+    $('orders').style.display = 'none';
+    $('orders-list').textContent = '';
     $('auth').style.display = 'block';
     clear($('send-msg'));
     clear($('auth-msg'));
+    clear($('orders-msg'));
   });
 })();
 </script>
