@@ -126,7 +126,86 @@
     }
     .picked{border-color:rgba(0,255,179,.45)!important;background:rgba(0,255,179,.05)!important;}
 
-    @media(max-width:520px){.row{grid-template-columns:1fr;}}
+    /* ── Confirmation modal ── */
+    .backdrop{
+      position:fixed;inset:0;z-index:100;display:none;
+      background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      align-items:center;justify-content:center;padding:20px;
+    }
+    .backdrop.show{display:flex;}
+    .dialog{
+      background:#0b1428;border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;padding:26px 24px;max-width:420px;width:100%;
+      box-shadow:0 30px 80px rgba(0,0,0,.85);
+    }
+    .dialog h3{font-size:18px;font-weight:900;margin-bottom:6px;}
+    .dialog .sub{font-size:13px;color:var(--text3);margin-bottom:18px;}
+    .dl{
+      background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:12px;padding:14px 16px;margin-bottom:18px;
+    }
+    .dl div{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;}
+    .dl .k{color:var(--text3);white-space:nowrap;}
+    .dl .v{color:var(--text);font-weight:700;text-align:left;word-break:break-word;}
+    .dl .v.ltr{direction:ltr;unicode-bidi:isolate;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+    .dl .v.amt{color:var(--gold);}
+    .dlg-warn{
+      background:rgba(251,113,133,.07);border:1px solid rgba(251,113,133,.28);
+      border-radius:11px;padding:11px 13px;margin-bottom:18px;
+      font-size:12.5px;color:#F5A9B5;line-height:1.6;
+    }
+    .dlg-acts{display:flex;gap:10px;}
+    .dlg-acts button{flex:1;min-height:46px;padding:12px;font-size:14px;border-radius:11px;}
+    .b-cancel{background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border);}
+    .b-go{background:linear-gradient(135deg,#00E5A0,#00C48A);color:#020814;border:none;}
+
+    /* ── Credentials panel ── */
+    #creds{display:none;}
+    #creds.show{display:block;}
+    .cred-note{
+      background:rgba(247,201,72,.07);border:1px solid rgba(247,201,72,.28);
+      border-radius:12px;padding:12px 14px;margin-bottom:18px;
+      font-size:12.5px;color:#E8D9A8;line-height:1.65;
+    }
+    .cred-field{margin-bottom:14px;}
+    .cred-label{font-size:12px;color:var(--text3);font-weight:700;margin-bottom:5px;}
+    .cred-row{display:flex;gap:8px;align-items:stretch;}
+    .cred-val{
+      flex:1;min-width:0;
+      background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:11px;
+      padding:12px 14px;font-family:ui-monospace,Consolas,monospace;font-size:15px;font-weight:700;
+      color:var(--green);direction:ltr;unicode-bidi:isolate;text-align:left;
+      word-break:break-all;display:flex;align-items:center;
+    }
+    .cred-copy{
+      width:auto;flex:0 0 auto;min-width:88px;min-height:44px;
+      padding:10px 14px;font-size:13px;font-weight:700;border-radius:11px;
+      background:rgba(0,255,179,.1);color:var(--green);border:1px solid rgba(0,255,179,.3);
+    }
+    .cred-copy.done{background:rgba(0,255,179,.22);}
+    .cred-wide{
+      width:100%;min-height:46px;margin-top:4px;
+      background:rgba(90,171,255,.1);color:var(--blue);border:1px solid rgba(90,171,255,.32);
+      font-size:14px;font-weight:700;border-radius:11px;padding:12px;
+    }
+    .cred-wa{
+      display:flex;align-items:center;justify-content:center;gap:9px;
+      width:100%;min-height:46px;margin-top:10px;padding:12px;
+      border-radius:11px;text-decoration:none;font-size:14px;font-weight:700;
+      background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.32);color:#25D366;
+    }
+    .cred-close{
+      width:100%;min-height:44px;margin-top:14px;padding:11px;
+      background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);
+      font-size:13px;font-weight:700;border-radius:11px;
+    }
+    .cred-preview{
+      background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:11px;
+      padding:12px 14px;margin-top:10px;font-size:12px;color:var(--text2);
+      white-space:pre-wrap;line-height:1.7;max-height:190px;overflow-y:auto;
+    }
+
+    @media(max-width:520px){.row{grid-template-columns:1fr;}.cred-row{flex-wrap:wrap;}}
   </style>
 </head>
 <body>
@@ -156,6 +235,41 @@
     </div>
     <div id="orders-list"><div class="ord-empty">טוען...</div></div>
     <div class="msg" id="orders-msg"></div>
+  </section>
+
+  <!-- ── Credentials for a paid order ──
+       Rendered only after a status flip. Everything in here is built in the
+       browser and never sent anywhere; see the note in the script. -->
+  <section id="creds">
+    <div class="ord-head"><h2>פרטי גישה ללקוח</h2></div>
+    <div class="cred-note">
+      הסיסמה נוצרה כאן בדפדפן ואינה נשמרת בשום מקום — לא במסד הנתונים ולא בלוגים.
+      סגירת הפאנל מוחקת אותה לצמיתות. העתק אותה עכשיו.
+      <br><b>הפאנל מכין את הפרטים בלבד — יצירת המשתמש נעשית על ידך.</b>
+    </div>
+
+    <div class="cred-field">
+      <div class="cred-label">שם משתמש מוצע</div>
+      <div class="cred-row">
+        <div class="cred-val" id="cred-user"></div>
+        <button class="cred-copy" type="button" id="copy-user">העתק</button>
+      </div>
+      <div class="hint" id="cred-user-hint" style="margin:6px 0 0"></div>
+    </div>
+
+    <div class="cred-field">
+      <div class="cred-label">סיסמה שנוצרה</div>
+      <div class="cred-row">
+        <div class="cred-val" id="cred-pass"></div>
+        <button class="cred-copy" type="button" id="copy-pass">העתק</button>
+      </div>
+    </div>
+
+    <button class="cred-wide" type="button" id="copy-msg">📋 העתק הודעת וואטסאפ מוכנה</button>
+    <a class="cred-wa" id="cred-wa" href="#" target="_blank" rel="noopener noreferrer">💬 פתח צ'אט עם הלקוח</a>
+    <div class="cred-preview" id="cred-preview"></div>
+    <button class="cred-close" type="button" id="cred-close">סגור ומחק את הסיסמה</button>
+    <div class="msg" id="cred-msg"></div>
   </section>
 
   <!-- ── STEP 3: confirm a payment ── -->
@@ -206,6 +320,25 @@
     <button id="logout-btn" class="ghost" type="button">התנתק</button>
     <div class="msg" id="send-msg"></div>
   </section>
+</div>
+
+<!-- ── Irreversible-action confirmation ── -->
+<div class="backdrop" id="confirm-backdrop">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h3 id="confirm-title">לאשר תשלום?</h3>
+    <div class="sub" id="confirm-sub">ההזמנה תסומן כשולמה.</div>
+    <div class="dl">
+      <div><span class="k">שם</span><span class="v" id="cf-name"></span></div>
+      <div><span class="k">אימייל</span><span class="v ltr" id="cf-email"></span></div>
+      <div><span class="k">סכום</span><span class="v amt" id="cf-amount"></span></div>
+      <div><span class="k">מספר הזמנה</span><span class="v ltr" id="cf-oid"></span></div>
+    </div>
+    <div class="dlg-warn" id="cf-warn"></div>
+    <div class="dlg-acts">
+      <button class="b-cancel" type="button" id="cf-cancel">ביטול</button>
+      <button class="b-go" type="button" id="cf-go">כן, אשר תשלום</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -317,6 +450,226 @@
     if (e.key === 'Enter') $('login-btn').click();
   });
 
+  /* ════════════════════════════════════════════════════
+     CREDENTIALS PREPARATION
+
+     This panel PREPARES credentials. It does not create the account — that is
+     done by hand in the admin panel of the course app.
+
+     The generated password lives in one place only: the `creds` variable below
+     and the DOM node showing it. It is never sent to log-order, never written
+     to the orders table, never put in localStorage or sessionStorage, never
+     logged, and deliberately never placed in the wa.me URL — URLs end up in
+     browser history and in WhatsApp's own logs. Closing the panel clears both
+     the variable and the node, and the next confirmation generates a fresh one.
+     ════════════════════════════════════════════════════ */
+
+  var COURSE_URL = 'https://lidorfiliba.github.io/StockLensAcademy/';
+  var creds = null;   // { name, email, phone, username, password } — in memory only
+
+  /* Ambiguous glyphs removed: 0/O and 1/l/I. These get read aloud over the
+     phone and typed from a WhatsApp message, so a character that can be
+     mistaken for another is a support call waiting to happen. Uppercase L and
+     lowercase o survive because the characters they collide with are gone. */
+  var PW_UPPER  = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  var PW_LOWER  = 'abcdefghijkmnopqrstuvwxyz';
+  var PW_DIGITS = '23456789';
+  var PW_ALL    = PW_UPPER + PW_LOWER + PW_DIGITS;
+
+  /* Rejection sampling, not modulo. `% n` over a uint32 range biases the first
+     (2^32 % n) characters of the alphabet upwards; for a password that is a
+     real, if small, loss of entropy, and it costs nothing to avoid. */
+  function randIndex(n){
+    var limit = Math.floor(4294967296 / n) * n;
+    var buf = new Uint32Array(1);
+    var v;
+    do { crypto.getRandomValues(buf); v = buf[0]; } while (v >= limit);
+    return v % n;
+  }
+
+  function generatePassword(){
+    /* Guarantee one of each class, then fill and shuffle, so "mixed case and
+       digits" is a property of every password rather than a probability. */
+    var chars = [
+      PW_UPPER[randIndex(PW_UPPER.length)],
+      PW_LOWER[randIndex(PW_LOWER.length)],
+      PW_DIGITS[randIndex(PW_DIGITS.length)]
+    ];
+    while (chars.length < 12) chars.push(PW_ALL[randIndex(PW_ALL.length)]);
+    // Fisher-Yates, so the guaranteed three are not always in positions 0-2.
+    for (var i = chars.length - 1; i > 0; i--) {
+      var j = randIndex(i + 1);
+      var t = chars[i]; chars[i] = chars[j]; chars[j] = t;
+    }
+    return chars.join('');
+  }
+
+  /* 05X-XXXXXXX -> 9725XXXXXXXX for wa.me. Same normalisation the purchase
+     forms apply before storing, so a stored number works here unchanged. */
+  function waNumber(raw){
+    var d = String(raw || '').replace(/[^\d+]/g, '');
+    if (d.indexOf('+972') === 0) d = '0' + d.slice(4);
+    else if (d.indexOf('972') === 0) d = '0' + d.slice(3);
+    d = d.replace(/\D/g, '');
+    if (d.indexOf('0') === 0) d = '972' + d.slice(1);
+    return d;
+  }
+
+  function whatsappMessage(c){
+    return 'שלום ' + c.name + ',\n'
+      + 'התשלום התקבל — ברוך הבא ל-StockLens Academy! 🎉\n\n'
+      + 'פרטי הכניסה שלך:\n'
+      + 'שם משתמש: ' + c.username + '\n'
+      + 'סיסמה: ' + c.password + '\n\n'
+      + 'קישור לקורס:\n' + COURSE_URL + '\n\n'
+      + 'אין צורך לשנות שום דבר — פשוט היכנס עם הפרטים האלה כמו שהם.\n'
+      + 'אותם פרטים משמשים גם את כלי StockLens.\n\n'
+      + 'בהצלחה! 📈';
+  }
+
+  /* Clipboard with a fallback for browsers that block the async API on
+     non-secure or non-focused contexts. */
+  function copyText(text, btn, label){
+    var done = function(){
+      if (!btn) return;
+      var old = btn.textContent;
+      btn.textContent = 'הועתק ✓';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = label || old; btn.classList.remove('done'); }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function(){ legacy(); });
+    } else { legacy(); }
+    function legacy(){
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly','');
+        ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        done();
+      } catch(e){ say($('cred-msg'), 'err', 'ההעתקה נכשלה — סמן והעתק ידנית.'); }
+    }
+  }
+
+  async function showCredentials(order){
+    var msg = $('cred-msg');
+    clear(msg);
+
+    /* The username has to be checked against the users table, so it comes from
+       the server. A failure here must not hide the panel — the password is
+       already generated and the admin still needs it; the field falls back to
+       the local-part guess with a warning. */
+    var username = '';
+    var hint = '';
+    try {
+      var r = await callFn('log-order', {
+        action: 'admin_suggest_username',
+        admin_id: admin.id, admin_username: admin.username,
+        email: order.email
+      });
+      var d = await r.json();
+      if (d.ok) {
+        username = d.username;
+        hint = d.collided
+          ? 'השם הבסיסי (' + d.base + ') כבר תפוס — נוספה ספרה.'
+          : 'השם פנוי בטבלת המשתמשים.';
+      } else {
+        username = String(order.email || '').split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'') || 'user';
+        hint = '⚠ לא ניתן לבדוק זמינות בשרת — ודא ידנית שהשם פנוי.';
+      }
+    } catch(e) {
+      username = String(order.email || '').split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'') || 'user';
+      hint = '⚠ לא ניתן לבדוק זמינות בשרת — ודא ידנית שהשם פנוי.';
+    }
+
+    creds = {
+      name: order.name || '',
+      email: order.email || '',
+      phone: order.phone || '',
+      username: username,
+      password: generatePassword()
+    };
+
+    $('cred-user').textContent = creds.username;
+    $('cred-user-hint').textContent = hint;
+    $('cred-pass').textContent = creds.password;
+    $('cred-preview').textContent = whatsappMessage(creds);
+
+    var wa = $('cred-wa');
+    var num = waNumber(creds.phone);
+    if (num) {
+      /* No ?text= on purpose — that would put the password in a URL. */
+      wa.href = 'https://wa.me/' + num;
+      wa.style.display = 'flex';
+      wa.textContent = "💬 פתח צ'אט עם " + (creds.name || creds.phone);
+    } else {
+      wa.style.display = 'none';
+    }
+
+    $('creds').classList.add('show');
+    $('creds').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function clearCredentials(){
+    creds = null;
+    $('cred-user').textContent = '';
+    $('cred-pass').textContent = '';
+    $('cred-preview').textContent = '';
+    $('cred-user-hint').textContent = '';
+    $('creds').classList.remove('show');
+    clear($('cred-msg'));
+  }
+
+  $('copy-user').addEventListener('click', function(){
+    if (creds) copyText(creds.username, this, 'העתק');
+  });
+  $('copy-pass').addEventListener('click', function(){
+    if (creds) copyText(creds.password, this, 'העתק');
+  });
+  $('copy-msg').addEventListener('click', function(){
+    if (creds) copyText(whatsappMessage(creds), this, '📋 העתק הודעת וואטסאפ מוכנה');
+  });
+  $('cred-close').addEventListener('click', clearCredentials);
+
+  /* ── Confirmation gate ────────────────────────────────
+     Every path that flips a status routes through here. The dialog states who
+     is being given the course and how much they paid, because the only way to
+     catch the wrong row is to read it back before committing. */
+  var pendingConfirm = null;
+
+  function askConfirm(order, opts){
+    pendingConfirm = opts.onConfirm;
+    $('cf-name').textContent   = order.name || '—';
+    $('cf-email').textContent  = order.email || '—';
+    $('cf-amount').textContent = (order.amount != null ? order.amount : '—') + ' ' + (order.currency || '');
+    $('cf-oid').textContent    = order.order_id || '—';
+    $('confirm-title').textContent = opts.title;
+    $('confirm-sub').textContent   = opts.sub;
+    $('cf-warn').textContent       = opts.warn;
+    $('cf-go').textContent         = opts.go;
+    $('confirm-backdrop').classList.add('show');
+    $('cf-cancel').focus();
+  }
+
+  function closeConfirm(){
+    pendingConfirm = null;
+    $('confirm-backdrop').classList.remove('show');
+  }
+
+  $('cf-cancel').addEventListener('click', closeConfirm);
+  $('confirm-backdrop').addEventListener('click', function(e){
+    if (e.target === this) closeConfirm();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && $('confirm-backdrop').classList.contains('show')) closeConfirm();
+  });
+  $('cf-go').addEventListener('click', function(){
+    var fn = pendingConfirm;
+    closeConfirm();
+    if (fn) fn();
+  });
+
   // ── PENDING ORDERS ───────────────────────────────────
   /* The list exists so a payment is confirmed against a real row rather than an
      order id typed from memory. Selecting a row fills the form below it; the
@@ -381,7 +734,17 @@
       var paid = document.createElement('button');
       paid.type = 'button'; paid.className = 'b-paid';
       paid.textContent = 'סמן כשולם בלבד';
-      paid.addEventListener('click', function(){ markPaid(o.order_id, paid); });
+      /* Gated: this button sits in a scrollable list of rows that all look
+         alike, which is exactly where a stray tap lands on the wrong one. */
+      paid.addEventListener('click', function(){
+        askConfirm(o, {
+          title: 'לסמן כשולם?',
+          sub:   'ההזמנה תסומן כשולמה ותוסר מרשימת הממתינות. לא יישלח אירוע Purchase ל-Meta.',
+          warn:  'פעולה זו אינה הפיכה — סימון ההזמנה הלא נכונה מעניק קורס בשווי ₪980 בחינם.',
+          go:    'כן, סמן כשולם',
+          onConfirm: function(){ markPaid(o, paid); }
+        });
+      });
 
       acts.appendChild(pick); acts.appendChild(paid); card.appendChild(acts);
       wrap.appendChild(card);
@@ -425,7 +788,11 @@
   }
   window.loadOrders = loadOrders;
 
-  async function markPaid(orderId, btn){
+  /* Takes the whole order, not just its id, because the credentials panel needs
+     the name, email and phone — and taking the row that was actually displayed
+     removes any chance of preparing credentials for a different customer than
+     the one just confirmed. */
+  async function markPaid(order, btn){
     var msg = $('orders-msg');
     clear(msg);
     var label = btn.textContent;
@@ -434,7 +801,7 @@
       var r = await callFn('log-order', {
         action: 'admin_mark_paid',
         admin_id: admin.id, admin_username: admin.username,
-        order_id: orderId
+        order_id: order.order_id
       });
       var d = await r.json();
       if (d.ok){
@@ -442,7 +809,8 @@
            element on entry, so saying it first would wipe the confirmation the
            moment the list came back. */
         await loadOrders();
-        say(msg, 'ok', '✓ ' + orderId + ' סומן כשולם.');
+        say(msg, 'ok', '✓ ' + order.order_id + ' סומן כשולם.');
+        await showCredentials(order);
         return;
       }
       say(msg, 'err', 'לא סומן (' + r.status + '): ' + (d.error || ''));
@@ -477,6 +845,32 @@
     if (!email && !phone){
       say(msg, 'err', 'צריך אימייל או טלפון של הלקוח — לפחות אחד.'); return;
     }
+
+    var tecPre = $('tec').value.trim();
+    /* Gated for the same reason as the row button: this reports revenue to Meta
+       AND flips the order to paid, both irreversibly. A test event is exempt —
+       it reports nothing and changes no status. */
+    if (tecPre){ await doSend(); return; }
+
+    askConfirm({
+      name: $('nm').value.trim(), email: email,
+      amount: amount, currency: $('cur').value, order_id: orderId
+    }, {
+      title: 'לשלוח Purchase ולסמן כשולם?',
+      sub:   'אירוע Purchase אמיתי יישלח ל-Meta וההזמנה תסומן כשולמה.',
+      warn:  'פעולה זו אינה הפיכה — האירוע נספר כהכנסה ולא ניתן למחוק אותו מ-Meta.',
+      go:    'כן, שלח ל-Meta',
+      onConfirm: doSend
+    });
+  });
+
+  async function doSend(){
+    var msg = $('send-msg');
+    var btn = $('send-btn');
+    var orderId = $('oid').value.trim();
+    var amount  = parseFloat($('amt').value);
+    var email   = $('em').value.trim();
+    var phone   = $('ph').value.trim();
 
     btn.disabled = true; btn.textContent = 'שולח...';
     try {
@@ -526,7 +920,13 @@
           } catch(e){
             say(msg, 'ok', msg.textContent + '\n\n⚠ נשלח ל-Meta, אך סימון ההזמנה כשולמה נכשל: ' + e);
           }
-          loadOrders();
+          await loadOrders();
+          /* Same panel as the row button: a paid order needs credentials
+             prepared regardless of which path confirmed it. */
+          await showCredentials({
+            name: $('nm').value.trim(), email: email, phone: phone,
+            amount: amount, currency: $('cur').value, order_id: orderId
+          });
         }
         return;
       }
@@ -549,10 +949,13 @@
     } finally {
       btn.disabled = false; btn.textContent = 'שלח Purchase ל-Meta';
     }
-  });
+  }
 
   $('logout-btn').addEventListener('click', function(){
     admin = null;
+    /* The password must not outlive the session on screen. */
+    clearCredentials();
+    closeConfirm();
     $('panel').style.display = 'none';
     /* Hidden too — it holds customer names, emails and phone numbers. */
     $('orders').style.display = 'none';
