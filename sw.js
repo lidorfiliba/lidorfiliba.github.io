@@ -10,11 +10,19 @@
    The version bump alone fixes it once. The strategy change below is what stops
    it recurring: app.js is now network-first, so a missed version bump costs a
    cache refresh, not a permanently stale deploy. */
-const CACHE = 'sl-home-v17';
+/* v17 -> v18: index.html, privacy.html, thank-you.html and app.js all changed
+   in the legal/accessibility deploy, and the three new legal pages joined the
+   precache list. Without the bump the offline fallback would keep serving the
+   old copies, and a visitor who went offline on /terms.html would be handed
+   index.html instead of the document they asked for. */
+const CACHE = 'sl-home-v18';
 const PRECACHE = [
   './',
   '/index.html',
   '/privacy.html',
+  '/terms.html',
+  '/refund.html',
+  '/accessibility.html',
   '/thank-you.html',
   '/app.js',
   '/manifest.json',
