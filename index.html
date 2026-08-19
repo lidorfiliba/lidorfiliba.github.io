@@ -1029,6 +1029,48 @@ src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
      straight into the content. #main is rendered by <main> in app.jsx. -->
 <a href="#main" class="skip-link">דלג לתוכן הראשי</a>
 
+<script id="focus-scroll-fix">
+/* Keep the keyboard-focused element on screen.
+
+   Measured on the deployed page: with html{scroll-behavior:smooth} (set at the
+   top of this file, and wanted for the nav's anchor links) Chrome does NOT
+   scroll a Tab-focused element into view. Tabbing down the landing page left
+   focus on a button at y=776 in a 590px viewport with scrollY still 0 — the
+   focus ring was real but nowhere on screen. Flipping scroll-behavior to auto
+   scrolled it to y=263 correctly, which isolates smooth scrolling as the cause.
+
+   Rather than give up smooth anchor scrolling, this restores the missing
+   behaviour explicitly.
+
+   :focus-visible gates it to keyboard and assistive-tech focus, so clicking a
+   partially-visible button with a mouse still does not make the page jump.
+   The fixed navbar (66px) and ticker sit over the top of the viewport, so an
+   element scrolled flush to y=0 would still be covered — block:'center' keeps
+   it clear of both. */
+(function () {
+  var NAV_COVER = 130; /* navbar + ticker overlay height */
+
+  document.addEventListener('focusin', function (e) {
+    var el = e.target;
+    if (!el || el === document.body || !el.getBoundingClientRect) return;
+
+    /* Keyboard/AT focus only. Browsers without :focus-visible fall through to
+       doing nothing, which is the pre-existing behaviour. */
+    try { if (!el.matches(':focus-visible')) return; } catch (err) { return; }
+
+    /* The purchase dialog is position:fixed and scrolls its own overflow; the
+       page must not move underneath it. */
+    if (el.closest && el.closest('#purchase-modal')) return;
+
+    var r = el.getBoundingClientRect();
+    if (r.top < NAV_COVER || r.bottom > window.innerHeight) {
+      try { el.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+      catch (err) { el.scrollIntoView(true); }
+    }
+  }, true);
+})();
+</script>
+
 <!-- TradingView Ticker Tape — injected after window.load to keep it off critical path -->
 <div id="tv-ticker" style="position:fixed;top:66px;left:0;right:0;z-index:48;overflow:hidden;border-bottom:1px solid rgba(0,255,179,.07);background:rgba(2,8,20,.97);">
   <div class="tradingview-widget-container">
