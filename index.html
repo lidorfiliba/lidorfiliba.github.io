@@ -202,6 +202,97 @@
       }
     }
 
+    /* ── ACCESSIBILITY ─────────────────────────────────────────────────────
+       Everything below is required for WCAG 2.1 AA and must not be removed
+       for visual reasons. */
+
+    /* Visible keyboard focus on every interactive element.
+
+       :focus-visible rather than :focus, so the ring appears for keyboard and
+       assistive-tech users without putting an outline round every button a
+       mouse user clicks. The colour is the brand green on a dark ground —
+       measured 14.7:1 — and outline-offset keeps it clear of the button's own
+       glow. Nothing in this file may set `outline:none` without providing a
+       replacement indicator. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #00FFB3 !important;
+      outline-offset: 3px !important;
+      border-radius: 6px;
+    }
+    /* The panel takes focus when the purchase dialog opens. That is a
+       programmatic move to establish context, not a control the user tabbed
+       to, so it must not draw a ring around the whole dialog. */
+    #purchase-modal:focus,
+    #purchase-modal:focus-visible {
+      outline: none !important;
+    }
+    /* Older engines without :focus-visible still get a ring rather than
+       nothing at all. */
+    @supports not selector(:focus-visible) {
+      a:focus, button:focus, input:focus, select:focus, textarea:focus {
+        outline: 3px solid #00FFB3 !important;
+        outline-offset: 3px !important;
+      }
+    }
+
+    /* Available to a screen reader, invisible on screen. Used for required-field
+       announcements and for hints that would be redundant visually. */
+    .sr-only {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Skip link — first Tab stop on the page, hidden until focused. z-index
+       clears the fixed navbar (50) and the ticker (48).
+
+       Hidden by transform, not by a -9999px inset: under dir=rtl a negative
+       inset-inline-start pushes the link 9999px to the RIGHT, widening the
+       scroll area and leaving it off-screen even when focused. */
+    .skip-link {
+      position: fixed;
+      inset-inline-start: 0;
+      top: 0;
+      z-index: 100;
+      background: #00FFB3;
+      color: #020814;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 14px 22px;
+      border-end-end-radius: 12px;
+      text-decoration: none;
+      transform: translateY(-150%);
+      transition: transform .15s;
+    }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    /* Honour a reduced-motion preference. The decorative layer on this page is
+       heavy — orbs, aurora, parallax, shimmer — and it is exactly what triggers
+       symptoms for motion-sensitive users. */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .p-orb, .aurora1, .aurora2 { animation: none !important; }
+    }
+
     </style>
 
 <style id="parallax-system">
@@ -908,7 +999,7 @@ fbq('set', 'autoConfig', false, '27572902432409101');
 fbq('init', '27572902432409101');
 fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none"
+<noscript><img height="1" width="1" alt="" style="display:none"
 src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
@@ -934,6 +1025,10 @@ src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
 
 </head>
 <body>
+<!-- First Tab stop on the page: jumps past the fixed navbar and the ticker
+     straight into the content. #main is rendered by <main> in app.jsx. -->
+<a href="#main" class="skip-link">דלג לתוכן הראשי</a>
+
 <!-- TradingView Ticker Tape — injected after window.load to keep it off critical path -->
 <div id="tv-ticker" style="position:fixed;top:66px;left:0;right:0;z-index:48;overflow:hidden;border-bottom:1px solid rgba(0,255,179,.07);background:rgba(2,8,20,.97);">
   <div class="tradingview-widget-container">

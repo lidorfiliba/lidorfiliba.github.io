@@ -317,7 +317,7 @@ const logOrder=async payload=>{
 /* ══════════════ ICONS ══════════════ */
 const Ic={
   Lens:({s=32})=>(
-    <svg width={s} height={s} viewBox="0 0 32 32" fill="none">
+    <svg aria-hidden="true" focusable="false" width={s} height={s} viewBox="0 0 32 32" fill="none">
       <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" strokeWidth="2"/>
       <circle cx="13" cy="13" r="4" stroke="#00E5A0" strokeWidth="1.6"/>
       <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" strokeWidth="2.6" strokeLinecap="round"/>
@@ -325,32 +325,32 @@ const Ic={
     </svg>
   ),
   Check:({size=18,color='#00E5A0'})=>(
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{flexShrink:0}}>
+    <svg aria-hidden="true" focusable="false" width={size} height={size} viewBox="0 0 20 20" fill="none" style={{flexShrink:0}}>
       <circle cx="10" cy="10" r="9.5" fill={color+'18'} stroke={color+'40'}/>
       <polyline points="6,10 9,13 14,7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
-  ArrowL:()=>(<svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="9" x2="3" y2="9"/><polyline points="8,4 3,9 8,14"/></svg>),
-  ChevronDown:()=>(<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="4,6 8,10 12,6"/></svg>),
-  BarChart:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="12" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="14" rx="1"/><rect x="16" y="2" width="4" height="18" rx="1"/></svg>),
-  Compare:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="9" height="16" rx="2"/><rect x="13" y="2" width="9" height="18" rx="2"/></svg>),
-  Versus:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="3" x2="19" y2="19"/><line x1="19" y1="3" x2="3" y2="19"/></svg>),
-  Brain:()=>(<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A4.5 4.5 0 0 1 14 6.5v1a2.5 2.5 0 0 0 2.5 2.5h.5a3 3 0 0 1 0 6h-.5a2.5 2.5 0 0 0-2.5 2.5V20"/><path d="M9.5 2a4.5 4.5 0 0 0-4.5 4.5v.5a3 3 0 0 1-3 3 3 3 0 0 0 0 6 3 3 0 0 1 3 3V20"/><line x1="10" y1="20" x2="14" y2="20"/></svg>),
-  Star:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 13.9,8.6 21,9.7 16,14.5 17.2,21.5 11,18.1 4.8,21.5 6,14.5 1,9.7 8.1,8.6"/></svg>),
-  Globe:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="10"/><line x1="1" y1="11" x2="21" y2="11"/><path d="M11 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>),
-  Layers:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 21,7 11,12 1,7"/><polyline points="1,12 11,17 21,12"/><polyline points="1,17 11,22 21,17"/></svg>),
-  Grid:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="8" height="8" rx="1.5"/><rect x="13" y="2" width="8" height="8" rx="1.5"/><rect x="2" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>),
-  Crown:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17L5.5 7 11 12 14.5 3 18 12 20.5 7 19 17Z"/><line x1="3" y1="20" x2="19" y2="20"/></svg>),
-  Menu:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="3" y1="5" x2="19" y2="5"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="17" x2="19" y2="17"/></svg>),
-  X:()=>(<svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>),
-  StarFill:()=>(<svg width="13" height="13" viewBox="0 0 13 13" fill="#F7C948"><polygon points="6.5,1 8.1,4.8 12.4,5.2 9.3,8.1 10.2,12.4 6.5,10.2 2.8,12.4 3.7,8.1 0.6,5.2 4.9,4.8"/></svg>),
-  Shield:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7 3.5-.5 6-3.5 6-7V4L8 1z"/></svg>),
-  Zap:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13,2 3,14 12,14 9,22 20,10 11,10"/></svg>),
-  BookOpen:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h7a2 2 0 0 1 2 2v14a1 1 0 0 1-1-1H2z"/><path d="M20 3h-7a2 2 0 0 0-2 2v14a1 1 0 0 0 1-1h8z"/></svg>),
-  TrendUp:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17"/><polyline points="16,7 22,7 22,13"/></svg>),
-  Users:()=>(<svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>),
-  Lock:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>),
-  Refresh:()=>(<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1,4 1,10 7,10"/><path d="M3.5 10A6 6 0 1 0 5 5.5"/></svg>),
+  ArrowL:()=>(<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="9" x2="3" y2="9"/><polyline points="8,4 3,9 8,14"/></svg>),
+  ChevronDown:()=>(<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="4,6 8,10 12,6"/></svg>),
+  BarChart:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="12" width="4" height="8" rx="1"/><rect x="9" y="6" width="4" height="14" rx="1"/><rect x="16" y="2" width="4" height="18" rx="1"/></svg>),
+  Compare:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="9" height="16" rx="2"/><rect x="13" y="2" width="9" height="18" rx="2"/></svg>),
+  Versus:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="3" x2="19" y2="19"/><line x1="19" y1="3" x2="3" y2="19"/></svg>),
+  Brain:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A4.5 4.5 0 0 1 14 6.5v1a2.5 2.5 0 0 0 2.5 2.5h.5a3 3 0 0 1 0 6h-.5a2.5 2.5 0 0 0-2.5 2.5V20"/><path d="M9.5 2a4.5 4.5 0 0 0-4.5 4.5v.5a3 3 0 0 1-3 3 3 3 0 0 0 0 6 3 3 0 0 1 3 3V20"/><line x1="10" y1="20" x2="14" y2="20"/></svg>),
+  Star:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 13.9,8.6 21,9.7 16,14.5 17.2,21.5 11,18.1 4.8,21.5 6,14.5 1,9.7 8.1,8.6"/></svg>),
+  Globe:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="10"/><line x1="1" y1="11" x2="21" y2="11"/><path d="M11 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>),
+  Layers:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="11,2 21,7 11,12 1,7"/><polyline points="1,12 11,17 21,12"/><polyline points="1,17 11,22 21,17"/></svg>),
+  Grid:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="8" height="8" rx="1.5"/><rect x="13" y="2" width="8" height="8" rx="1.5"/><rect x="2" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>),
+  Crown:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17L5.5 7 11 12 14.5 3 18 12 20.5 7 19 17Z"/><line x1="3" y1="20" x2="19" y2="20"/></svg>),
+  Menu:()=>(<svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="3" y1="5" x2="19" y2="5"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="17" x2="19" y2="17"/></svg>),
+  X:()=>(<svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>),
+  StarFill:()=>(<svg aria-hidden="true" focusable="false" width="13" height="13" viewBox="0 0 13 13" fill="#F7C948"><polygon points="6.5,1 8.1,4.8 12.4,5.2 9.3,8.1 10.2,12.4 6.5,10.2 2.8,12.4 3.7,8.1 0.6,5.2 4.9,4.8"/></svg>),
+  Shield:()=>(<svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7 3.5-.5 6-3.5 6-7V4L8 1z"/></svg>),
+  Zap:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13,2 3,14 12,14 9,22 20,10 11,10"/></svg>),
+  BookOpen:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h7a2 2 0 0 1 2 2v14a1 1 0 0 1-1-1H2z"/><path d="M20 3h-7a2 2 0 0 0-2 2v14a1 1 0 0 0 1-1h8z"/></svg>),
+  TrendUp:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17"/><polyline points="16,7 22,7 22,13"/></svg>),
+  Users:()=>(<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>),
+  Lock:()=>(<svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="10" height="8" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>),
+  Refresh:()=>(<svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#00E5A0" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1,4 1,10 7,10"/><path d="M3.5 10A6 6 0 1 0 5 5.5"/></svg>),
 };
 
 /* ══════════════ HERO CHART ══════════════ */
@@ -368,7 +368,7 @@ const HeroChart=()=>{
         <div style={{fontSize:'13px',fontWeight:'700',color:'#EDF2FF'}}>6 מימדי בריאות פיננסית</div>
         <div style={{display:'flex',gap:'4px',marginTop:'6px'}}>
           {['Growth','Value','Safety'].map(l=>(
-            <span key={l} style={{fontSize:'10px',color:'#475569',background:'rgba(255,255,255,.05)',borderRadius:'4px',padding:'2px 6px'}}>{l}</span>
+            <span key={l} style={{fontSize:'10px',color:'#94A3B8',background:'rgba(255,255,255,.05)',borderRadius:'4px',padding:'2px 6px'}}>{l}</span>
           ))}
         </div>
       </div>
@@ -378,7 +378,7 @@ const HeroChart=()=>{
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'16px'}}>
           <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
             <div style={{background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.22)',borderRadius:'8px',padding:'4px 10px',fontSize:'12px',fontWeight:'800',color:'#00E5A0'}}>AAPL</div>
-            <span style={{fontSize:'11px',color:'#475569',fontWeight:'500'}}>NASDAQ</span>
+            <span style={{fontSize:'11px',color:'#94A3B8',fontWeight:'500'}}>NASDAQ</span>
           </div>
           <div style={{textAlign:'right'}}>
             <div style={{fontSize:'24px',fontWeight:'900',color:'#EDF2FF',lineHeight:'1',fontVariantNumeric:'tabular-nums'}}>$192.40</div>
@@ -386,7 +386,7 @@ const HeroChart=()=>{
           </div>
         </div>
         <div style={{position:'relative',height:'120px',marginBottom:'14px'}}>
-          <svg viewBox="0 0 430 200" preserveAspectRatio="xMidYMid meet" style={{width:'100%',height:'100%',overflow:'visible'}}>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 430 200" preserveAspectRatio="xMidYMid meet" style={{width:'100%',height:'100%',overflow:'visible'}}>
             <defs>
               <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#00E5A0" stopOpacity=".7"/>
@@ -407,7 +407,7 @@ const HeroChart=()=>{
         <div style={{display:'flex',justifyContent:'space-between',borderTop:'1px solid rgba(255,255,255,.05)',paddingTop:'12px'}}>
           {[['P/E','29.4'],['EPS','$6.56'],['Mkt Cap','$2.9T'],['ROE','26%']].map(([l,v])=>(
             <div key={l} style={{textAlign:'center'}}>
-              <div style={{fontSize:'10px',color:'#475569',marginBottom:'3px',fontWeight:'500'}}>{l}</div>
+              <div style={{fontSize:'10px',color:'#94A3B8',marginBottom:'3px',fontWeight:'500'}}>{l}</div>
               <div style={{fontSize:'13px',fontWeight:'700',color:'#94A3B8',fontVariantNumeric:'tabular-nums'}}>{v}</div>
             </div>
           ))}
@@ -416,7 +416,7 @@ const HeroChart=()=>{
 
       {/* Investment Board badge */}
       <div className="glass2" style={{position:'absolute',bottom:'-22px',left:'-22px',borderRadius:'16px',padding:'11px 16px',border:'1px solid rgba(247,201,72,.18)',zIndex:2,boxShadow:'0 8px 32px rgba(0,0,0,.4)'}}>
-        <div style={{fontSize:'10px',color:'#475569',marginBottom:'3px',fontWeight:'500'}}>Investment Board · AI</div>
+        <div style={{fontSize:'10px',color:'#94A3B8',marginBottom:'3px',fontWeight:'500'}}>Investment Board · AI</div>
         <div style={{fontSize:'13px',fontWeight:'700',color:'#EDF2FF'}}>וורן באפט: <span style={{color:'#00E5A0'}}>קנייה</span></div>
         <div style={{display:'flex',alignItems:'center',gap:'4px',marginTop:'4px'}}>
           {[1,2,3,4].map(i=><Ic.StarFill key={i}/>)}
@@ -463,7 +463,7 @@ const SplashScreen=({onDone})=>{
         <div style={{fontSize:'11px',letterSpacing:'6px',color:'#2D4A6A',textTransform:'uppercase',
           fontWeight:700,marginBottom:'48px',opacity:0,animation:'splashFade .5s .7s ease forwards'}}>Academy</div>
         <div style={{marginBottom:'40px',opacity:0,animation:'splashFade .5s .32s ease forwards'}}>
-          <svg width="260" height="56" viewBox="0 0 260 60" style={{overflow:'visible'}}>
+          <svg aria-hidden="true" focusable="false" width="260" height="56" viewBox="0 0 260 60" style={{overflow:'visible'}}>
             <defs>
               <linearGradient id="sg" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#00FFB3"/><stop offset="100%" stopColor="#5AABFF"/>
@@ -520,7 +520,7 @@ const StatCounter=({end,prefix='',suffix='',label,color})=>{
     <div ref={ref} style={{textAlign:'center'}}>
       <div className="stat-counter" style={{fontSize:'clamp(30px,3.5vw,50px)',fontWeight:900,
         color,lineHeight:1,marginBottom:'8px',letterSpacing:'-.02em'}}>{prefix}{val}{suffix}</div>
-      <div style={{fontSize:'12px',color:'#475569',fontWeight:600,letterSpacing:'.04em'}}>{label}</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',fontWeight:600,letterSpacing:'.04em'}}>{label}</div>
     </div>
   );
 };
@@ -537,7 +537,7 @@ const Navbar=({scrolled,onBuy,user,signOut})=>{
             <Ic.Lens s={28}/>
             <div>
               <div style={{fontSize:'20px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
-              <div style={{fontSize:'8px',letterSpacing:'3px',color:'#334155',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
+              <div style={{fontSize:'8px',letterSpacing:'3px',color:'#94A3B8',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
             </div>
           </a>
           {/* No inline `display` here on purpose. `.hidden` sets display:none and
@@ -550,27 +550,32 @@ const Navbar=({scrolled,onBuy,user,signOut})=>{
           </nav>
           <div style={{flex:1}} className="md:hidden"/>
           {/* Same rule as the nav above — no inline `display`. */}
+          {/* Styled anchors, not <a><button>. A button nested in a link is
+              invalid HTML and gave keyboard users two Tab stops per item, the
+              outer one silent. */}
           <div className="hidden md:flex" style={{alignItems:'center',gap:'8px'}}>
-            <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-              <button className="btn-ghost" style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px'}}>StockLens</button>
-            </a>
-            <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-              <button className="btn-ghost" style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px'}}>Academy</button>
-            </a>
-            <button className="btn-green" onClick={onBuy} style={{padding:'9px 22px',borderRadius:'11px',fontSize:'14px'}}>רכוש — ₪980</button>
+            <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener noreferrer"
+              style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px',textDecoration:'none'}}>StockLens</a>
+            <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener noreferrer"
+              style={{padding:'8px 16px',borderRadius:'10px',fontSize:'13px',textDecoration:'none'}}>Academy</a>
+            <button className="btn-green" type="button" onClick={onBuy} style={{padding:'9px 22px',borderRadius:'11px',fontSize:'14px'}}>רכוש — ₪980</button>
           </div>
-          <button className="md:hidden" onClick={()=>setOpen(!open)} style={{background:'transparent',border:'none',cursor:'pointer',color:'#94A3B8',padding:'6px',flexShrink:0}}>
+          {/* Icon-only, so the name has to come from aria-label; aria-expanded
+              tells a screen reader whether the panel below is open. */}
+          <button className="md:hidden" type="button" onClick={()=>setOpen(!open)}
+            aria-label={open?'סגור תפריט':'פתח תפריט'}
+            aria-expanded={open} aria-controls="mobile-menu"
+            style={{background:'transparent',border:'none',cursor:'pointer',color:'#94A3B8',padding:'6px',flexShrink:0,minWidth:'44px',minHeight:'44px'}}>
             {open?<Ic.X/>:<Ic.Menu/>}
           </button>
         </div>
         {open&&(
-          <div className="glass2" style={{borderRadius:'18px',padding:'14px',marginBottom:'12px',border:'1px solid rgba(0,229,160,.1)'}}>
+          <div id="mobile-menu" className="glass2" style={{borderRadius:'18px',padding:'14px',marginBottom:'12px',border:'1px solid rgba(0,229,160,.1)'}}>
             {links.map(({l,h})=><a key={h} href={h} className="nav-link" style={{display:'block',marginBottom:'2px'}} onClick={()=>setOpen(false)}>{l}</a>)}
             <div style={{display:'flex',gap:'8px',marginTop:'14px',paddingTop:'14px',borderTop:'1px solid rgba(255,255,255,.06)'}}>
-              <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{flex:1,textDecoration:'none'}}>
-                <button className="btn-ghost" style={{width:'100%',padding:'10px',borderRadius:'10px',fontSize:'13px'}}>StockLens</button>
-              </a>
-              <button className="btn-green" onClick={onBuy} style={{flex:1,padding:'10px',borderRadius:'10px',fontSize:'13px'}}>רכוש — ₪980</button>
+              <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener noreferrer"
+                style={{flex:1,padding:'10px',borderRadius:'10px',fontSize:'13px',textDecoration:'none'}}>StockLens</a>
+              <button className="btn-green" type="button" onClick={onBuy} style={{flex:1,padding:'10px',borderRadius:'10px',fontSize:'13px'}}>רכוש — ₪980</button>
             </div>
           </div>
         )}
@@ -625,12 +630,12 @@ const Hero=({onBuy,user})=>(
           <div className="fade-up-d3" style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'48px'}}>
             {user?(
               <div style={{display:'flex',gap:'14px',flexWrap:'wrap'}}>
-                <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-                  <button className="btn-green hero-cta-beam" style={{padding:'16px 32px',borderRadius:'14px',fontSize:'16px'}}>📚 כניסה ל-Academy ←</button>
-                </a>
-                <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-                  <button className="btn-ghost" style={{padding:'16px 26px',borderRadius:'14px',fontSize:'16px'}}>📊 כניסה ל-StockLens</button>
-                </a>
+                <a className="btn-green hero-cta-beam" href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener noreferrer"
+                  style={{padding:'16px 32px',borderRadius:'14px',fontSize:'16px',textDecoration:'none'}}>
+                  <span aria-hidden="true">📚</span> כניסה ל-Academy <span aria-hidden="true">←</span></a>
+                <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener noreferrer"
+                  style={{padding:'16px 26px',borderRadius:'14px',fontSize:'16px',textDecoration:'none'}}>
+                  <span aria-hidden="true">📊</span> כניסה ל-StockLens</a>
               </div>
             ):(
               <div style={{display:'flex',gap:'14px',flexWrap:'wrap'}}>
@@ -643,7 +648,7 @@ const Hero=({onBuy,user})=>(
                       fontWeight:800,position:'relative',zIndex:1,
                       boxShadow:'0 0 50px rgba(0,255,179,.5),0 12px 40px rgba(0,255,179,.3)'}}>
                     רכוש גישה — ₪980
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+                    <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
                   </button>
                 </div>
               </div>
@@ -708,7 +713,7 @@ const HowItWorks=()=>(
               <span style={{fontSize:'32px',fontWeight:'900',color:'rgba(255,255,255,.05)',lineHeight:'1',fontVariantNumeric:'tabular-nums'}}>{n}</span>
             </div>
             <div style={{fontSize:'16px',fontWeight:'800',color:'#EDF2FF',marginBottom:'10px'}}>{t}</div>
-            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75'}}>{d}</p>
+            <p style={{fontSize:'13.5px',color:'#94A3B8',lineHeight:'1.75'}}>{d}</p>
           </div>
         ))}
       </div>
@@ -751,7 +756,7 @@ const Tools=()=>(
             </div>
             <div style={{fontSize:'15px',fontWeight:'800',color:'#EDF2FF',marginBottom:'4px'}}>{n}</div>
             <div style={{fontSize:'11px',fontWeight:'600',color:'#5AABFF',marginBottom:'10px',letterSpacing:'.04em'}}>{s}</div>
-            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75'}}>{d}</p>
+            <p style={{fontSize:'13.5px',color:'#94A3B8',lineHeight:'1.75'}}>{d}</p>
           </div>
         ))}
       </div>
@@ -803,18 +808,18 @@ const Platform=()=>(
               <div style={{width:'58px',height:'58px',borderRadius:'17px',background:card.icBg,border:`1px solid ${card.icBorder}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px',marginBottom:'22px'}}>{card.icChar}</div>
               <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',textTransform:'uppercase',color:card.labelColor,marginBottom:'10px'}}>{card.label}</div>
               <h3 style={{fontSize:'26px',fontWeight:'900',color:'#EDF2FF',marginBottom:'14px',lineHeight:'1.15'}}>{card.title}</h3>
-              <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'26px'}}>{card.desc}</p>
+              <p style={{fontSize:'15px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'26px'}}>{card.desc}</p>
               <div style={{display:'flex',flexDirection:'column',gap:'9px',marginBottom:'28px'}}>
                 {card.features.map(f=>(
                   <div key={f} style={{display:'flex',alignItems:'center',gap:'8px'}}>
                     <Ic.Check size={16} color={card.ctaColor}/>
-                    <span style={{fontSize:'13px',color:'#64748B'}}>{f}</span>
+                    <span style={{fontSize:'13px',color:'#94A3B8'}}>{f}</span>
                   </div>
                 ))}
               </div>
               <div style={{display:'inline-flex',alignItems:'center',gap:'8px',color:card.ctaColor,fontSize:'14px',fontWeight:'700'}}>
                 {card.cta}
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="7" x2="13" y2="7"/><polyline points="7,1 13,7 7,13"/></svg>
+                <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="7" x2="13" y2="7"/><polyline points="7,1 13,7 7,13"/></svg>
               </div>
             </div>
           </a>
@@ -855,7 +860,7 @@ const Testimonials=()=>(
               {Array.from({length:r}).map((_,j)=><Ic.StarFill key={j}/>)}
             </div>
             <div style={{fontSize:'15px',fontWeight:'800',color:'#EDF2FF',marginBottom:'8px'}}>{t}</div>
-            <p style={{fontSize:'13.5px',color:'#64748B',lineHeight:'1.75',marginBottom:'16px'}}>{d}</p>
+            <p style={{fontSize:'13.5px',color:'#94A3B8',lineHeight:'1.75',marginBottom:'16px'}}>{d}</p>
             <div style={{display:'flex',alignItems:'center',gap:'10px',borderTop:'1px solid rgba(255,255,255,.05)',paddingTop:'14px'}}>
               <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,rgba(0,229,160,.15),rgba(90,171,255,.15))',border:'1px solid rgba(255,255,255,.08)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:'700',color:'#00E5A0'}}>
                 {n[0]}
@@ -910,14 +915,14 @@ const Pricing=({onBuy})=>(
           </div>
           <div style={{marginTop:'18px'}}>
             <div style={{fontSize:'12px',fontWeight:'700',color:'#00E5A0',letterSpacing:'.1em',marginBottom:'6px',textTransform:'uppercase'}}>שוק ההון מ-0 עד 100</div>
-            <div style={{fontSize:'13px',color:'#475569',marginBottom:'24px'}}>12 פרקים · +60 נושאים · 9 כלים · עברית 100%</div>
+            <div style={{fontSize:'13px',color:'#94A3B8',marginBottom:'24px'}}>12 פרקים · +60 נושאים · 9 כלים · עברית 100%</div>
 
             {/* Price options */}
             <div style={{display:'flex',gap:'12px',marginBottom:'28px'}}>
               {[{price:'₪980',method:'Bit / Paybox',color:'#F7C948',bg:'rgba(247,201,72,.08)',border:'rgba(247,201,72,.25)'},{price:'$320',method:'PayPal',color:'#5AABFF',bg:'rgba(90,171,255,.08)',border:'rgba(90,171,255,.25)'}].map(({price,method,color,bg,border})=>(
                 <div key={method} style={{flex:1,background:bg,border:`1px solid ${border}`,borderRadius:'16px',padding:'18px',textAlign:'center'}}>
                   <div style={{fontSize:'30px',fontWeight:'900',color,fontVariantNumeric:'tabular-nums',lineHeight:'1',marginBottom:'6px'}}>{price}</div>
-                  <div style={{fontSize:'12px',color:'#475569',fontWeight:'500'}}>{method}</div>
+                  <div style={{fontSize:'12px',color:'#94A3B8',fontWeight:'500'}}>{method}</div>
                 </div>
               ))}
             </div>
@@ -936,16 +941,16 @@ const Pricing=({onBuy})=>(
 
             <button className="btn-green" onClick={onBuy} style={{width:'100%',padding:'17px',borderRadius:'14px',fontSize:'16px',justifyContent:'center'}}>
               רכוש גישה עכשיו
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
             </button>
-            <p style={{textAlign:'center',fontSize:'12px',color:'#334155',marginTop:'14px'}}>גישה ללא הגבלת זמן · עדכונים שוטפים כלולים · תשלום חד פעמי</p>
+            <p style={{textAlign:'center',fontSize:'12px',color:'#94A3B8',marginTop:'14px'}}>גישה ללא הגבלת זמן · עדכונים שוטפים כלולים · תשלום חד פעמי</p>
           </div>
         </div>
 
         <div style={{display:'flex',justifyContent:'center',gap:'28px',marginTop:'28px',flexWrap:'wrap'}}>
           {[{ic:<Ic.Shield/>,t:'אתר מאובטח SSL'},{ic:<Ic.Lock/>,t:'גישה מיידית'},{ic:<Ic.Refresh/>,t:'עדכונים לנצח'}].map(({ic,t})=>(
             <div key={t} style={{display:'flex',alignItems:'center',gap:'6px'}}>
-              {ic}<span style={{fontSize:'12px',color:'#334155',fontWeight:'500'}}>{t}</span>
+              {ic}<span style={{fontSize:'12px',color:'#94A3B8',fontWeight:'500'}}>{t}</span>
             </div>
           ))}
         </div>
@@ -964,18 +969,28 @@ const FAQS=[
   {q:'מה אפשרויות התשלום?',a:'ניתן לשלם דרך Bit/Paybox (₪980) או PayPal ($320). לאחר התשלום ממלאים טופס קצר ומקבלים גישה תוך שעות.'},
 ];
 
-const FaqItem=({q,a})=>{
+const FaqItem=({q,a,idx})=>{
   const [open,setOpen]=useState(false);
+  /* Stable ids so the trigger and its panel can point at each other. */
+  const btnId='faq-q-'+idx, panelId='faq-a-'+idx;
   return(
     <div className="faq-item" style={{padding:'0'}}>
-      <button onClick={()=>setOpen(!open)} style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'22px 0',gap:'16px',textAlign:'right'}}>
-        <span style={{fontSize:'15px',fontWeight:'700',color:open?'#00E5A0':'#EDF2FF',transition:'color .2s',flex:1}}>{q}</span>
-        <div style={{transform:open?'rotate(180deg)':'rotate(0)',transition:'transform .25s',color:open?'#00E5A0':'#475569',flexShrink:0}}>
-          <Ic.ChevronDown/>
-        </div>
-      </button>
-      <div style={{maxHeight:open?'200px':'0',overflow:'hidden',transition:'max-height .3s ease'}}>
-        <p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.8',paddingBottom:'22px'}}>{a}</p>
+      <h3 style={{margin:0}}>
+        <button id={btnId} onClick={()=>setOpen(!open)}
+          aria-expanded={open} aria-controls={panelId}
+          style={{width:'100%',background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'22px 0',gap:'16px',textAlign:'right',fontFamily:'Heebo,sans-serif'}}>
+          <span style={{fontSize:'15px',fontWeight:'700',color:open?'#00E5A0':'#EDF2FF',transition:'color .2s',flex:1}}>{q}</span>
+          <div style={{transform:open?'rotate(180deg)':'rotate(0)',transition:'transform .25s',color:open?'#00E5A0':'#94A3B8',flexShrink:0}} aria-hidden="true">
+            <Ic.ChevronDown/>
+          </div>
+        </button>
+      </h3>
+      {/* `hidden` rather than height alone: a panel collapsed only by
+          max-height:0 stays in the accessibility tree, so a screen reader
+          still reads all six answers and Tab still lands inside them. */}
+      <div id={panelId} role="region" aria-labelledby={btnId} hidden={!open}
+        style={{maxHeight:open?'400px':'0',overflow:'hidden',transition:'max-height .3s ease'}}>
+        <p style={{fontSize:'14px',color:'#94A3B8',lineHeight:'1.8',paddingBottom:'22px'}}>{a}</p>
       </div>
     </div>
   );
@@ -991,10 +1006,10 @@ const FAQ=()=>(
         </h2>
       </div>
       <div className="glass reveal" style={{borderRadius:'24px',padding:'8px 32px',border:'1px solid rgba(255,255,255,.07)'}}>
-        {FAQS.map((item,i)=><FaqItem key={i} {...item}/>)}
+        {FAQS.map((item,i)=><FaqItem key={i} idx={i} {...item}/>)}
       </div>
       <div style={{textAlign:'center',marginTop:'32px'}}>
-        <p style={{fontSize:'14px',color:'#475569'}}>
+        <p style={{fontSize:'14px',color:'#94A3B8'}}>
           עדיין יש שאלות?{' '}
           <a href="mailto:Lidorfiliba@gmail.com" style={{color:'#00E5A0',textDecoration:'none',fontWeight:'600'}}>צור קשר</a>
         </p>
@@ -1059,15 +1074,13 @@ const CTABanner=({onBuy})=>(
               position:'relative',zIndex:1,
               boxShadow:'0 0 60px rgba(0,255,179,.55),0 16px 50px rgba(0,255,179,.35)'}}>
             רכוש גישה — ₪980
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
+            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/></svg>
           </button>
         </div>
-        <a href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-          <button className="btn-ghost" style={{padding:'18px 32px',borderRadius:'14px',fontSize:'16px'}}>Academy ←</button>
-        </a>
-        <a href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener" style={{textDecoration:'none'}}>
-          <button className="btn-ghost" style={{padding:'18px 32px',borderRadius:'14px',fontSize:'16px'}}>StockLens ←</button>
-        </a>
+        <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLensAcademy/" target="_blank" rel="noopener noreferrer"
+          style={{padding:'18px 32px',borderRadius:'14px',fontSize:'16px',textDecoration:'none'}}>Academy <span aria-hidden="true">←</span></a>
+        <a className="btn-ghost" href="https://lidorfiliba.github.io/StockLens/" target="_blank" rel="noopener noreferrer"
+          style={{padding:'18px 32px',borderRadius:'14px',fontSize:'16px',textDecoration:'none'}}>StockLens <span aria-hidden="true">←</span></a>
       </div>
 
       {/* Trust strip */}
@@ -1089,9 +1102,20 @@ const Footer=({onBuy})=>{
   const cols=[
     {title:'כלים',items:[{l:'Overview',href:A},{l:'Quarter Compare',href:A},{l:'Stock vs Stock',href:A},{l:'Intelligence',href:A},{l:'Market Pulse',href:A},{l:'Options P/C',href:A}]},
     {title:'תוכן',items:[{l:'12 פרקי לימוד',href:AC},{l:'+60 נושאים',href:AC},{l:'Investment Board',href:AC},{l:'Spread Simulator',href:AC},{l:'Watchlist',href:AC}]},
-    {title:'כללי',items:[{l:'אודות',href:'#tools'},{l:'צור קשר',href:'mailto:Lidorfiliba@gmail.com'},{l:'פרטיות',href:'privacy.html'},{l:'תנאי שימוש',href:'#'},{l:'רכוש גישה',buy:true}]},
+    {title:'כללי',items:[{l:'אודות',href:'#tools'},{l:'צור קשר',href:'mailto:Lidorfiliba@gmail.com'},{l:'רכוש גישה',buy:true}]},
+    /* The four documents an ad platform and an Israeli consumer both expect to
+       find. They sit in their own column so they are never pushed below the
+       fold of a marketing list. */
+    {title:'מידע משפטי',items:[
+      {l:'תנאי שימוש',href:'terms.html'},
+      {l:'ביטול עסקה והחזר',href:'refund.html'},
+      {l:'מדיניות פרטיות',href:'privacy.html'},
+      {l:'הצהרת נגישות',href:'accessibility.html'},
+    ]},
   ];
-  const linkStyle={fontSize:'13px',color:'#334155',textDecoration:'none',transition:'color .2s',fontWeight:'500'};
+  /* #94A3B8, not the old #334155 — that measured 1.94:1 on the footer's
+     #020814 and was effectively invisible, let alone WCAG AA. */
+  const linkStyle={fontSize:'13px',color:'#94A3B8',textDecoration:'none',transition:'color .2s',fontWeight:'500'};
   return(
     <footer style={{background:'#020814',borderTop:'1px solid rgba(255,255,255,.05)',padding:'60px 24px 32px'}}>
       <div style={{maxWidth:'1280px',margin:'0 auto'}}>
@@ -1101,33 +1125,34 @@ const Footer=({onBuy})=>{
               <Ic.Lens s={24}/>
               <div>
                 <div style={{fontSize:'19px',fontWeight:'900',background:'linear-gradient(135deg,#FFF 0%,#94A3B8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',lineHeight:'1.1'}}>StockLens</div>
-                <div style={{fontSize:'8px',letterSpacing:'2.5px',color:'#334155',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
+                <div style={{fontSize:'8px',letterSpacing:'2.5px',color:'#94A3B8',textTransform:'uppercase',fontWeight:'600'}}>Academy</div>
               </div>
             </div>
-            <p style={{fontSize:'13px',color:'#334155',lineHeight:'1.8',maxWidth:'200px'}}>9 כלי ניתוח חיים · 12 פרקים · עברית 100% · תשלום חד פעמי · גישה לנצח.</p>
+            <p style={{fontSize:'13px',color:'#94A3B8',lineHeight:'1.8',maxWidth:'200px'}}>9 כלי ניתוח חיים · 12 פרקים · עברית 100% · תשלום חד פעמי · גישה לנצח.</p>
           </div>
           {cols.map(col=>(
-            <div key={col.title}>
-              <div style={{fontSize:'12px',fontWeight:'700',color:'#EDF2FF',marginBottom:'18px',letterSpacing:'.06em',textTransform:'uppercase'}}>{col.title}</div>
+            <nav key={col.title} aria-label={col.title}>
+              <h2 style={{fontSize:'12px',fontWeight:'700',color:'#EDF2FF',marginBottom:'18px',letterSpacing:'.06em',textTransform:'uppercase'}}>{col.title}</h2>
               <ul style={{listStyle:'none',padding:0,margin:0}}>
                 {col.items.map(item=>(
                   <li key={item.l} style={{marginBottom:'10px'}}>
                     {item.buy
-                      ? <button onClick={onBuy} style={{background:'none',border:'none',padding:0,fontSize:'13px',color:'#00E5A0',cursor:'pointer',fontFamily:'Heebo,sans-serif',fontWeight:'600',transition:'color .2s'}}
-                          onMouseEnter={e=>e.target.style.color='#00FFB3'} onMouseLeave={e=>e.target.style.color='#00E5A0'}>{item.l} ←</button>
+                      ? <button onClick={onBuy} type="button" style={{background:'none',border:'none',padding:0,fontSize:'13px',color:'#00E5A0',cursor:'pointer',fontFamily:'Heebo,sans-serif',fontWeight:'600',transition:'color .2s'}}
+                          onMouseEnter={e=>e.currentTarget.style.color='#00FFB3'} onMouseLeave={e=>e.currentTarget.style.color='#00E5A0'}>{item.l} <span aria-hidden="true">←</span></button>
                       : <a href={item.href} target={item.href.startsWith('http')?'_blank':'_self'} rel="noopener"
                           style={linkStyle}
-                          onMouseEnter={e=>e.target.style.color='#94A3B8'} onMouseLeave={e=>e.target.style.color='#334155'}>{item.l}</a>
+                          onMouseEnter={e=>e.currentTarget.style.color='#EDF2FF'} onMouseLeave={e=>e.currentTarget.style.color='#94A3B8'}>{item.l}</a>
                     }
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:'12px',paddingTop:'24px',borderTop:'1px solid rgba(255,255,255,.05)'}}>
-          <div style={{fontSize:'13px',color:'#1E293B',fontWeight:'500'}}>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
-          <div style={{fontSize:'13px',color:'#1E293B'}}>StockLens • Academy</div>
+          {/* #6F87A6, not #1E293B — the old value measured 1.37:1 on this band. */}
+          <div style={{fontSize:'13px',color:'#6F87A6',fontWeight:'500'}}>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+          <div style={{fontSize:'13px',color:'#6F87A6'}}>StockLens • Academy</div>
         </div>
       </div>
     </footer>
@@ -1139,13 +1164,28 @@ const Footer=({onBuy})=>{
    Defining a component inside another component creates a NEW function
    identity on every render, so React unmounts and remounts the <input>
    on each keystroke and the field loses focus after every character. */
-const inp={width:'100%',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'11px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'13px 15px',outline:'none',marginTop:'6px',boxSizing:'border-box',transition:'border-color .2s,box-shadow .2s'};
+/* `outline:'none'` is deliberately gone. The focus ring below is drawn with
+   box-shadow instead, so the field is still obviously focused for a
+   keyboard-only customer — removing the outline with nothing in its place is
+   what made this form impossible to follow without a mouse. */
+const inp={width:'100%',background:'rgba(255,255,255,.04)',border:'1px solid rgba(255,255,255,.1)',borderRadius:'11px',color:'#EDF2FF',fontFamily:'Heebo,sans-serif',fontSize:'15px',padding:'13px 15px',marginTop:'6px',boxSizing:'border-box',transition:'border-color .2s,box-shadow .2s'};
 
-const InputField=({label,type='text',value,onChange,placeholder})=>(
+/* A real <label for> rather than a styled <div>. The old markup showed the
+   field name on screen but left the input nameless to a screen reader, and
+   clicking the caption did not focus the field. */
+const InputField=({id,label,type='text',value,onChange,placeholder,autoComplete,inputMode,describedBy,invalid})=>(
   <div style={{marginBottom:'14px'}}>
-    <div style={{fontSize:'12px',color:'#64748B',marginBottom:'4px',fontWeight:'600'}}>{label}</div>
-    <input style={inp} type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
-      onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.45)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.08)';}}
+    <label htmlFor={id} style={{display:'block',fontSize:'12px',color:'#94A3B8',marginBottom:'4px',fontWeight:'600'}}>
+      {label}
+      <span aria-hidden="true" style={{color:'#00E5A0',marginInlineStart:'3px'}}>*</span>
+      <span className="sr-only"> (שדה חובה)</span>
+    </label>
+    <input id={id} style={inp} type={type} value={value} onChange={e=>onChange(e.target.value)}
+      placeholder={placeholder} required autoComplete={autoComplete} inputMode={inputMode}
+      aria-required="true"
+      aria-invalid={invalid?'true':undefined}
+      aria-describedby={describedBy}
+      onFocus={e=>{e.target.style.borderColor='rgba(0,229,160,.45)';e.target.style.boxShadow='0 0 0 3px rgba(0,229,160,.35)';}}
       onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,.1)';e.target.style.boxShadow='';}}/>
   </div>
 );
@@ -1218,7 +1258,66 @@ const PurchaseModal=({onClose})=>{
   const [captchaToken,setCaptchaToken]=React.useState('');
   const [captchaBlocked,setCaptchaBlocked]=React.useState(false);
 
+  /* The panel itself, and the element that had focus when the modal opened —
+     focus goes back there on close so a keyboard user is returned to the buy
+     button they pressed rather than to the top of the document. */
+  const panel=React.useRef(null);
+  const opener=React.useRef(null);
+  /* Held in a ref so the unmount cleanup below never closes over a stale
+     onClose from an earlier render. */
+  const closeRef=React.useRef(onClose);
+  closeRef.current=onClose;
+
   React.useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow='';};},[]);
+
+  /* ── Dialog behaviour: initial focus, focus trap, Escape, focus return ──
+     Written by hand rather than with <dialog>, because showModal() puts the
+     panel in the top layer and that reliably breaks the Turnstile iframe's
+     own focus handling. */
+  React.useEffect(()=>{
+    opener.current=document.activeElement;
+
+    /* Every tabbable descendant, in DOM order. Recomputed on each Tab rather
+       than cached: the panel swaps its whole contents between steps, and the
+       Turnstile iframe appears only once Cloudflare has answered. */
+    const tabbables=()=>{
+      if(!panel.current)return[];
+      const sel='a[href],button:not([disabled]),input:not([disabled]),'
+        +'select:not([disabled]),textarea:not([disabled]),iframe,[tabindex]:not([tabindex="-1"])';
+      return Array.prototype.filter.call(panel.current.querySelectorAll(sel),
+        el=>el.offsetWidth>0||el.offsetHeight>0||el===document.activeElement);
+    };
+
+    /* Focus the panel, not the first control: the close button is first in the
+       DOM, and starting there would read "close" before the customer has heard
+       what the dialog is for. */
+    if(panel.current)panel.current.focus();
+
+    const onKey=e=>{
+      if(e.key==='Escape'){e.stopPropagation();closeRef.current();return;}
+      if(e.key!=='Tab')return;
+      const items=tabbables();
+      if(!items.length)return;
+      const first=items[0],last=items[items.length-1];
+      /* Focus sitting on the panel wrapper itself is outside the list, so the
+         first Tab has to be steered in explicitly or it escapes to the page. */
+      if(!panel.current.contains(document.activeElement)||document.activeElement===panel.current){
+        e.preventDefault();(e.shiftKey?last:first).focus();return;
+      }
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    };
+
+    document.addEventListener('keydown',onKey,true);
+    return()=>{
+      document.removeEventListener('keydown',onKey,true);
+      /* Skip the restore when the modal is unmounting because the browser is
+         already navigating to thank-you.html — moving focus mid-navigation is
+         pointless and can steal it from the incoming page. */
+      const el=opener.current;
+      if(el&&document.contains(el)&&typeof el.focus==='function')el.focus();
+    };
+  },[]);
 
   const allFilled=name.trim()&&email.trim()&&phone.trim()&&username.trim();
   /* Only surfaced once the customer has typed something, so the field does not
@@ -1345,72 +1444,88 @@ const PurchaseModal=({onClose})=>{
   return(
     <div style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,.85)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}
       onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
-      <div id="purchase-modal" style={{background:'rgba(4,8,20,.98)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.9),0 0 0 1px rgba(0,229,160,.07)',maxHeight:'92vh',overflowY:'auto'}}>
-        <button onClick={onClose} style={{position:'absolute',top:'16px',left:'16px',background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'50%',width:'34px',height:'34px',cursor:'pointer',color:'#64748B',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .2s'}}
-          onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,.08)';e.currentTarget.style.color='#94A3B8';}}
-          onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.color='#64748B';}}>✕</button>
+      <div id="purchase-modal" ref={panel} tabIndex={-1}
+        role="dialog" aria-modal="true" aria-labelledby="purchase-modal-title"
+        style={{background:'rgba(4,8,20,.98)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'28px',padding:'36px 32px',maxWidth:'460px',width:'100%',position:'relative',boxShadow:'0 32px 80px rgba(0,0,0,.9),0 0 0 1px rgba(0,229,160,.07)',maxHeight:'92vh',overflowY:'auto'}}>
+        {/* The ✕ glyph is decorative; aria-label carries the real name. */}
+        <button onClick={onClose} type="button" aria-label="סגור את חלון הרכישה"
+          style={{position:'absolute',top:'16px',left:'16px',background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.08)',borderRadius:'50%',width:'34px',height:'34px',cursor:'pointer',color:'#94A3B8',fontSize:'16px',display:'flex',alignItems:'center',justifyContent:'center',transition:'all .2s'}}
+          onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,.08)';e.currentTarget.style.color='#EDF2FF';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.05)';e.currentTarget.style.color='#94A3B8';}}>
+          <span aria-hidden="true">✕</span>
+        </button>
 
         {step==='choose'&&(
           <>
             <div style={{textAlign:'center',marginBottom:'28px'}}>
               <div style={{fontSize:'11px',fontWeight:'700',letterSpacing:'.14em',color:'#00E5A0',marginBottom:'10px',textTransform:'uppercase'}}>StockLens Academy</div>
-              <h2 style={{fontSize:'24px',fontWeight:'900',color:'#EDF2FF',marginBottom:'8px'}}>בחר שיטת תשלום</h2>
-              <p style={{fontSize:'14px',color:'#64748B'}}>תשלום חד פעמי · גישה לנצח</p>
+              <h2 id="purchase-modal-title" style={{fontSize:'24px',fontWeight:'900',color:'#EDF2FF',marginBottom:'8px'}}>בחר שיטת תשלום</h2>
+              <p style={{fontSize:'14px',color:'#94A3B8'}}>תשלום חד פעמי · גישה לנצח</p>
             </div>
             {[{step:'bit',color:'247,201,72',price:'₪980',sub:'Bit · Paybox · העברה בנקאית'},{step:'paypal',color:'90,171,255',price:'$320',sub:'PayPal'}].map(({step:s,color,price,sub})=>(
-              <button key={s} onClick={()=>setStep(s)} style={{background:`rgba(${color},.07)`,border:`1px solid rgba(${color},.25)`,borderRadius:'16px',padding:'18px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:'16px',width:'100%',textAlign:'right',marginBottom:'12px',transition:'all .2s'}}
+              <button key={s} onClick={()=>setStep(s)} type="button"
+                aria-label={'שלם '+price+' — '+sub}
+                style={{background:`rgba(${color},.07)`,border:`1px solid rgba(${color},.25)`,borderRadius:'16px',padding:'18px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:'16px',width:'100%',textAlign:'right',marginBottom:'12px',transition:'all .2s'}}
                 onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.borderColor=`rgba(${color},.6)`;e.currentTarget.style.background=`rgba(${color},.1)`;}}
                 onMouseLeave={e=>{e.currentTarget.style.transform='';e.currentTarget.style.borderColor=`rgba(${color},.25)`;e.currentTarget.style.background=`rgba(${color},.07)`;}}>
-                <div style={{width:'48px',height:'48px',borderRadius:'13px',background:`rgba(${color},.12)`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px',flexShrink:0}}>{s==='bit'?'💳':'🌐'}</div>
-                <div style={{flex:1}}>
+                <div aria-hidden="true" style={{width:'48px',height:'48px',borderRadius:'13px',background:`rgba(${color},.12)`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px',flexShrink:0}}>{s==='bit'?'💳':'🌐'}</div>
+                <div style={{flex:1}} aria-hidden="true">
                   <div style={{fontSize:'22px',fontWeight:'900',color:`rgb(${color})`,lineHeight:'1'}}>{price}</div>
-                  <div style={{fontSize:'12px',color:'#64748B',marginTop:'3px'}}>{sub}</div>
+                  <div style={{fontSize:'12px',color:'#94A3B8',marginTop:'3px'}}>{sub}</div>
                 </div>
-                <span style={{color:`rgb(${color})`,fontSize:'16px'}}>←</span>
+                <span aria-hidden="true" style={{color:`rgb(${color})`,fontSize:'16px'}}>←</span>
               </button>
             ))}
-            <div style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:'18px',display:'flex',flexDirection:'column',gap:'8px'}}>
+            <ul style={{borderTop:'1px solid rgba(255,255,255,.06)',paddingTop:'18px',display:'flex',flexDirection:'column',gap:'8px',listStyle:'none',margin:0,padding:'18px 0 0'}}>
               {['גישה לכל 12 הפרקים + 9 כלי ניתוח','גישה לנצח — ללא מנוי','עדכונים עתידיים כלולים','עברית 100%'].map(f=>(
-                <div key={f} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                <li key={f} style={{display:'flex',alignItems:'center',gap:'8px'}}>
                   <Ic.Check size={15}/>
-                  <span style={{fontSize:'13px',color:'#64748B'}}>{f}</span>
-                </div>
+                  <span style={{fontSize:'13px',color:'#94A3B8'}}>{f}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </>
         )}
 
         {(step==='bit'||step==='paypal')&&(
           <>
-            <button onClick={()=>setStep('choose')} style={{background:'transparent',border:'none',color:'#64748B',cursor:'pointer',fontSize:'13px',display:'flex',alignItems:'center',gap:'6px',marginBottom:'22px',padding:0,fontFamily:'Heebo,sans-serif',fontWeight:'600'}}>→ חזרה</button>
+            <button onClick={()=>setStep('choose')} type="button" style={{background:'transparent',border:'none',color:'#94A3B8',cursor:'pointer',fontSize:'13px',display:'flex',alignItems:'center',gap:'6px',marginBottom:'22px',padding:0,fontFamily:'Heebo,sans-serif',fontWeight:'600'}}>
+              <span aria-hidden="true">→</span> חזרה לבחירת אמצעי תשלום
+            </button>
             <div style={{textAlign:'center',marginBottom:'22px'}}>
-              <div style={{fontSize:'36px',marginBottom:'10px'}}>{step==='bit'?'💳':'🌐'}</div>
-              <h3 style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',marginBottom:'6px'}}>{step==='bit'?'תשלום ₪980':'תשלום $320 — PayPal'}</h3>
+              <div aria-hidden="true" style={{fontSize:'36px',marginBottom:'10px'}}>{step==='bit'?'💳':'🌐'}</div>
+              <h2 id="purchase-modal-title" style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',marginBottom:'6px'}}>{step==='bit'?'תשלום ₪980':'תשלום $320 — PayPal'}</h2>
             </div>
             <div style={{background:step==='bit'?'rgba(247,201,72,.06)':'rgba(90,171,255,.06)',border:`1px solid ${step==='bit'?'rgba(247,201,72,.25)':'rgba(90,171,255,.25)'}`,borderRadius:'14px',padding:'18px',marginBottom:'22px',textAlign:'center'}}>
               <div style={{fontSize:'11px',color:step==='bit'?'#F7C948':'#5AABFF',fontWeight:'700',letterSpacing:'.1em',marginBottom:'8px',textTransform:'uppercase'}}>{step==='bit'?'מספר Bit / Paybox':'PayPal'}</div>
-              <div style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',fontFamily:'monospace',letterSpacing:'1px'}}>{step==='bit'?'054-6667812':'Lidorfiliba@gmail.com'}</div>
-              <div style={{fontSize:'11px',color:'#334155',marginTop:'6px',fontWeight:'500'}}>לאחר התשלום, מלא את הפרטים למטה</div>
+              <div dir="ltr" style={{fontSize:'20px',fontWeight:'900',color:'#EDF2FF',fontFamily:'monospace',letterSpacing:'1px',unicodeBidi:'isolate'}}>{step==='bit'?'054-6667812':'Lidorfiliba@gmail.com'}</div>
+              <div style={{fontSize:'11px',color:'#94A3B8',marginTop:'6px',fontWeight:'500'}}>לאחר התשלום, מלא את הפרטים למטה</div>
             </div>
-            <InputField label="שם מלא" value={name} onChange={setName} placeholder="שם מלא"/>
-            <InputField label="כתובת מייל" type="email" value={email} onChange={setEmail} placeholder="you@email.com"/>
-            <InputField label="טלפון" type="tel" value={phone} onChange={setPhone} placeholder="050-0000000"/>
+            <InputField id="pm-name" label="שם מלא" value={name} onChange={setName} placeholder="שם מלא" autoComplete="name"/>
+            <InputField id="pm-email" label="כתובת מייל" type="email" value={email} onChange={setEmail} placeholder="you@email.com" autoComplete="email"/>
+            <InputField id="pm-phone" label="טלפון" type="tel" value={phone} onChange={setPhone} placeholder="050-0000000"
+              autoComplete="tel" inputMode="tel" invalid={phoneBad}
+              describedBy={phoneBad?'pm-phone-err':'pm-phone-hint'}/>
             {/* Rendered from derived state only. Nothing here attaches a
                 listener to the input or reads it during typing — see the
                 warning on #fb-events about what broke typing in this form. */}
+            <p id="pm-phone-hint" className="sr-only">נדרש מספר נייד ישראלי — 10 ספרות, מתחיל ב-05</p>
             {phoneBad&&(
-              <p style={{fontSize:'11px',color:'#fb7185',marginTop:'-8px',marginBottom:'14px'}}>
+              <p id="pm-phone-err" role="alert" style={{fontSize:'12px',color:'#fb7185',marginTop:'-8px',marginBottom:'14px'}}>
                 נדרש מספר נייד ישראלי — 10 ספרות, מתחיל ב-05
               </p>
             )}
-            <InputField label="שם משתמש רצוי לאקדמיה" value={username} onChange={setUsername} placeholder="lidor123"/>
+            <InputField id="pm-username" label="שם משתמש רצוי לאקדמיה" value={username} onChange={setUsername} placeholder="lidor123" autoComplete="username"/>
             <TurnstileBox onToken={setCaptchaToken} onUnavailable={()=>setCaptchaBlocked(true)}/>
-            <button onClick={submit} disabled={!allFilled||loading}
-              style={{width:'100%',background:(!allFilled||loading)?'rgba(255,255,255,.05)':'linear-gradient(135deg,#00E5A0,#00C48A)',color:(!allFilled||loading)?'#334155':'#020814',border:'none',borderRadius:'13px',padding:'15px',fontFamily:'Heebo,sans-serif',fontSize:'15px',fontWeight:'700',cursor:(!allFilled||loading)?'not-allowed':'pointer',boxShadow:(!allFilled||loading)?'none':'0 4px 24px rgba(0,229,160,.3)',transition:'all .2s'}}>
+            <button onClick={submit} type="button" disabled={!allFilled||loading}
+              aria-describedby="pm-submit-note"
+              style={{width:'100%',background:(!allFilled||loading)?'rgba(255,255,255,.05)':'linear-gradient(135deg,#00E5A0,#00C48A)',color:(!allFilled||loading)?'#94A3B8':'#020814',border:'none',borderRadius:'13px',padding:'15px',fontFamily:'Heebo,sans-serif',fontSize:'15px',fontWeight:'700',cursor:(!allFilled||loading)?'not-allowed':'pointer',boxShadow:(!allFilled||loading)?'none':'0 4px 24px rgba(0,229,160,.3)',transition:'all .2s'}}>
               {loading?'שולח...':'שלחתי — תן לי גישה ✓'}
             </button>
-            {err&&<p style={{textAlign:'center',fontSize:'12px',color:'#fb7185',marginTop:'8px'}}>{err}</p>}
-            <p style={{textAlign:'center',fontSize:'11px',color:'#1E293B',marginTop:'10px'}}>תקבל גישה תוך שעות ספורות לאחר אישור התשלום</p>
+            {/* role=alert so a submit failure is announced rather than only
+                appearing under a button the customer has already left. */}
+            <p role="alert" style={{textAlign:'center',fontSize:'13px',color:'#fb7185',marginTop:'8px',minHeight:err?undefined:0}}>{err}</p>
+            <p id="pm-submit-note" style={{textAlign:'center',fontSize:'12px',color:'#94A3B8',marginTop:'10px'}}>תקבל גישה תוך שעות ספורות לאחר אישור התשלום</p>
           </>
         )}
 
@@ -1421,9 +1536,9 @@ const PurchaseModal=({onClose})=>{
              typed have still been emailed through. No status code, no reason
              string, nothing about limits — just what they need to do next. */
           <div id="purchase-received" style={{textAlign:'center',padding:'10px 0'}}>
-            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>✓</div>
-            <h3 style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>ההזמנה שלך כבר התקבלה</h3>
-            <p style={{fontSize:'15px',color:'#64748B',lineHeight:'1.8',marginBottom:'22px'}}>
+            <div aria-hidden="true" style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>✓</div>
+            <h2 id="purchase-modal-title" style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>ההזמנה שלך כבר התקבלה</h2>
+            <p style={{fontSize:'15px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'22px'}}>
               קיבלנו את הפרטים שלך ואנחנו מטפלים בהם.<br/>
               אם משהו השתבש או שלא קיבלת מאיתנו עדכון, כתוב לנו ונסדר את זה מיד.
             </p>
@@ -1432,9 +1547,9 @@ const PurchaseModal=({onClose})=>{
                 minHeight:'46px',padding:'13px 20px',borderRadius:'13px',textDecoration:'none',
                 fontSize:'15px',fontWeight:'700',marginBottom:'10px',
                 background:'rgba(37,211,102,.1)',border:'1px solid rgba(37,211,102,.32)',color:'#25D366'}}>
-              💬 דברו איתנו בוואטסאפ
+              <span aria-hidden="true">💬</span> דברו איתנו בוואטסאפ
             </a>
-            <button className="btn-ghost" onClick={onClose} style={{width:'100%',padding:'12px',borderRadius:'13px',fontSize:'14px',cursor:'pointer'}}>סגור</button>
+            <button className="btn-ghost" type="button" onClick={onClose} style={{width:'100%',padding:'12px',borderRadius:'13px',fontSize:'14px',cursor:'pointer'}}>סגור</button>
           </div>
         )}
 
@@ -1443,10 +1558,10 @@ const PurchaseModal=({onClose})=>{
              on /thank-you.html and nowhere else. If this ever stays on screen
              the redirect failed, which is the visible symptom this replaced an
              invisible one with. The manual link is the escape hatch. */
-          <div id="purchase-redirecting" style={{textAlign:'center',padding:'10px 0'}}>
-            <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>⏳</div>
-            <h3 style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>מעביר אותך לאישור ההזמנה...</h3>
-            <p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.8',marginBottom:'22px'}}>אם הדף לא נטען מעצמו,<br/><a href={redirectUrl} style={{color:'#00E5A0',fontWeight:'700'}}>לחץ כאן להמשך</a></p>
+          <div id="purchase-redirecting" role="status" style={{textAlign:'center',padding:'10px 0'}}>
+            <div aria-hidden="true" style={{width:'72px',height:'72px',borderRadius:'50%',background:'rgba(0,229,160,.1)',border:'1px solid rgba(0,229,160,.25)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:'32px'}}>⏳</div>
+            <h2 id="purchase-modal-title" style={{fontSize:'20px',fontWeight:'900',color:'#00E5A0',marginBottom:'12px'}}>מעביר אותך לאישור ההזמנה...</h2>
+            <p style={{fontSize:'14px',color:'#94A3B8',lineHeight:'1.8',marginBottom:'22px'}}>אם הדף לא נטען מעצמו,<br/><a href={redirectUrl} style={{color:'#00E5A0',fontWeight:'700'}}>לחץ כאן להמשך</a></p>
           </div>
         )}
       </div>
@@ -1487,7 +1602,10 @@ const App=()=>{
       {splash&&<SplashScreen onDone={()=>setSplash(false)}/>}
       {modal&&<PurchaseModal onClose={()=>setModal(false)}/>}
       <Navbar scrolled={scrolled} onBuy={buy} user={user} signOut={signOut}/>
-      <main>
+      {/* tabIndex -1 so the skip link in index.html can actually move focus
+          here; without it the browser scrolls but focus stays on the link and
+          the next Tab goes back into the navbar. */}
+      <main id="main" tabIndex={-1}>
         <Hero onBuy={buy} user={user}/>
         <HowItWorks/>
         <Tools/>

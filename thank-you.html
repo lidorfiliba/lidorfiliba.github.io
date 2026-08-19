@@ -52,11 +52,27 @@
 
     .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
 
+    /* Keyboard-only shortcut past the header straight to the document body.
+
+       Hidden by transform rather than by a -9999px inset. Under dir=rtl an
+       inset-inline-start of -9999px pushes the link 9999px to the RIGHT, which
+       widens the scroll area and leaves it off-screen even once focused;
+       transform moves it without touching layout at all. */
+    .skip{
+      position:fixed;inset-inline-start:0;top:0;z-index:100;
+      background:var(--green);color:#020814;font-weight:800;
+      padding:12px 20px;border-end-end-radius:12px;text-decoration:none;
+      transform:translateY(-150%);transition:transform .15s;
+    }
+    .skip:focus{transform:translateY(0);}
+
     .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
     .brand-name{font-size:20px;font-weight:900;line-height:1.1;
       background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .brand-sub{font-size:8px;letter-spacing:3px;color:#476282;text-transform:uppercase;font-weight:600;}
+    /* var(--text3), not the old #476282 — that measured 3.08:1 on this
+       background and failed WCAG 2.1 AA for text. */
+    .brand-sub{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;font-weight:600;}
 
     /* ── Hero ── */
     .tick{
@@ -191,11 +207,18 @@
     footer{
       margin-top:40px;padding-top:24px;
       border-top:1px solid rgba(255,255,255,.06);
-      display:flex;justify-content:space-between;align-items:center;
-      flex-wrap:wrap;gap:12px;
       font-size:13px;color:var(--text3);
     }
-    footer a{color:var(--text3);font-weight:500;}
+    .legal-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:18px;}
+    .legal-nav a{
+      color:var(--text2);font-weight:600;font-size:13px;
+      border-bottom:1px solid transparent;
+      min-height:44px;display:inline-flex;align-items:center;
+    }
+    .legal-nav a:hover{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .foot-base a{color:var(--text3);font-weight:500;}
+    .foot-base a:hover{color:var(--text2);}
 
     @media(max-width:600px){
       .wrap{padding:28px 16px 60px;}
@@ -225,17 +248,19 @@
   fbq('init','27572902432409101');
   fbq('track','PageView');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
+  <noscript><img height="1" width="1" alt="" style="display:none"
   src="https://www.facebook.com/tr?id=27572902432409101&ev=PageView&noscript=1"
   /></noscript>
 </head>
 <body>
+  <a href="#main" class="skip">דלג לתוכן הראשי</a>
+
   <div class="glow glow-a" aria-hidden="true"></div>
   <div class="glow glow-b" aria-hidden="true"></div>
 
   <div class="wrap">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
         <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
         <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
         <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
@@ -247,6 +272,7 @@
       </div>
     </div>
 
+    <main id="main">
     <div class="tick" aria-hidden="true">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#00FFB3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20,6 9,17 4,12"/>
@@ -338,10 +364,19 @@
         </a>
       </div>
     </section>
+    </main>
 
     <footer>
-      <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
-      <div><a href="index.html">חזרה לעמוד הבית</a></div>
+      <nav class="legal-nav" aria-label="מסמכים משפטיים ונגישות">
+        <a href="terms.html">תנאי שימוש</a>
+        <a href="refund.html">ביטול עסקה והחזר</a>
+        <a href="privacy.html">מדיניות פרטיות</a>
+        <a href="accessibility.html">הצהרת נגישות</a>
+      </nav>
+      <div class="foot-base">
+        <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+        <div><a href="index.html">חזרה לעמוד הבית</a></div>
+      </div>
     </footer>
   </div>
 

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>מדיניות ביטול עסקה והחזר כספי | StockLens Academy</title>
+  <meta name="description" content="מדיניות ביטול עסקה והחזר כספי של StockLens Academy — זכות הביטול בעסקת מכר מרחוק לפי חוק הגנת הצרכן, אופן הגשת בקשת ביטול ולוחות זמנים להחזר."/>
+  <link rel="icon" href="icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* Design tokens copied verbatim from privacy.html so every standalone page
+       stays visually identical to the others and to the landing page. */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;
+      --surface:rgba(14,24,52,.7);
+      --border:rgba(255,255,255,.1);
+      --text:#F0F6FF;
+      --text2:#9FB4CE;
+      --text3:#6F87A6;
+      --green:#00FFB3;
+      --blue:#5AABFF;
+      --amber:#F7C948;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;
+      line-height:1.75;
+      direction:rtl;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Ambient glow — decorative only */
+    .glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+    .glow-a{width:70vw;height:70vw;max-width:700px;max-height:700px;top:-20%;right:-15%;
+      background:radial-gradient(circle,rgba(0,255,179,.16) 0%,rgba(0,255,179,.04) 40%,transparent 68%);}
+    .glow-b{width:60vw;height:60vw;max-width:600px;max-height:600px;bottom:-15%;left:-15%;
+      background:radial-gradient(circle,rgba(90,171,255,.14) 0%,rgba(90,171,255,.03) 40%,transparent 68%);}
+
+    .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    /* Keyboard-only shortcut past the header straight to the document body.
+
+       Hidden by transform rather than by a -9999px inset. Under dir=rtl an
+       inset-inline-start of -9999px pushes the link 9999px to the RIGHT, which
+       widens the scroll area and leaves it off-screen even once focused;
+       transform moves it without touching layout at all. */
+    .skip{
+      position:fixed;inset-inline-start:0;top:0;z-index:100;
+      background:var(--green);color:#020814;font-weight:800;
+      padding:12px 20px;border-end-end-radius:12px;text-decoration:none;
+      transform:translateY(-150%);transition:transform .15s;
+    }
+    .skip:focus{transform:translateY(0);}
+
+    /* ── Header ── */
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      min-height:44px;padding:10px 16px;margin-bottom:32px;
+      border:1px solid var(--border);border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:var(--text2);text-decoration:none;
+      font-size:14px;font-weight:600;
+      transition:color .2s,border-color .2s,background .2s;
+    }
+    .back:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
+
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .brand-name{font-size:20px;font-weight:900;line-height:1.1;
+      background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;font-weight:600;}
+
+    h1{font-size:clamp(30px,5.5vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px;}
+    h1 .tg{background:linear-gradient(135deg,#00FFB3,#5AABFF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .updated{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:12px;}
+    .lede{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:40px;max-width:65ch;}
+
+    hr.grad{height:1px;border:none;margin:0 0 40px;
+      background:linear-gradient(90deg,transparent,rgba(0,255,179,.35),rgba(90,171,255,.22),transparent);}
+
+    /* ── Sections ── */
+    section{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 26px;
+      margin-bottom:16px;
+    }
+    h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.35;
+      display:flex;align-items:center;gap:10px;}
+    h2 .num{
+      flex-shrink:0;width:28px;height:28px;border-radius:9px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.22);
+      color:var(--green);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;
+      direction:ltr;
+    }
+    h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 8px;}
+    p{color:var(--text2);margin-bottom:12px;max-width:65ch;}
+    p:last-child,ul:last-child,ol:last-child{margin-bottom:0;}
+
+    ul{list-style:none;padding:0;margin:0 0 12px;}
+    ul li{position:relative;color:var(--text2);padding-inline-start:20px;margin-bottom:9px;max-width:65ch;}
+    ul li::before{
+      content:'';position:absolute;inset-inline-start:0;top:.65em;
+      width:6px;height:6px;border-radius:50%;background:var(--green);opacity:.75;
+    }
+    li strong{color:var(--text);font-weight:700;}
+
+    /* Numbered "how to cancel" steps — same treatment as thank-you.html */
+    ol.steps{list-style:none;padding:0;margin:0 0 12px;counter-reset:step;}
+    ol.steps li{
+      position:relative;counter-increment:step;
+      padding-inline-start:42px;margin-bottom:18px;color:var(--text2);max-width:65ch;
+    }
+    ol.steps li:last-child{margin-bottom:0;}
+    ol.steps li::before{
+      content:counter(step);
+      position:absolute;inset-inline-start:0;top:2px;
+      width:28px;height:28px;border-radius:9px;
+      background:rgba(90,171,255,.1);border:1px solid rgba(90,171,255,.25);
+      color:var(--blue);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;direction:ltr;
+    }
+    ol.steps li b{color:var(--text);font-weight:700;display:block;margin-bottom:2px;}
+
+    a{color:var(--green);text-decoration:none;font-weight:600;
+      border-bottom:1px solid rgba(0,255,179,.3);transition:border-color .2s,color .2s;}
+    a:hover{border-bottom-color:var(--green);}
+    a.back{border-bottom:1px solid var(--border);}
+
+    /* Accessible focus — never removed */
+    a:focus-visible,button:focus-visible,.back:focus-visible{
+      outline:2px solid var(--green);outline-offset:3px;border-radius:4px;
+    }
+
+    .note{
+      background:rgba(90,171,255,.06);
+      border:1px solid rgba(90,171,255,.22);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .note p{color:#BBD2EC;margin-bottom:0;font-size:15px;}
+
+    .warn{
+      background:rgba(247,201,72,.07);
+      border:1px solid rgba(247,201,72,.3);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .warn p{color:#F0DCA6;margin-bottom:10px;font-size:15px;}
+    .warn p:last-child{margin-bottom:0;}
+
+    /* Unfilled business details. Loud on purpose: a PLACEHOLDER that reaches
+       production must be impossible to miss rather than quietly wrong. */
+    .ph{
+      display:inline-block;background:rgba(247,201,72,.14);
+      border:1px dashed rgba(247,201,72,.55);border-radius:6px;
+      padding:1px 8px;color:#F7C948;font-weight:700;
+      font-size:.95em;white-space:nowrap;
+    }
+
+    /* ── Footer ── */
+    footer{
+      margin-top:40px;padding-top:24px;
+      border-top:1px solid rgba(255,255,255,.06);
+      font-size:13px;color:var(--text3);
+    }
+    .legal-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:18px;}
+    .legal-nav a{
+      color:var(--text2);font-weight:600;font-size:13px;
+      border-bottom:1px solid transparent;
+      min-height:44px;display:inline-flex;align-items:center;
+    }
+    .legal-nav a:hover{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .legal-nav a[aria-current="page"]{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .foot-base a{color:var(--text3);font-weight:500;border-bottom:none;}
+    .foot-base a:hover{color:var(--text2);}
+
+    @media(max-width:600px){
+      .wrap{padding:28px 16px 60px;}
+      section{padding:22px 18px;border-radius:16px;}
+      h2{font-size:17px;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *{transition:none!important;animation:none!important;}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">דלג לתוכן הראשי</a>
+
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <a href="index.html" class="back">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/>
+      </svg>
+      חזרה לאתר
+    </a>
+
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
+        <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
+        <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">StockLens</div>
+        <div class="brand-sub">Academy</div>
+      </div>
+    </div>
+
+    <main id="main">
+      <h1>ביטול עסקה <span class="tg">והחזר כספי</span></h1>
+      <div class="updated">עודכן לאחרונה: 19 באוגוסט 2026</div>
+      <p class="lede">
+        רכישת StockLens Academy היא <strong>עסקת מכר מרחוק</strong> של תוכן דיגיטלי, כהגדרתה
+        בחוק הגנת הצרכן, התשמ״א-1981. עמוד זה מסביר מהן זכויות הביטול שלך, כיצד להגיש בקשת
+        ביטול, ותוך כמה זמן מוחזר הכסף.
+      </p>
+
+      <hr class="grad"/>
+
+      <section>
+        <h2><span class="num">1</span>פרטי העוסק</h2>
+        <p>
+          <span class="ph">PLACEHOLDER — שם העסק</span> ·
+          מספר עוסק/ח.פ. <span class="ph">PLACEHOLDER — מספר עוסק / ח.פ.</span> ·
+          <span class="ph">PLACEHOLDER — כתובת העסק</span>
+        </p>
+        <p>
+          <strong>ערוצי הביטול:</strong>
+          <span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span> ·
+          <span class="ph">PLACEHOLDER — טלפון</span>
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">2</span>זכות הביטול לפי חוק</h2>
+        <p>
+          בעסקת מכר מרחוק עומדת לך זכות ביטול לפי סעיף 14ג לחוק הגנת הצרכן. מועד הביטול תלוי
+          בסיווג המוצר:
+        </p>
+        <ul>
+          <li>
+            <strong>ברכישת שירות</strong> — ניתן לבטל בתוך <strong>14 ימים</strong> מיום עשיית
+            העסקה או מיום קבלת מסמך פרטי העסקה, לפי המאוחר. אם מועד תחילת השירות מוקדם
+            מ-14 ימים ממועד העסקה, יש לבטל לפחות <strong>שני ימים</strong> — שאינם ימי מנוחה —
+            לפני מועד תחילת השירות.
+          </li>
+          <li>
+            <strong>ברכישת טובין</strong> — ניתן לבטל בתוך <strong>14 ימים</strong> מיום קבלת
+            הטובין או מיום קבלת מסמך פרטי העסקה, לפי המאוחר.
+          </li>
+        </ul>
+
+        <h3>הארכה לאוכלוסיות מסוימות</h3>
+        <p>
+          לאדם עם מוגבלות, לאזרח ותיק (בן 65 ומעלה) ולעולה חדש עומדת זכות ביטול מורחבת של
+          <strong>עד ארבעה חודשים</strong> ממועד העסקה, מיום קבלת המוצר או מיום קבלת מסמך
+          פרטי העסקה — לפי המאוחר — ובלבד שההתקשרות בעסקה כללה שיחה בין העוסק לצרכן. אנו
+          עשויים לבקש תעודה המעידה על הזכאות.
+        </p>
+
+        <h3>דמי ביטול</h3>
+        <p>
+          כאשר הביטול אינו נובע מפגם או מאי-התאמה, אנו רשאים לגבות דמי ביטול בשיעור של
+          <strong>עד 5% ממחיר העסקה או 100 ש״ח — לפי הנמוך מביניהם</strong>. יתרת הסכום
+          תוחזר לך במלואה.
+        </p>
+        <p>
+          בוטלה העסקה בשל פגם, אי-התאמה, או אי-אספקה במועד — לא ייגבו דמי ביטול כלל,
+          והכסף יוחזר במלואו.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">3</span>תוכן דיגיטלי — סייג חשוב</h2>
+        <div class="warn">
+          <p>
+            <strong>שים לב לפני הרכישה.</strong> סעיף 14ג(ד) לחוק הגנת הצרכן קובע כי זכות
+            הביטול אינה חלה, בין היתר, על <strong>״מידע״ כהגדרתו בחוק המחשבים, התשנ״ה-1995</strong> —
+            כלומר על תוכן דיגיטלי הניתן להקלטה, לשעתוק או לשכפול, לאחר שהתוכן הועמד לרשות הצרכן.
+          </p>
+          <p>
+            מכיוון שהמוצר כולל קורס מוקלט וכלים דיגיטליים, ייתכן שהסייג הזה חל עליו החל מרגע
+            פתיחת הגישה לחשבונך.
+          </p>
+        </div>
+
+        <h3>המדיניות שלנו בפועל</h3>
+        <p>
+          מעבר לנדרש בחוק, אנו מיישמים את המדיניות הבאה:
+        </p>
+        <p>
+          <span class="ph">PLACEHOLDER — מדיניות ההחזר הוולונטרית שלך</span>
+        </p>
+        <div class="note">
+          <p>
+            יש להשלים כאן את המדיניות שהעסק בוחר להחיל: למשל האם ניתן לבטל ולקבל החזר מלא
+            כל עוד לא נפתחה הגישה לחשבון, והאם קיים חלון החזר לאחר פתיחת הגישה ומה אורכו.
+            זו החלטה עסקית ומשפטית — היא אינה נגזרת מהחוק ואין למלא אותה בניחוש.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">4</span>כיצד מגישים בקשת ביטול</h2>
+        <p>
+          ניתן להודיע על ביטול בכל אחת מהדרכים הבאות. אין צורך בנימוק, ואין חובה להשתמש
+          בטופס מסוים.
+        </p>
+        <ol class="steps">
+          <li>
+            <b>שלח הודעת ביטול</b>
+            בדואר אלקטרוני אל <span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span>,
+            או בטלפון <span class="ph">PLACEHOLDER — טלפון</span>.
+          </li>
+          <li>
+            <b>ציין את פרטי הזיהוי</b>
+            שם מלא, מספר ההזמנה (בפורמט <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">SLA-…</code>
+            — הוא מופיע בעמוד האישור ובמייל שקיבלת), וכתובת האימייל שאיתה בוצעה ההזמנה.
+          </li>
+          <li>
+            <b>קבל אישור קליטה</b>
+            נשיב לך באישור בכתב על קליטת בקשת הביטול. שמור אותו.
+          </li>
+          <li>
+            <b>הגישה נסגרת</b>
+            עם אישור הביטול תיחסם הגישה לקורס ולכלים, והרישיון האישי שניתן לך יפקע.
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><span class="num">5</span>תוך כמה זמן מוחזר הכסף</h2>
+        <p>
+          לאחר קליטת הודעת הביטול ואישור הזכאות, נחזיר לך את הסכום ששולם — בניכוי דמי ביטול
+          אם חלים — <strong>בתוך 14 ימים ממועד קבלת הודעת הביטול</strong>, כנדרש בחוק.
+        </p>
+        <ul>
+          <li>
+            <strong>אופן ההחזר</strong> — ההחזר מבוצע באותו אמצעי שבו שולמה העסקה: החזרה
+            בביט/פייבוקס או העברה בנקאית עבור תשלום בשקלים, והחזר דרך PayPal עבור תשלום ב-PayPal.
+          </li>
+          <li>
+            <strong>זמן זיכוי בפועל</strong> — לאחר ביצוע ההחזר מצדנו, מועד הופעת הכסף בחשבונך
+            תלוי בספק התשלום או בבנק, ועשוי להימשך מספר ימי עסקים נוספים.
+          </li>
+          <li>
+            <strong>מסמך ביטול</strong> — יישלח אליך אישור על ביטול העסקה ועל סכום ההחזר.
+          </li>
+        </ul>
+        <div class="note">
+          <p>
+            התשלום מתבצע מחוץ לאתר (Bit / פייבוקס / העברה בנקאית או PayPal), ולכן ההחזר
+            מבוצע ידנית מול אותו אמצעי תשלום. כדי לזרז את הטיפול, ציין בבקשת הביטול את
+            אמצעי התשלום שבו השתמשת.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">6</span>ביטול מצדנו</h2>
+        <p>
+          אנו רשאים לבטל עסקה ולהשיב את מלוא התמורה במקרים של טעות בתיאור המוצר או במחירו,
+          תקלה טכנית, או חשד לשימוש לרעה. במקרה של ביטול מצדנו שאינו נובע מהפרה מצדך, יוחזר
+          מלוא הסכום ששולם ללא דמי ביטול.
+        </p>
+        <p>
+          בוטלה הגישה בשל הפרה יסודית של <a href="terms.html">תנאי השימוש</a> — לרבות שיתוף
+          פרטי גישה או הפצת התוכן — לא יינתן החזר כספי.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">7</span>שאלות ובירורים</h2>
+        <p>
+          לא בטוח אם אתה זכאי לביטול, או שנתקלת בבעיה בתהליך? כתוב לנו לפני שאתה מוותר —
+          נשמח לבדוק כל מקרה לגופו.
+        </p>
+        <p>
+          <span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span> ·
+          <span class="ph">PLACEHOLDER — טלפון</span>
+        </p>
+        <p>
+          אין באמור בעמוד זה כדי לגרוע מזכויות המוקנות לך לפי חוק הגנת הצרכן, התשמ״א-1981,
+          ולפי כל דין. בכל סתירה בין עמוד זה לבין הוראות הדין — הוראות הדין גוברות.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <nav class="legal-nav" aria-label="מסמכים משפטיים ונגישות">
+        <a href="terms.html">תנאי שימוש</a>
+        <a href="refund.html" aria-current="page">ביטול עסקה והחזר</a>
+        <a href="privacy.html">מדיניות פרטיות</a>
+        <a href="accessibility.html">הצהרת נגישות</a>
+      </nav>
+      <div class="foot-base">
+        <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+        <div><a href="index.html">חזרה לעמוד הבית</a></div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

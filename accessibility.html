@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>הצהרת נגישות | StockLens Academy</title>
+  <meta name="description" content="הצהרת הנגישות של StockLens Academy — רמת הנגישות שאליה אנו חותרים, ההתאמות שבוצעו באתר, מגבלות ידועות ודרכי פנייה לרכז הנגישות."/>
+  <link rel="icon" href="icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* Design tokens copied verbatim from privacy.html so every standalone page
+       stays visually identical to the others and to the landing page. */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;
+      --surface:rgba(14,24,52,.7);
+      --border:rgba(255,255,255,.1);
+      --text:#F0F6FF;
+      --text2:#9FB4CE;
+      --text3:#6F87A6;
+      --green:#00FFB3;
+      --blue:#5AABFF;
+      --amber:#F7C948;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;
+      line-height:1.75;
+      direction:rtl;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Ambient glow — decorative only */
+    .glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+    .glow-a{width:70vw;height:70vw;max-width:700px;max-height:700px;top:-20%;right:-15%;
+      background:radial-gradient(circle,rgba(0,255,179,.16) 0%,rgba(0,255,179,.04) 40%,transparent 68%);}
+    .glow-b{width:60vw;height:60vw;max-width:600px;max-height:600px;bottom:-15%;left:-15%;
+      background:radial-gradient(circle,rgba(90,171,255,.14) 0%,rgba(90,171,255,.03) 40%,transparent 68%);}
+
+    .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    /* Keyboard-only shortcut past the header straight to the document body.
+
+       Hidden by transform rather than by a -9999px inset. Under dir=rtl an
+       inset-inline-start of -9999px pushes the link 9999px to the RIGHT, which
+       widens the scroll area and leaves it off-screen even once focused;
+       transform moves it without touching layout at all. */
+    .skip{
+      position:fixed;inset-inline-start:0;top:0;z-index:100;
+      background:var(--green);color:#020814;font-weight:800;
+      padding:12px 20px;border-end-end-radius:12px;text-decoration:none;
+      transform:translateY(-150%);transition:transform .15s;
+    }
+    .skip:focus{transform:translateY(0);}
+
+    /* ── Header ── */
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      min-height:44px;padding:10px 16px;margin-bottom:32px;
+      border:1px solid var(--border);border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:var(--text2);text-decoration:none;
+      font-size:14px;font-weight:600;
+      transition:color .2s,border-color .2s,background .2s;
+    }
+    .back:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
+
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .brand-name{font-size:20px;font-weight:900;line-height:1.1;
+      background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;font-weight:600;}
+
+    h1{font-size:clamp(30px,5.5vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px;}
+    h1 .tg{background:linear-gradient(135deg,#00FFB3,#5AABFF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .updated{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:12px;}
+    .lede{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:40px;max-width:65ch;}
+
+    hr.grad{height:1px;border:none;margin:0 0 40px;
+      background:linear-gradient(90deg,transparent,rgba(0,255,179,.35),rgba(90,171,255,.22),transparent);}
+
+    /* ── Sections ── */
+    section{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 26px;
+      margin-bottom:16px;
+    }
+    h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.35;
+      display:flex;align-items:center;gap:10px;}
+    h2 .num{
+      flex-shrink:0;width:28px;height:28px;border-radius:9px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.22);
+      color:var(--green);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;
+      direction:ltr;
+    }
+    h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 8px;}
+    p{color:var(--text2);margin-bottom:12px;max-width:65ch;}
+    p:last-child,ul:last-child{margin-bottom:0;}
+
+    ul{list-style:none;padding:0;margin:0 0 12px;}
+    li{position:relative;color:var(--text2);padding-inline-start:20px;margin-bottom:9px;max-width:65ch;}
+    li::before{
+      content:'';position:absolute;inset-inline-start:0;top:.65em;
+      width:6px;height:6px;border-radius:50%;background:var(--green);opacity:.75;
+    }
+    li strong{color:var(--text);font-weight:700;}
+
+    /* Keyboard shortcut table */
+    .keys{width:100%;border-collapse:collapse;margin-bottom:12px;}
+    .keys th,.keys td{
+      text-align:start;padding:9px 10px;font-size:14px;color:var(--text2);
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .keys th{color:var(--text);font-weight:700;font-size:13px;}
+    .keys td:first-child{white-space:nowrap;}
+    kbd{
+      display:inline-block;background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.18);border-bottom-width:2px;
+      border-radius:6px;padding:2px 8px;
+      font-family:ui-monospace,Consolas,monospace;font-size:12px;
+      color:var(--text);direction:ltr;unicode-bidi:isolate;
+    }
+
+    a{color:var(--green);text-decoration:none;font-weight:600;
+      border-bottom:1px solid rgba(0,255,179,.3);transition:border-color .2s,color .2s;}
+    a:hover{border-bottom-color:var(--green);}
+    a.back{border-bottom:1px solid var(--border);}
+
+    /* Accessible focus — never removed */
+    a:focus-visible,button:focus-visible,.back:focus-visible{
+      outline:2px solid var(--green);outline-offset:3px;border-radius:4px;
+    }
+
+    .note{
+      background:rgba(90,171,255,.06);
+      border:1px solid rgba(90,171,255,.22);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .note p{color:#BBD2EC;margin-bottom:0;font-size:15px;}
+
+    .warn{
+      background:rgba(247,201,72,.07);
+      border:1px solid rgba(247,201,72,.3);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .warn p{color:#F0DCA6;margin-bottom:10px;font-size:15px;}
+    .warn p:last-child{margin-bottom:0;}
+
+    /* Unfilled business details. Loud on purpose: a PLACEHOLDER that reaches
+       production must be impossible to miss rather than quietly wrong. */
+    .ph{
+      display:inline-block;background:rgba(247,201,72,.14);
+      border:1px dashed rgba(247,201,72,.55);border-radius:6px;
+      padding:1px 8px;color:#F7C948;font-weight:700;
+      font-size:.95em;white-space:nowrap;
+    }
+
+    /* Accessibility-coordinator contact block */
+    .coord{
+      background:rgba(0,255,179,.06);
+      border:1px solid rgba(0,255,179,.24);
+      border-radius:16px;padding:22px 22px;margin-top:4px;
+    }
+    .coord dl{margin:0;}
+    .coord dt{font-size:12px;color:var(--text3);font-weight:700;letter-spacing:.05em;
+      text-transform:uppercase;margin-bottom:3px;}
+    .coord dd{margin:0 0 14px;color:var(--text);font-size:16px;font-weight:600;}
+    .coord dd:last-child{margin-bottom:0;}
+
+    /* ── Footer ── */
+    footer{
+      margin-top:40px;padding-top:24px;
+      border-top:1px solid rgba(255,255,255,.06);
+      font-size:13px;color:var(--text3);
+    }
+    .legal-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:18px;}
+    .legal-nav a{
+      color:var(--text2);font-weight:600;font-size:13px;
+      border-bottom:1px solid transparent;
+      min-height:44px;display:inline-flex;align-items:center;
+    }
+    .legal-nav a:hover{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .legal-nav a[aria-current="page"]{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .foot-base a{color:var(--text3);font-weight:500;border-bottom:none;}
+    .foot-base a:hover{color:var(--text2);}
+
+    @media(max-width:600px){
+      .wrap{padding:28px 16px 60px;}
+      section{padding:22px 18px;border-radius:16px;}
+      h2{font-size:17px;}
+      .keys th,.keys td{padding:8px 6px;font-size:13px;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *{transition:none!important;animation:none!important;}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">דלג לתוכן הראשי</a>
+
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <a href="index.html" class="back">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/>
+      </svg>
+      חזרה לאתר
+    </a>
+
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
+        <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
+        <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">StockLens</div>
+        <div class="brand-sub">Academy</div>
+      </div>
+    </div>
+
+    <main id="main">
+      <h1>הצהרת <span class="tg">נגישות</span></h1>
+      <div class="updated">עודכן לאחרונה: 19 באוגוסט 2026</div>
+      <p class="lede">
+        אנו רואים בנגישות האתר חלק מהותי מהשירות, ופועלים כדי שכל אדם — לרבות אנשים עם
+        מוגבלות — יוכל לגלוש בו, להבין את תוכנו ולהשלים רכישה באופן עצמאי, נוח ושוויוני.
+        עמוד זה מפרט את רמת הנגישות שאליה אנו חותרים, מה בוצע בפועל, ואילו מגבלות ידועות לנו.
+      </p>
+
+      <hr class="grad"/>
+
+      <section>
+        <h2><span class="num">1</span>רמת הנגישות שאליה אנו חותרים</h2>
+        <p>
+          האתר הותאם לעמידה ב<strong>רמה AA</strong> של הנחיות הנגישות
+          <strong>WCAG 2.1</strong> (Web Content Accessibility Guidelines) של ארגון W3C.
+        </p>
+        <p>
+          תקן זה הוא גם הבסיס לתקן הישראלי <strong>ת״י 5568</strong>, ולדרישות
+          <strong>תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע״ג-2013</strong>.
+        </p>
+        <div class="note">
+          <p>
+            רמת AA היא הרמה הנדרשת בתקנות. התאמנו את האתר לגרסה 2.1 של ההנחיות, המחמירה
+            מגרסה 2.0 שעליה מבוסס התקן הישראלי.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">2</span>מה בוצע באתר</h2>
+        <p>ההתאמות הבאות בוצעו ונבדקו בכלל עמודי האתר:</p>
+
+        <h3>מבנה וניווט</h3>
+        <ul>
+          <li>הצהרת שפה ומבנה טקסט — <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">lang="he"</code> ו-<code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">dir="rtl"</code> ברמת המסמך בכל עמוד</li>
+          <li>היררכיית כותרות תקינה ורציפה (H1 יחיד בכל עמוד, ואחריו H2 ו-H3 בסדר הגיוני)</li>
+          <li>שימוש בתגיות מבנה סמנטיות — <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">header</code>, <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">nav</code>, <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">main</code>, <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">footer</code></li>
+          <li>קישור ״דלג לתוכן הראשי״ המופיע בלחיצת <kbd>Tab</kbd> ראשונה ומדלג על אזור הכותרת</li>
+          <li>קישורים למסמכים המשפטיים ולהצהרה זו בתחתית כל עמוד באתר</li>
+        </ul>
+
+        <h3>מקלדת ומיקוד</h3>
+        <ul>
+          <li>ניתן להפעיל את כל רכיבי האתר — לרבות תפריט הניווט, שאלות נפוצות ותהליך הרכישה המלא — באמצעות מקלדת בלבד</li>
+          <li>סימון מיקוד (Focus) ברור ובעל ניגודיות גבוהה על כל רכיב הניתן להפעלה; סימון המיקוד לעולם אינו מוסתר</li>
+          <li>סדר המעבר בין רכיבים תואם את סדר הקריאה החזותי</li>
+          <li>חלון הרכישה כולא את המיקוד בתוכו כל עוד הוא פתוח, נסגר בלחיצת <kbd>Esc</kbd>, והמיקוד חוזר לכפתור שממנו נפתח</li>
+        </ul>
+
+        <h3>טפסים</h3>
+        <ul>
+          <li>לכל שדה בטופס הרכישה תווית (Label) מקושרת המוקראת על ידי קורא מסך</li>
+          <li>הודעות שגיאה מקושרות לשדה שאליו הן מתייחסות ומוכרזות אוטומטית</li>
+          <li>שדות חובה מסומנים באופן תכנותי ולא באמצעות צבע בלבד</li>
+          <li>שדות מסומנים ב-<code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">autocomplete</code> מתאים למילוי אוטומטי</li>
+        </ul>
+
+        <h3>טקסט וצבע</h3>
+        <ul>
+          <li>יחסי ניגודיות של לפחות 4.5:1 בין טקסט לרקע בכל טקסטי התוכן והממשק</li>
+          <li>המידע לעולם אינו מועבר באמצעות צבע בלבד</li>
+          <li>הטקסט ניתן להגדלה עד 200% ללא אובדן תוכן או פונקציונליות</li>
+          <li>שטחי מגע של 44 פיקסלים לפחות בכפתורים ובקישורים במובייל</li>
+        </ul>
+
+        <h3>תמונות ותנועה</h3>
+        <ul>
+          <li>אלמנטים גרפיים דקורטיביים מוסתרים מקוראי מסך ואינם מייצרים ״רעש״ בהקראה</li>
+          <li>אלמנטים גרפיים נושאי משמעות מלווים בטקסט חלופי</li>
+          <li>אין באתר תוכן מהבהב או מרצד העלול לגרום להתקף</li>
+          <li>האתר מכבד את העדפת המערכת <code dir="ltr" style="direction:ltr;unicode-bidi:isolate;">prefers-reduced-motion</code>, ומנטרל אנימציות עבור מי שהגדיר זאת</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><span class="num">3</span>ניווט מקלדת — קיצורי דרך</h2>
+        <table class="keys">
+          <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">מקשים לניווט באתר באמצעות מקלדת</caption>
+          <thead>
+            <tr><th scope="col">מקש</th><th scope="col">פעולה</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><kbd>Tab</kbd></td><td>מעבר לרכיב הבא הניתן להפעלה</td></tr>
+            <tr><td><kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>חזרה לרכיב הקודם</td></tr>
+            <tr><td><kbd>Enter</kbd></td><td>הפעלת קישור או כפתור</td></tr>
+            <tr><td><kbd>Space</kbd></td><td>הפעלת כפתור, גלילת העמוד</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>סגירת חלון הרכישה</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2><span class="num">4</span>מגבלות ידועות</h2>
+        <p>
+          אנו מציגים כאן במלואן את המגבלות הידועות לנו, גם כאשר מקורן בשירותים חיצוניים
+          שאינם בשליטתנו:
+        </p>
+        <ul>
+          <li>
+            <strong>מחוון נתוני המניות (TradingView)</strong> — רצועת נתוני השוק בראש עמוד
+            הבית מוטמעת ממערכת חיצונית של TradingView, ורמת הנגישות שלה אינה בשליטתנו.
+            הרצועה היא תוספת חזותית בלבד: אין בה מידע הדרוש להבנת המוצר או להשלמת רכישה.
+          </li>
+          <li>
+            <strong>רכיב אימות האבטחה (Cloudflare Turnstile)</strong> — בטופס הרכישה מוטמע
+            רכיב אימות של Cloudflare, המסופק כמסגרת חיצונית. הרכיב תומך בהפעלה במקלדת
+            ומציע חלופה נגישה, אך התנהגותו נקבעת על ידי הספק.
+          </li>
+          <li>
+            <strong>שירותי תשלום חיצוניים</strong> — התשלום עצמו מבוצע באתרים של Bit,
+            פייבוקס או PayPal. נגישות אותם שירותים היא באחריות מפעיליהם.
+          </li>
+        </ul>
+        <div class="note">
+          <p>
+            נתקלת במגבלה שאינה מופיעה כאן? נשמח לדעת. פנייה אלינו היא הדרך המהירה ביותר
+            שבה נוכל לתקן — ראה פרטי הפנייה בהמשך.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">5</span>פנייה בנושא נגישות</h2>
+        <p>
+          אם נתקלת בקושי, בתקלה או ברכיב שאינו נגיש — נשמח שתפנה אלינו. נשתדל לטפל בפנייה
+          בהקדם האפשרי ולתת מענה בתוך זמן סביר.
+        </p>
+        <p>בפנייתך יסייע לנו מאוד אם תציין:</p>
+        <ul>
+          <li>הדף או המסך שבו נתקלת בבעיה (רצוי כתובת מלאה)</li>
+          <li>תיאור הקושי ומה ניסית לעשות</li>
+          <li>המכשיר, הדפדפן וטכנולוגיית העזר שבהם השתמשת</li>
+        </ul>
+
+        <h3>רכז הנגישות</h3>
+        <div class="coord">
+          <dl>
+            <dt>שם רכז הנגישות</dt>
+            <dd><span class="ph">PLACEHOLDER — שם רכז הנגישות</span></dd>
+
+            <dt>דואר אלקטרוני</dt>
+            <dd><span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span></dd>
+
+            <dt>טלפון</dt>
+            <dd><span class="ph">PLACEHOLDER — טלפון</span></dd>
+
+            <dt>כתובת למשלוח דואר</dt>
+            <dd><span class="ph">PLACEHOLDER — כתובת העסק</span></dd>
+          </dl>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">6</span>פרטי הארגון</h2>
+        <p>
+          <span class="ph">PLACEHOLDER — שם העסק</span> ·
+          מספר עוסק/ח.פ. <span class="ph">PLACEHOLDER — מספר עוסק / ח.פ.</span>
+        </p>
+        <p>
+          האתר: <a href="https://lidorfiliba.github.io/">lidorfiliba.github.io</a> —
+          עמוד הבית, עמוד אישור הזמנה והמסמכים המשפטיים.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">7</span>עדכון ההצהרה</h2>
+        <p>
+          הצהרה זו נבדקת ומעודכנת מעת לעת, ובכל שינוי מהותי באתר. הבדיקות בוצעו באמצעות
+          ניווט מקלדת בלבד, בחינת ניגודיות צבעים מול תקן WCAG 2.1 AA, ובדיקת מבנה סמנטי
+          והצהרות ARIA.
+        </p>
+        <p>
+          <strong>תאריך עדכון אחרון של הצהרה זו: 19 באוגוסט 2026.</strong>
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <nav class="legal-nav" aria-label="מסמכים משפטיים ונגישות">
+        <a href="terms.html">תנאי שימוש</a>
+        <a href="refund.html">ביטול עסקה והחזר</a>
+        <a href="privacy.html">מדיניות פרטיות</a>
+        <a href="accessibility.html" aria-current="page">הצהרת נגישות</a>
+      </nav>
+      <div class="foot-base">
+        <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+        <div><a href="index.html">חזרה לעמוד הבית</a></div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

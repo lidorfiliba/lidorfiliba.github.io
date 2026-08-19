@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#00E5A0"/>
+  <title>תנאי שימוש | StockLens Academy</title>
+  <meta name="description" content="תנאי השימוש של StockLens Academy — מהו המוצר, הבהרה כי מדובר בתוכן חינוכי בלבד ולא בייעוץ השקעות, רישיון שימוש אישי ואיסור הפצה."/>
+  <link rel="icon" href="icon-192.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    /* Design tokens copied verbatim from privacy.html so every standalone page
+       stays visually identical to the others and to the landing page. */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#060d1f;
+      --surface:rgba(14,24,52,.7);
+      --border:rgba(255,255,255,.1);
+      --text:#F0F6FF;
+      --text2:#9FB4CE;
+      --text3:#6F87A6;
+      --green:#00FFB3;
+      --blue:#5AABFF;
+      --amber:#F7C948;
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Heebo','Arial Hebrew',sans-serif;
+      font-size:16px;
+      line-height:1.75;
+      direction:rtl;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Ambient glow — decorative only */
+    .glow{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(90px);}
+    .glow-a{width:70vw;height:70vw;max-width:700px;max-height:700px;top:-20%;right:-15%;
+      background:radial-gradient(circle,rgba(0,255,179,.16) 0%,rgba(0,255,179,.04) 40%,transparent 68%);}
+    .glow-b{width:60vw;height:60vw;max-width:600px;max-height:600px;bottom:-15%;left:-15%;
+      background:radial-gradient(circle,rgba(90,171,255,.14) 0%,rgba(90,171,255,.03) 40%,transparent 68%);}
+
+    .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    /* Keyboard-only shortcut past the header straight to the document body.
+
+       Hidden by transform rather than by a -9999px inset. Under dir=rtl an
+       inset-inline-start of -9999px pushes the link 9999px to the RIGHT, which
+       widens the scroll area and leaves it off-screen even once focused;
+       transform moves it without touching layout at all. */
+    .skip{
+      position:fixed;inset-inline-start:0;top:0;z-index:100;
+      background:var(--green);color:#020814;font-weight:800;
+      padding:12px 20px;border-end-end-radius:12px;text-decoration:none;
+      transform:translateY(-150%);transition:transform .15s;
+    }
+    .skip:focus{transform:translateY(0);}
+
+    /* ── Header ── */
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      min-height:44px;padding:10px 16px;margin-bottom:32px;
+      border:1px solid var(--border);border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:var(--text2);text-decoration:none;
+      font-size:14px;font-weight:600;
+      transition:color .2s,border-color .2s,background .2s;
+    }
+    .back:hover{color:var(--green);border-color:rgba(0,255,179,.4);background:rgba(0,255,179,.07);}
+
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .brand-name{font-size:20px;font-weight:900;line-height:1.1;
+      background:linear-gradient(135deg,#FFF 0%,#94A3B8 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:8px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;font-weight:600;}
+
+    h1{font-size:clamp(30px,5.5vw,44px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:14px;}
+    h1 .tg{background:linear-gradient(135deg,#00FFB3,#5AABFF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .updated{font-size:13px;color:var(--text3);font-weight:500;margin-bottom:12px;}
+    .lede{font-size:16px;color:var(--text2);line-height:1.85;margin-bottom:40px;max-width:65ch;}
+
+    hr.grad{height:1px;border:none;margin:0 0 40px;
+      background:linear-gradient(90deg,transparent,rgba(0,255,179,.35),rgba(90,171,255,.22),transparent);}
+
+    /* ── Sections ── */
+    section{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 26px;
+      margin-bottom:16px;
+    }
+    h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:14px;line-height:1.35;
+      display:flex;align-items:center;gap:10px;}
+    h2 .num{
+      flex-shrink:0;width:28px;height:28px;border-radius:9px;
+      background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.22);
+      color:var(--green);font-size:13px;font-weight:800;
+      display:flex;align-items:center;justify-content:center;
+      font-variant-numeric:tabular-nums;
+      direction:ltr;
+    }
+    h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 8px;}
+    p{color:var(--text2);margin-bottom:12px;max-width:65ch;}
+    p:last-child,ul:last-child{margin-bottom:0;}
+
+    ul{list-style:none;padding:0;margin:0 0 12px;}
+    li{position:relative;color:var(--text2);padding-inline-start:20px;margin-bottom:9px;max-width:65ch;}
+    li::before{
+      content:'';position:absolute;inset-inline-start:0;top:.65em;
+      width:6px;height:6px;border-radius:50%;background:var(--green);opacity:.75;
+    }
+    li strong{color:var(--text);font-weight:700;}
+
+    a{color:var(--green);text-decoration:none;font-weight:600;
+      border-bottom:1px solid rgba(0,255,179,.3);transition:border-color .2s,color .2s;}
+    a:hover{border-bottom-color:var(--green);}
+    a.back{border-bottom:1px solid var(--border);}
+
+    /* Accessible focus — never removed */
+    a:focus-visible,button:focus-visible,.back:focus-visible{
+      outline:2px solid var(--green);outline-offset:3px;border-radius:4px;
+    }
+
+    .note{
+      background:rgba(90,171,255,.06);
+      border:1px solid rgba(90,171,255,.22);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .note p{color:#BBD2EC;margin-bottom:0;font-size:15px;}
+
+    /* Risk / disclaimer callout — deliberately louder than .note */
+    .warn{
+      background:rgba(247,201,72,.07);
+      border:1px solid rgba(247,201,72,.3);
+      border-radius:14px;padding:18px 20px;margin-top:16px;
+    }
+    .warn p{color:#F0DCA6;margin-bottom:10px;font-size:15px;}
+    .warn p:last-child{margin-bottom:0;}
+
+    /* Unfilled business details. Loud on purpose: a PLACEHOLDER that reaches
+       production must be impossible to miss rather than quietly wrong. */
+    .ph{
+      display:inline-block;background:rgba(247,201,72,.14);
+      border:1px dashed rgba(247,201,72,.55);border-radius:6px;
+      padding:1px 8px;color:#F7C948;font-weight:700;
+      font-size:.95em;white-space:nowrap;
+    }
+
+    /* ── Footer ── */
+    footer{
+      margin-top:40px;padding-top:24px;
+      border-top:1px solid rgba(255,255,255,.06);
+      font-size:13px;color:var(--text3);
+    }
+    .legal-nav{
+      display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:18px;
+    }
+    .legal-nav a{
+      color:var(--text2);font-weight:600;font-size:13px;
+      border-bottom:1px solid transparent;
+      min-height:44px;display:inline-flex;align-items:center;
+    }
+    .legal-nav a:hover{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .legal-nav a[aria-current="page"]{color:var(--green);border-bottom-color:rgba(0,255,179,.5);}
+    .foot-base{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .foot-base a{color:var(--text3);font-weight:500;border-bottom:none;}
+    .foot-base a:hover{color:var(--text2);}
+
+    @media(max-width:600px){
+      .wrap{padding:28px 16px 60px;}
+      section{padding:22px 18px;border-radius:16px;}
+      h2{font-size:17px;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *{transition:none!important;animation:none!important;}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">דלג לתוכן הראשי</a>
+
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <a href="index.html" class="back">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <line x1="1" y1="8" x2="15" y2="8"/><polyline points="8,1 15,8 8,15"/>
+      </svg>
+      חזרה לאתר
+    </a>
+
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="9.5" stroke="#00E5A0" stroke-width="2"/>
+        <circle cx="13" cy="13" r="4" stroke="#00E5A0" stroke-width="1.6"/>
+        <line x1="20" y1="20" x2="27" y2="27" stroke="#00E5A0" stroke-width="2.6" stroke-linecap="round"/>
+        <polyline points="7,13 9.5,10.5 13,12 16.5,8 19.5,9" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">StockLens</div>
+        <div class="brand-sub">Academy</div>
+      </div>
+    </div>
+
+    <main id="main">
+      <h1>תנאי <span class="tg">שימוש</span></h1>
+      <div class="updated">עודכן לאחרונה: 19 באוגוסט 2026</div>
+      <p class="lede">
+        תנאים אלה חלים על השימוש באתר StockLens Academy ועל רכישת הקורס והכלים המוצעים בו.
+        רכישת המוצר או השימוש בו מהווים הסכמה מלאה לתנאים המפורטים בעמוד זה. אנא קרא אותם
+        במלואם לפני הרכישה.
+      </p>
+
+      <hr class="grad"/>
+
+      <section>
+        <h2><span class="num">1</span>מי אנחנו</h2>
+        <p>
+          המוצר מסופק על ידי <span class="ph">PLACEHOLDER — שם העסק</span>,
+          מספר עוסק/ח.פ. <span class="ph">PLACEHOLDER — מספר עוסק / ח.פ.</span>,
+          מכתובת <span class="ph">PLACEHOLDER — כתובת העסק</span>
+          (להלן: "אנחנו", "הספק").
+        </p>
+        <p>
+          לכל פנייה בנוגע לתנאים אלה:
+          <span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span> ·
+          <span class="ph">PLACEHOLDER — טלפון</span>.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">2</span>מהו המוצר</h2>
+        <p>
+          StockLens Academy הוא מוצר דיגיטלי בתחום שוק ההון, הנמכר בתשלום חד פעמי ומעניק
+          גישה ללא הגבלת זמן. המוצר כולל:
+        </p>
+        <ul>
+          <li><strong>קורס דיגיטלי מוקלט</strong> — 12 פרקי לימוד ולמעלה מ-60 נושאים, בעברית</li>
+          <li><strong>כלי ניתוח מקוונים</strong> — 9 כלים לניתוח מניות ונתוני שוק</li>
+          <li><strong>עדכוני תוכן</strong> — עדכונים עתידיים לקורס ולכלים, ככל שיפורסמו</li>
+        </ul>
+        <p>
+          הגישה ניתנת דרך חשבון משתמש אישי שנפתח עבורך לאחר אישור התשלום. פרטי הגישה נשלחים
+          לכתובת הדואר האלקטרוני שמסרת בעת ההזמנה.
+        </p>
+        <div class="note">
+          <p>
+            התשלום מתבצע מחוץ לאתר, באמצעים חיצוניים (Bit / פייבוקס / העברה בנקאית או PayPal),
+            ואישורו נעשה באופן ידני. הגישה נפתחת לאחר אישור התשלום.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">3</span>תוכן חינוכי בלבד — לא ייעוץ השקעות</h2>
+        <p>
+          זהו הסעיף החשוב ביותר במסמך זה. אנא קרא אותו בעיון.
+        </p>
+        <div class="warn">
+          <p>
+            <strong>כל התוכן, הכלים, הנתונים והדוגמאות במוצר ובאתר הם מידע חינוכי ולימודי בלבד.</strong>
+          </p>
+          <p>
+            אין בהם, ואין לראות בהם, ייעוץ השקעות, שיווק השקעות, ייעוץ פנסיוני, המלצה לקנייה
+            או למכירה של נייר ערך כלשהו, הצעה לרכישת נייר ערך, או תחליף לייעוץ אישי המתחשב
+            בנתונים ובצרכים המיוחדים שלך.
+          </p>
+          <p>
+            הספק אינו בעל רישיון ייעוץ השקעות או שיווק השקעות לפי חוק הסדרת העיסוק בייעוץ
+            השקעות, בשיווק השקעות ובניהול תיקי השקעות, התשנ״ה-1995, ואינו פועל כבעל רישיון כאמור.
+          </p>
+        </div>
+        <h3>אחריות על החלטות ההשקעה</h3>
+        <p>
+          כל החלטת השקעה שתקבל היא באחריותך המלאה והבלעדית. מסחר והשקעה בשוק ההון כרוכים
+          בסיכון, לרבות סיכון לאובדן מלוא כספי ההשקעה. לפני קבלת החלטה כלכלית מומלץ להיוועץ
+          בבעל רישיון מתאים המכיר את מצבך האישי.
+        </p>
+        <h3>ביצועי עבר</h3>
+        <p>
+          <strong>ביצועי עבר אינם מעידים על תשואות בעתיד.</strong> כל נתון, גרף, תרחיש, סימולציה
+          או דוגמה המופיעים במוצר או באתר — לרבות תוצאות היסטוריות של מניות, אסטרטגיות או
+          תיקי השקעות — מובאים לצורך הדגמה לימודית בלבד. אין בהם הבטחה, התחייבות או צפי
+          לתשואה כלשהי, ואין לגזור מהם ציפייה לרווח.
+        </p>
+        <h3>דיוק הנתונים</h3>
+        <p>
+          נתוני שוק המוצגים בכלים מגיעים ממקורות חיצוניים. הם עשויים להיות חלקיים, מושהים
+          או שגויים, ואיננו אחראים לדיוקם, לזמינותם או לשלמותם. אין להסתמך עליהם כמקור יחיד
+          לקבלת החלטות.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">4</span>רישיון שימוש אישי</h2>
+        <p>
+          עם אישור התשלום ניתן לך <strong>רישיון אישי, מוגבל, שאינו בלעדי ואינו ניתן להעברה</strong>,
+          לשימוש במוצר לצרכיך הפרטיים והלימודיים בלבד.
+        </p>
+        <ul>
+          <li><strong>משתמש יחיד</strong> — הרישיון הוא למשתמש אחד. חשבון המשתמש הוא אישי ואינו ניתן לשיתוף</li>
+          <li><strong>ללא העברה</strong> — אין להעביר, למכור, להשכיר או להשאיל את הגישה או את פרטי ההתחברות לאדם אחר</li>
+          <li><strong>שימוש לא מסחרי</strong> — אין לעשות שימוש במוצר לצורך הדרכה, הוראה או מתן שירות לצד שלישי בתמורה</li>
+        </ul>
+        <p>
+          זכויות היוצרים וכל זכויות הקניין הרוחני בתוכן, בכלים, בעיצוב ובקוד נותרות בבעלות
+          הספק. הרישיון אינו מעביר אליך בעלות בדבר.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">5</span>איסור הפצה ושכפול</h2>
+        <p>אלא אם ניתן לכך אישור מראש ובכתב, חל איסור מוחלט על:</p>
+        <ul>
+          <li>העתקה, שכפול, הורדה או שמירה של התוכן לצורך הפצה</li>
+          <li>הקלטה, צילום מסך או הסרטה של השיעורים והכלים לצורך שיתוף</li>
+          <li>פרסום התוכן או חלקים ממנו ברשתות חברתיות, בפורומים, בקבוצות או באתרים אחרים</li>
+          <li>מכירה, השכרה או הפצה של התוכן, בתמורה או שלא בתמורה</li>
+          <li>יצירת יצירה נגזרת, תרגום או עיבוד של התוכן</li>
+          <li>שימוש בתוכן לאימון מודלים או מערכות אוטומטיות</li>
+        </ul>
+        <div class="warn">
+          <p>
+            שיתוף פרטי גישה או הפצת תוכן מהווים הפרה יסודית של תנאים אלה. במקרה כזה נהיה
+            רשאים לחסום את הגישה לחשבון באופן מיידי וללא החזר כספי, וכן לנקוט בכל אמצעי
+            משפטי העומד לרשותנו.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">6</span>זמינות השירות</h2>
+        <p>
+          אנו שואפים לזמינות רציפה של הכלים והתוכן, אך איננו מתחייבים לפעילות ללא הפסקות.
+          ייתכנו הפסקות לצורך תחזוקה, עדכון או מסיבות שאינן בשליטתנו, לרבות תקלות אצל ספקי
+          תשתית וצדדים שלישיים.
+        </p>
+        <p>
+          אנו רשאים לעדכן, לשנות או להסיר תכונות וכלים מעת לעת, ובלבד שהשינוי אינו פוגע
+          באופן מהותי בליבת המוצר שנרכש.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">7</span>ביטול עסקה והחזר כספי</h2>
+        <p>
+          זכויות הביטול שלך, אופן הגשת בקשת ביטול ולוחות הזמנים להחזר מפורטים במסמך נפרד:
+          <a href="refund.html">מדיניות ביטול עסקה והחזר כספי</a>. המסמך מהווה חלק בלתי נפרד
+          מתנאים אלה.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">8</span>פרטיות</h2>
+        <p>
+          איסוף המידע, השימוש בו ואופן מחיקתו מפורטים ב<a href="privacy.html">מדיניות הפרטיות</a>,
+          המהווה חלק בלתי נפרד מתנאים אלה.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">9</span>הגבלת אחריות</h2>
+        <p>
+          המוצר ניתן כמות שהוא (As-Is). בכפוף לכל דין, לא נישא באחריות לכל נזק ישיר, עקיף,
+          תוצאתי או מיוחד — לרבות הפסד כספי, אובדן רווח או אובדן הזדמנות — הנובע משימוש
+          במוצר, מהסתמכות על תוכנו או מאי-יכולת להשתמש בו.
+        </p>
+        <p>
+          בכל מקרה, ובכפוף לכל דין, אחריותנו הכוללת לא תעלה על הסכום ששולם בפועל עבור המוצר.
+        </p>
+        <p>
+          אין באמור כדי לגרוע מזכויות המוקנות לך לפי חוק הגנת הצרכן, התשמ״א-1981, שאינן
+          ניתנות להתניה.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">10</span>שינויים בתנאים</h2>
+        <p>
+          אנו רשאים לעדכן תנאים אלה מעת לעת. הנוסח המעודכן יפורסם בעמוד זה ותאריך העדכון
+          שבראשו ישתנה בהתאם. שינוי מהותי לא יחול רטרואקטיבית על עסקה שכבר בוצעה.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">11</span>דין וסמכות שיפוט</h2>
+        <p>
+          על תנאים אלה יחולו דיני מדינת ישראל בלבד. סמכות השיפוט הבלעדית בכל עניין הנובע
+          מהם נתונה לבתי המשפט המוסמכים במחוז <span class="ph">PLACEHOLDER — מחוז השיפוט</span>.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">12</span>יצירת קשר</h2>
+        <p>
+          לשאלות או הבהרות בנוגע לתנאי השימוש:
+          <span class="ph">PLACEHOLDER — כתובת אימייל ליצירת קשר</span> ·
+          <span class="ph">PLACEHOLDER — טלפון</span>.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <nav class="legal-nav" aria-label="מסמכים משפטיים ונגישות">
+        <a href="terms.html" aria-current="page">תנאי שימוש</a>
+        <a href="refund.html">ביטול עסקה והחזר</a>
+        <a href="privacy.html">מדיניות פרטיות</a>
+        <a href="accessibility.html">הצהרת נגישות</a>
+      </nav>
+      <div class="foot-base">
+        <div>© 2026 StockLens by Lidor.F · כל הזכויות שמורות.</div>
+        <div><a href="index.html">חזרה לעמוד הבית</a></div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
